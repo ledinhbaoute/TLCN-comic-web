@@ -349,7 +349,7 @@ ol {
 	margin-right: 16px;
 }
 
-.header__menu ul li.active a {
+.header__menu ul li a.active {
 	background: #e53637;
 	color: #ffffff;
 }

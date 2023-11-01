@@ -8,21 +8,26 @@ import NotFound from './components/Notfound';
 import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
+import AnimeDetailPage from './components/pages/anime-detail.page';
+import GenresPage from './components/pages/genres.page';
 
 function App() {
   return (
-    <div className="App">
+    
       <BrowserRouter>
         <Header />
         <Routes>
           <Route exact path="/" Component={Home} />
           <Route path="/login" Component={Login} />
           <Route path='register' Component={Register}/>
+          <Route path='anime-detail' Component={AnimeDetailPage}/>
+          <Route path='genres' Component={GenresPage}/>
+          
           <Route path="*" Component={NotFound} />
         </Routes>
         <Footer />
       </BrowserRouter>
-    </div>
+    
   );
 }
 

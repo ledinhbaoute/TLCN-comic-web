@@ -1,19 +1,19 @@
 import React from "react";
 import "../sass/style.scss";
 import "../css/AllStyles";
-import logo from "../img/logo.png";
-import { Link } from "react-router-dom";
+import { Link,NavLink } from "react-router-dom";
 
 const Header = () => {
+  const logoUrl=`${process.env.PUBLIC_URL}/images/logo.png`
   return (
-    <div>
+  
       <header className="header">
         <div className="container">
           <div className="row">
             <div className="col-lg-2">
               <div className="header__logo">
                 <Link to="./">
-                  <img src={logo} alt="" />
+                  <img src={logoUrl} alt="" />
                 </Link>
               </div>
             </div>
@@ -21,19 +21,19 @@ const Header = () => {
               <div className="header__nav">
                 <nav className="header__menu mobile-menu">
                   <ul>
-                    <li className="active">
-                      <Link to="./">Homepage</Link>
+                    <li >
+                      <NavLink to="./" activeClassName='active'>Homepage</NavLink>
                     </li>
                     <li>
-                      <Link to="./categories.html">
+                      <NavLink to="./genres" activeClassName='active'>
                         Categories <span className="arrow_carrot-down"></span>
-                      </Link>
+                      </NavLink>
                       <ul className="dropdown">
                         <li>
                           <Link to="./categories.html">Categories</Link>
                         </li>
                         <li>
-                          <Link to="./anime-details.html">Anime Details</Link>
+                          <Link to="./anime-detail">Anime Details</Link>
                         </li>
                         <li>
                           <Link to="./anime-watching.html">Anime Watching</Link>
@@ -74,15 +74,7 @@ const Header = () => {
         </div>
       </header>
 
-      <script src="../js/jquery-3.3.1.min.js"></script>
-      <script src="../js/bootstrap.min.js"></script>
-      <script src="../js/player.js"></script>
-      <script src="../js/jquery.nice-select.min.js"></script>
-      <script src="../js/mixitup.min.js"></script>
-      <script src="../js/jquery.slicknav.js"></script>
-      <script src="../js/owl.carousel.min.js"></script>
-      <script src="../js/main.js"></script>
-    </div>
+  
   );
 };
 

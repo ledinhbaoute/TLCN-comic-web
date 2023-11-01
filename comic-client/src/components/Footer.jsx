@@ -1,10 +1,10 @@
 import React from "react";
 import "../sass/style.scss";
 import "../css/AllStyles";
-import logo from "../img/logo.png";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const logoUrl=`${process.env.PUBLIC_URL}/images/logo.png`
   const currentYear = new Date().getFullYear();
 
   const handleScrollToTop = () => {
@@ -25,7 +25,7 @@ const Footer = () => {
           <div class="col-lg-3">
             <div class="footer__logo">
               <Link to="./index.html">
-                <img src={logo} alt="" />
+                <img src={logoUrl} alt="" />
               </Link>
             </div>
           </div>
@@ -47,21 +47,7 @@ const Footer = () => {
               </ul>
             </div>
           </div>
-          <div class="col-lg-3">
-            <p>
-              {/* Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. */}
-              Copyright &copy;{currentYear} All rights reserved | This template
-              is made with <i className="fa fa-heart" aria-hidden="true"></i> by{" "}
-              <Link
-                href="https://colorlib.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Colorlib
-              </Link>
-              {/* Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. */}
-            </p>
-          </div>
+       
         </div>
       </div>
     </footer>
