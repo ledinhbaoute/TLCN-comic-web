@@ -1,24 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 import "../sass/style.scss";
 import "../css/AllStyles";
 import { Link } from "react-router-dom";
 
-
-
 const Login = () => {
+  const imgBgUrl = `${process.env.PUBLIC_URL}images/normal-breadcrumb.jpg`
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  var message
+
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+
+    if(username=="Bao" && password=="Bao")
+      message = "Đăng nhập thành công"
+    else
+      message = "Đăng nhập thất bại"
+
+    window.alert(message)
+  };
+
   return (
     <div>
       {/* <!-- Normal Breadcrumb Begin --> */}
       <section
         class="normal-breadcrumb set-bg"
-        data-setbg="img/normal-breadcrumb.jpg"
+        style={{ backgroundImage: `url(${imgBgUrl})`}}
       >
         <div class="container">
           <div class="row">
             <div class="col-lg-12 text-center">
               <div class="normal__breadcrumb__text">
-                <h2>Login</h2>
-                <p>Welcome to the official Anime blog.</p>
+                <h2>Đăng nhập</h2>
+                <p>Chào mừng đến với BQComic</p>
               </div>
             </div>
           </div>
@@ -32,30 +55,42 @@ const Login = () => {
           <div class="row">
             <div class="col-lg-6">
               <div class="login__form">
-                <h3>Login</h3>
-                <form action="#">
+                <h3>Đăng nhập</h3>
+                <form onSubmit={handleFormSubmit}>
                   <div class="input__item">
-                    <input type="text" placeholder="Email address" />
+                    <input
+                      type="text"
+                      id="username"
+                      placeholder="Tên đăng nhập"
+                      value={username}
+                      onChange={handleUsernameChange}
+                    />
                     <span class="icon_mail"></span>
                   </div>
                   <div class="input__item">
-                    <input type="text" placeholder="Password" />
+                    <input
+                      type="password"
+                      id="password"
+                      placeholder="Mật khẩu"
+                      value={password}
+                      onChange={handlePasswordChange}
+                    />
                     <span class="icon_lock"></span>
                   </div>
                   <button type="submit" class="site-btn">
-                    Login Now
+                    Đăng nhập
                   </button>
                 </form>
-                <Link to="#" class="forget_pass">
-                  Forgot Your Password?
+                <Link to="../forgetpass" class="forget_pass">
+                  Quên mật khẩu?
                 </Link>
               </div>
             </div>
             <div class="col-lg-6">
               <div class="login__register">
-                <h3>Dont’t Have An Account?</h3>
+                <h3>Chưa có tài khoản?</h3>
                 <Link to="../register" class="primary-btn">
-                  Register Now
+                  Đăng ký ngay
                 </Link>
               </div>
             </div>

@@ -33,16 +33,16 @@ const Footer = () => {
             <div class="footer__nav">
               <ul>
                 <li class="active">
-                  <Link to="./index.html">Homepage</Link>
+                  <Link to="./">Về chúng tôi</Link>
                 </li>
                 <li>
-                  <Link to="./categories.html">Categories</Link>
+                  <Link to="./">Điều khoản</Link>
                 </li>
                 <li>
-                  <Link to="./blog.html">Our Blog</Link>
+                  <Link to="./">Quyền riêng tư</Link>
                 </li>
                 <li>
-                  <Link to="#">Contacts</Link>
+                  <Link to="#">Liên hệ</Link>
                 </li>
               </ul>
             </div>

@@ -3,13 +3,43 @@ import "../sass/style.scss";
 import "../css/AllStyles";
 
 const Home = () => {
+  const imgHeroUrl = `${process.env.PUBLIC_URL}images/hero/hero-1.jpg`;
+  const imgTrendingUrl = [
+    `${process.env.PUBLIC_URL}images/trending/trend-1.jpg`,
+    `${process.env.PUBLIC_URL}images/trending/trend-2.jpg`,
+    `${process.env.PUBLIC_URL}images/trending/trend-3.jpg`,
+    `${process.env.PUBLIC_URL}images/trending/trend-4.jpg`,
+    `${process.env.PUBLIC_URL}images/trending/trend-5.jpg`,
+    `${process.env.PUBLIC_URL}images/trending/trend-6.jpg`,
+  ];
+
+  const imgRecentlyUrl = [
+    `${process.env.PUBLIC_URL}images/recent/recent-1.jpg`,
+    `${process.env.PUBLIC_URL}images/recent/recent-2.jpg`,
+    `${process.env.PUBLIC_URL}images/recent/recent-3.jpg`,
+    `${process.env.PUBLIC_URL}images/recent/recent-4.jpg`,
+    `${process.env.PUBLIC_URL}images/recent/recent-5.jpg`,
+    `${process.env.PUBLIC_URL}images/recent/recent-6.jpg`,
+  ];
+
+  const imgTvUrl = [
+    `${process.env.PUBLIC_URL}images/sidebar/tv-1.jpg`,
+    `${process.env.PUBLIC_URL}images/sidebar/tv-2.jpg`,
+    `${process.env.PUBLIC_URL}images/sidebar/tv-3.jpg`,
+    `${process.env.PUBLIC_URL}images/sidebar/tv-4.jpg`,
+    `${process.env.PUBLIC_URL}images/sidebar/tv-5.jpg`,
+  ]
+
   return (
     <div>
       {/*  Hero Section Begin  */}
       <section class="hero">
         <div class="container">
           <div class="hero__slider owl-carousel">
-            <div class="hero__items set-bg" data-setbg="../img/hero/hero-1.jpg">
+            <div
+              class="hero__items set-bg"
+              style={{ backgroundImage: `url(${imgHeroUrl})` }}
+            >
               <div class="row">
                 <div class="col-lg-6">
                   <div class="hero__text">
@@ -23,7 +53,10 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            <div class="hero__items set-bg" data-setbg="img/hero/hero-1.jpg">
+            <div
+              class="hero__items set-bg"
+              style={{ backgroundImage: `url(${imgHeroUrl})` }}
+            >
               <div class="row">
                 <div class="col-lg-6">
                   <div class="hero__text">
@@ -37,7 +70,10 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            <div class="hero__items set-bg" data-setbg="img/hero/hero-1.jpg">
+            <div
+              class="hero__items set-bg"
+              style={{ backgroundImage: `url(${imgHeroUrl})` }}
+            >
               <div class="row">
                 <div class="col-lg-6">
                   <div class="hero__text">
@@ -81,7 +117,7 @@ const Home = () => {
                     <div class="product__item">
                       <div
                         class="product__item__pic set-bg"
-                        data-setbg="img/trending/trend-1.jpg"
+                        style={{ backgroundImage: `url(${imgTrendingUrl[0]})` }}
                       >
                         <div class="ep">18 / 18</div>
                         <div class="comment">
@@ -108,7 +144,7 @@ const Home = () => {
                     <div class="product__item">
                       <div
                         class="product__item__pic set-bg"
-                        data-setbg="img/trending/trend-2.jpg"
+                        style={{ backgroundImage: `url(${imgTrendingUrl[1]})` }}
                       >
                         <div class="ep">18 / 18</div>
                         <div class="comment">
@@ -135,7 +171,7 @@ const Home = () => {
                     <div class="product__item">
                       <div
                         class="product__item__pic set-bg"
-                        data-setbg="img/trending/trend-3.jpg"
+                        style={{ backgroundImage: `url(${imgTrendingUrl[2]})` }}
                       >
                         <div class="ep">18 / 18</div>
                         <div class="comment">
@@ -160,7 +196,7 @@ const Home = () => {
                     <div class="product__item">
                       <div
                         class="product__item__pic set-bg"
-                        data-setbg="img/trending/trend-4.jpg"
+                        style={{ backgroundImage: `url(${imgTrendingUrl[3]})` }}
                       >
                         <div class="ep">18 / 18</div>
                         <div class="comment">
@@ -185,7 +221,7 @@ const Home = () => {
                     <div class="product__item">
                       <div
                         class="product__item__pic set-bg"
-                        data-setbg="img/trending/trend-5.jpg"
+                        style={{ backgroundImage: `url(${imgTrendingUrl[4]})` }}
                       >
                         <div class="ep">18 / 18</div>
                         <div class="comment">
@@ -210,7 +246,7 @@ const Home = () => {
                     <div class="product__item">
                       <div
                         class="product__item__pic set-bg"
-                        data-setbg="img/trending/trend-6.jpg"
+                        style={{ backgroundImage: `url(${imgTrendingUrl[5]})` }}
                       >
                         <div class="ep">18 / 18</div>
                         <div class="comment">
@@ -233,7 +269,7 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-              <div class="popular__product">
+              {/* <div class="popular__product">
                 <div class="row">
                   <div class="col-lg-8 col-md-8 col-sm-8">
                     <div class="section-title">
@@ -402,12 +438,12 @@ const Home = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
               <div class="recent__product">
                 <div class="row">
                   <div class="col-lg-8 col-md-8 col-sm-8">
                     <div class="section-title">
-                      <h4>Recently Added Shows</h4>
+                      <h4>Truyện mới cập nhật</h4>
                     </div>
                   </div>
                   <div class="col-lg-4 col-md-4 col-sm-4">
@@ -423,7 +459,7 @@ const Home = () => {
                     <div class="product__item">
                       <div
                         class="product__item__pic set-bg"
-                        data-setbg="img/recent/recent-1.jpg"
+                        style={{ backgroundImage: `url(${imgRecentlyUrl[0]})` }}
                       >
                         <div class="ep">18 / 18</div>
                         <div class="comment">
@@ -448,7 +484,7 @@ const Home = () => {
                     <div class="product__item">
                       <div
                         class="product__item__pic set-bg"
-                        data-setbg="img/recent/recent-2.jpg"
+                        style={{ backgroundImage: `url(${imgRecentlyUrl[1]})` }}
                       >
                         <div class="ep">18 / 18</div>
                         <div class="comment">
@@ -475,7 +511,7 @@ const Home = () => {
                     <div class="product__item">
                       <div
                         class="product__item__pic set-bg"
-                        data-setbg="img/recent/recent-3.jpg"
+                        style={{ backgroundImage: `url(${imgRecentlyUrl[2]})` }}
                       >
                         <div class="ep">18 / 18</div>
                         <div class="comment">
@@ -500,7 +536,7 @@ const Home = () => {
                     <div class="product__item">
                       <div
                         class="product__item__pic set-bg"
-                        data-setbg="img/recent/recent-4.jpg"
+                        style={{ backgroundImage: `url(${imgRecentlyUrl[3]})` }}
                       >
                         <div class="ep">18 / 18</div>
                         <div class="comment">
@@ -525,7 +561,7 @@ const Home = () => {
                     <div class="product__item">
                       <div
                         class="product__item__pic set-bg"
-                        data-setbg="img/recent/recent-5.jpg"
+                        style={{ backgroundImage: `url(${imgRecentlyUrl[4]})` }}
                       >
                         <div class="ep">18 / 18</div>
                         <div class="comment">
@@ -550,7 +586,7 @@ const Home = () => {
                     <div class="product__item">
                       <div
                         class="product__item__pic set-bg"
-                        data-setbg="img/recent/recent-6.jpg"
+                        style={{ backgroundImage: `url(${imgRecentlyUrl[5]})` }}
                       >
                         <div class="ep">18 / 18</div>
                         <div class="comment">
@@ -575,7 +611,7 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-              <div class="live__product">
+              {/* <div class="live__product">
                 <div class="row">
                   <div class="col-lg-8 col-md-8 col-sm-8">
                     <div class="section-title">
@@ -746,7 +782,7 @@ const Home = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div class="col-lg-4 col-md-6 col-sm-8">
               <div class="product__sidebar">
@@ -756,16 +792,16 @@ const Home = () => {
                   </div>
                   <ul class="filter__controls">
                     <li class="active" data-filter="*">
-                      Day
+                      Ngày
                     </li>
-                    <li data-filter=".week">Week</li>
-                    <li data-filter=".month">Month</li>
-                    <li data-filter=".years">Years</li>
+                    <li data-filter=".week">Tuần</li>
+                    <li data-filter=".month">Tháng</li>
+                    <li data-filter=".years">Năm</li>
                   </ul>
                   <div class="filter__gallery">
                     <div
                       class="product__sidebar__view__item set-bg mix day years"
-                      data-setbg="img/sidebar/tv-1.jpg"
+                      style={{ backgroundImage: `url(${imgTvUrl[0]})` }}
                     >
                       <div class="ep">18 / ?</div>
                       <div class="view">
@@ -777,7 +813,7 @@ const Home = () => {
                     </div>
                     <div
                       class="product__sidebar__view__item set-bg mix month week"
-                      data-setbg="img/sidebar/tv-2.jpg"
+                      style={{ backgroundImage: `url(${imgTvUrl[1]})` }}
                     >
                       <div class="ep">18 / ?</div>
                       <div class="view">
@@ -789,7 +825,7 @@ const Home = () => {
                     </div>
                     <div
                       class="product__sidebar__view__item set-bg mix week years"
-                      data-setbg="img/sidebar/tv-3.jpg"
+                      style={{ backgroundImage: `url(${imgTvUrl[2]})` }}
                     >
                       <div class="ep">18 / ?</div>
                       <div class="view">
@@ -803,7 +839,7 @@ const Home = () => {
                     </div>
                     <div
                       class="product__sidebar__view__item set-bg mix years month"
-                      data-setbg="img/sidebar/tv-4.jpg"
+                      style={{ backgroundImage: `url(${imgTvUrl[3]})` }}
                     >
                       <div class="ep">18 / ?</div>
                       <div class="view">
@@ -817,7 +853,7 @@ const Home = () => {
                     </div>
                     <div
                       class="product__sidebar__view__item set-bg mix day"
-                      data-setbg="img/sidebar/tv-5.jpg"
+                      style={{ backgroundImage: `url(${imgTvUrl[4]})` }}
                     >
                       <div class="ep">18 / ?</div>
                       <div class="view">
@@ -829,7 +865,7 @@ const Home = () => {
                     </div>
                   </div>
                 </div>
-                <div class="product__sidebar__comment">
+                {/* <div class="product__sidebar__comment">
                   <div class="section-title">
                     <h5>New Comment</h5>
                   </div>
@@ -901,7 +937,7 @@ const Home = () => {
                       </span>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
