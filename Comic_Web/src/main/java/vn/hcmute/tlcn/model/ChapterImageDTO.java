@@ -1,22 +1,15 @@
-package vn.hcmute.tlcn.entity;
+package vn.hcmute.tlcn.model;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "images")
-public class ChapterImage {
-    @Id
+public class ChapterImageDTO {
     private int id;
-    @ManyToOne
-    @JoinColumn(name = "chapter_id")
-    private Chapter chapter;
+    private ChapterDTO chapter;
     private String link;
-    @Column(name = "ordinal_number")
+
     private int ordinalNumber;
 
-    public ChapterImage() {
+    public ChapterImageDTO() {
     }
-    public ChapterImage(Chapter chapters, String link, int ordinalNumber) {
+    public ChapterImageDTO(ChapterDTO chapters, String link, int ordinalNumber) {
         this.chapter = chapters;
         this.link = link;
         this.ordinalNumber = ordinalNumber;
@@ -26,11 +19,15 @@ public class ChapterImage {
         return id;
     }
 
-    public Chapter getChapter() {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public ChapterDTO getChapter() {
         return chapter;
     }
 
-    public void setChapter(Chapter chapter) {
+    public void setChapter(ChapterDTO chapter) {
         this.chapter = chapter;
     }
 

@@ -48,6 +48,7 @@ public class ComicBookDTO {
         this.status = status;
     }
 
+
     public String getId() {
         return id;
     }

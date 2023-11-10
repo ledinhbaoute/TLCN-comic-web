@@ -2,8 +2,9 @@ package vn.hcmute.tlcn.serviceimple;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import vn.hcmute.tlcn.converter.Converter;
-import vn.hcmute.tlcn.converter.GenerateId;
+import vn.hcmute.tlcn.utils.Converter;
+import vn.hcmute.tlcn.utils.GenerateId;
+import vn.hcmute.tlcn.utils.ValidatePassword;
 import vn.hcmute.tlcn.entity.ResponseObject;
 import vn.hcmute.tlcn.entity.User;
 import vn.hcmute.tlcn.model.UserDTO;
@@ -21,6 +22,8 @@ public class UserServiceImple implements IUserService {
     private Converter converter;
     @Autowired
     private GenerateId generateId;
+    @Autowired
+    ValidatePassword validatePassword;
 
     @Override
     public UserDTO getUser(String username, String password) {
@@ -44,6 +47,9 @@ public class UserServiceImple implements IUserService {
         int check = 0;
         if (checkUserExist(userName))
             check = 1;
+        else if(!validatePassword.checkPasswordValid(password).isStatus())
+            check=3;
+
         else if (!password.equals(confirmPass))
             check = 2;
         return check;
@@ -63,8 +69,9 @@ public class UserServiceImple implements IUserService {
         else if(check==1){
             return new ResponseObject(false,"User name already exist!","");
         }
-        else return new ResponseObject(false,"Password and confirm password doesn't match!","");
-
+        else if (check==2)
+            return new ResponseObject(false,"Password and confirm password doesn't match!","");
+        else return validatePassword.checkPasswordValid(pass);
     }
 
     @Override
@@ -74,6 +81,26 @@ public class UserServiceImple implements IUserService {
         if ((user.isPresent()))
             f = true;
         return f;
+
+    }
+
+    @Override
+    public int changePassword(String username, String password,String newPass, String confirmPass) {
+        int check=0;
+        Optional<User>optionalUser=userRepository.findOneByUserNameAndPassword(username,password);
+        if(!optionalUser.isPresent())
+             return check;
+        User user=optionalUser.get();
+        if(!validatePassword.checkPasswordValid(newPass).isStatus())
+            check=3;
+        else if(!newPass.equals(confirmPass))
+            check=1;
+        else {
+            check=2;
+            user.setPassword(confirmPass);
+            userRepository.saveAndFlush(user);
+        }
+        return check;
 
     }
 

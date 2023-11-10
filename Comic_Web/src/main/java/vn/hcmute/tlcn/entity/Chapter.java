@@ -2,6 +2,9 @@ package vn.hcmute.tlcn.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
+import java.util.List;
+
 @Entity
 @Table(name = "chapters")
 public class Chapter {
@@ -9,20 +12,21 @@ public class Chapter {
     private String id;
     @Column(name = "chapter_name")
     private String chapterName;
-
-   @ManyToOne
-   @JoinColumn(name="comicbook_id")
+    @ManyToOne()
+    @JoinColumn(name = "comicbook_id")
     private ComicBook comicBook;
 
+    @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL)
+    private List<ChapterImage> chapterImages;
     @Column(name = "publish_date")
-    private String publishDate;
+    private Date publishDate;
     @Column(name = "ordinal_number")
     private int ordinalNumber;
 
     public Chapter() {
     }
 
-    public Chapter(String id, String chapterName, ComicBook comicBook_Id, String publishDate, int ordinalNumber) {
+    public Chapter(String id, String chapterName, ComicBook comicBook_Id, Date publishDate, int ordinalNumber) {
         this.id = id;
         this.chapterName = chapterName;
         this.comicBook = comicBook_Id;
@@ -54,11 +58,11 @@ public class Chapter {
         this.comicBook = comicBook_Id;
     }
 
-    public String getPublishDate() {
+    public Date getPublishDate() {
         return publishDate;
     }
 
-    public void setPublishDate(String publishDate) {
+    public void setPublishDate(Date publishDate) {
         this.publishDate = publishDate;
     }
 

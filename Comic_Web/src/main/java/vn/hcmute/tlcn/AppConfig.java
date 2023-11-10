@@ -1,6 +1,7 @@
 package vn.hcmute.tlcn;
 
 import org.modelmapper.ModelMapper;
+import org.passay.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.MailException;
@@ -11,6 +12,8 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 
 import javax.mail.internet.MimeMessage;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 @Configuration
@@ -37,5 +40,17 @@ public class AppConfig {
         props.put("mail.smtp.ssl.protocols","TLSv1.2");
 
         return mailSender;
+    }
+    @Bean
+    public PasswordValidator passwordValidator() {
+        List<Rule> rules = Arrays.asList(
+                new LengthRule(8, 30), // Độ dài từ 8 đến 30 ký tự
+                new CharacterRule(EnglishCharacterData.UpperCase, 1), // Ít nhất 1 ký tự viết hoa
+                new CharacterRule(EnglishCharacterData.LowerCase, 1), // Ít nhất 1 ký tự viết thường
+                new CharacterRule(EnglishCharacterData.Digit, 1), // Ít nhất 1 chữ số
+                new CharacterRule(EnglishCharacterData.Special, 1) // Ít nhất 1 ký tự đặc biệt
+        );
+
+        return new PasswordValidator(rules);
     }
 }

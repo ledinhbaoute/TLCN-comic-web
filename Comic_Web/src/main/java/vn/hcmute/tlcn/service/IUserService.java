@@ -9,4 +9,5 @@ public interface IUserService {
     int checkRegisterCondition(String userName,String password,String confirmPass);
     ResponseObject register(String name, String email, String username, String pass, String conFirmPass);
     Boolean checkUserExist(String username);
+    int changePassword(String username,String password,String newPass,String confirmPass);
 }

@@ -2,7 +2,7 @@ package vn.hcmute.tlcn.serviceimple;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import vn.hcmute.tlcn.converter.Converter;
+import vn.hcmute.tlcn.utils.Converter;
 import vn.hcmute.tlcn.entity.Admin;
 import vn.hcmute.tlcn.model.AdminDTO;
 import vn.hcmute.tlcn.repository.AdminRepository;

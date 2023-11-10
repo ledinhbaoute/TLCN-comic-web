@@ -5,20 +5,21 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import vn.hcmute.tlcn.entity.ComicBook;
 
+import java.util.Date;
+
 public class ChapterDTO {
     private String id;
     private String chapterName;
-
      private ComicBookDTO comicBookDTO;
 
-     private String publishDate;
+     private Date publishDate;
 
     private int ordinalNumber;
 
     public ChapterDTO() {
     }
 
-    public ChapterDTO(String id, String chapterName, ComicBookDTO comicBook_Id, String publishDate, int ordinalNumber) {
+    public ChapterDTO(String id, String chapterName, ComicBookDTO comicBook_Id, Date publishDate, int ordinalNumber) {
         this.id = id;
         this.chapterName = chapterName;
         this.comicBookDTO = comicBook_Id;
@@ -50,11 +51,11 @@ public class ChapterDTO {
         this.comicBookDTO = comicBook_Id;
     }
 
-    public String getPublishDate() {
+    public Date getPublishDate() {
         return publishDate;
     }
 
-    public void setPublishDate(String publishDate) {
+    public void setPublishDate(Date publishDate) {
         this.publishDate = publishDate;
     }
 

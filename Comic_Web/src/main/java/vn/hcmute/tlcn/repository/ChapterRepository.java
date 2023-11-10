@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ChapterRepository extends JpaRepository<Chapter,String> {
-    List<Chapter>findByComicBook_Id(String comicId);
+    List<Chapter>findByComicBook_IdOrderByOrdinalNumberAsc(String comicId);
+
 
 }

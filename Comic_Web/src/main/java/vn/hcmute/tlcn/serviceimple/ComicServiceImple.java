@@ -2,13 +2,20 @@ package vn.hcmute.tlcn.serviceimple;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import vn.hcmute.tlcn.converter.Converter;
+import vn.hcmute.tlcn.entity.ResponseObject;
+import vn.hcmute.tlcn.utils.Converter;
+import vn.hcmute.tlcn.utils.GenerateId;
 import vn.hcmute.tlcn.entity.ComicBook;
+import vn.hcmute.tlcn.entity.Genre;
+import vn.hcmute.tlcn.entity.User;
 import vn.hcmute.tlcn.model.ComicBookDTO;
 import vn.hcmute.tlcn.repository.ComicBookRepository;
+import vn.hcmute.tlcn.repository.GenreRepository;
+import vn.hcmute.tlcn.repository.UserRepository;
 import vn.hcmute.tlcn.service.IComicBookService;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +25,14 @@ public class ComicServiceImple implements IComicBookService {
     private ComicBookRepository comicBookRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private Converter converter;
+    @Autowired
+    private GenerateId generateId;
+    @Autowired
+    private GenreRepository genreRepository;
     @Override
     public List<ComicBookDTO> getAllComic() {
         List<ComicBookDTO>comicBookDTOS=new ArrayList<>();
@@ -63,9 +77,63 @@ public class ComicServiceImple implements IComicBookService {
     }
 
     @Override
-    public ComicBookDTO addComic(ComicBookDTO comicBookDTO) {
-        ComicBook comicBook=converter.convertDtoToEntity(comicBookDTO);
-        ComicBook comicBook1=comicBookRepository.save(comicBook);
-        return converter.convertEntityToDto(comicBook1);
+    public ComicBookDTO addComic(String name, String username,String password,List<String>genres) {
+
+        Optional<User> optionalUser=userRepository.findOneByUserNameAndPassword(username,password);
+        if(!optionalUser.isPresent())
+            return null;
+        User user=optionalUser.get();
+        List<Genre>genreList=new ArrayList<>();
+        ComicBook comicBook=new ComicBook(generateId.generateId(),name,false,user,0,0,new Date(),new Date(),1);
+        for (String id:genres
+             ) {
+            Optional<Genre>genre=genreRepository.findById(id);
+            if(genre.isPresent())
+                genreList.add(genre.get());
+        }
+        comicBook.setGenres(genreList);
+        comicBookRepository.save(comicBook);
+        return converter.convertEntityToDto(comicBook);
     }
+
+    @Override
+    public ResponseObject updateComic(String username, String password, ComicBookDTO comicBookDTO) {
+        int check=checkUpdateCondition(username,password,comicBookDTO);
+        if(check==0)
+            return new ResponseObject(false,"User does not exist!","");
+        if(check==1)
+            return new ResponseObject(false,"Comic book not exist!","");
+        if(check==2)
+            return new ResponseObject(false,"This comic book is not owned by this user","");
+        ComicBook comicBook=converter.convertDtoToEntity(comicBookDTO);
+        return new ResponseObject(true,"Update Success!",comicBookRepository.save(comicBook));
+
+
+    }
+
+    @Override
+    public int deleteComic(String comicId) {
+        Optional<ComicBook>optionalComicBook=comicBookRepository.findById(comicId);
+        if (!optionalComicBook.isPresent())
+            return 0;
+        comicBookRepository.deleteById(comicId);
+        return 1;
+    }
+
+    @Override
+    public int checkUpdateCondition(String username, String password, ComicBookDTO comicBookDTO) {
+        Optional<User>optionalUser=userRepository.findOneByUserNameAndPassword(username,password);
+        if(!optionalUser.isPresent())
+            return 0;
+        Optional<ComicBook>optionalComicBook=comicBookRepository.findById(comicBookDTO.getId());
+        if(!optionalComicBook.isPresent())
+            return 1;
+        User user=optionalUser.get();
+        ComicBook comicBook=optionalComicBook.get();
+        if(!comicBook.getActorId().getId().equals(user.getId()))
+            return 2;
+        return 3;
+    }
+
+
 }

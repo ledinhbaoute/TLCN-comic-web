@@ -1,6 +1,9 @@
 package vn.hcmute.tlcn.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,11 +29,12 @@ public class ComicBook {
     private Date updateDate;
     private int status;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @ManyToMany()
     @JoinTable(name="comicbooks_genres",joinColumns = @JoinColumn(name = "comicbook_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
 
     private List<Genre> genres=new ArrayList<>();
+
 
     public List<Genre> getGenres() {
         return genres;

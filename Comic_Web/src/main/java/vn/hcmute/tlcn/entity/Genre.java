@@ -1,9 +1,8 @@
 package vn.hcmute.tlcn.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +15,7 @@ public class Genre {
     private String id;
     private String name;
     @ManyToMany(mappedBy = "genres")
+
     private List<ComicBook> comicBookList=new ArrayList<>();
 
 //    public List<ComicBook> getComicBookList() {
