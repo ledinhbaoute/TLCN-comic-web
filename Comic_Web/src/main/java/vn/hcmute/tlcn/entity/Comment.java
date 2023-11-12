@@ -1,46 +1,60 @@
 package vn.hcmute.tlcn.entity;
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
+
+
+import java.util.Date;
+
+@Entity
+@Table(name="comments")
 public class Comment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String user_id;
-    private String chapterId;
-    private LocalDateTime createAt;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    @ManyToOne
+    @JoinColumn(name = "chapter_id")
+    private Chapter chapter;
+    @Column(name = "created_at")
+    private Date createAt;
     private String content;
 
     public Comment() {
     }
 
-    public Comment(int id, String user_id, String chapterId, LocalDateTime createAt, String content) {
-        this.id = id;
-        this.user_id = user_id;
-        this.chapterId = chapterId;
+    public Comment(User user, Chapter chapter, Date createAt, String content) {
+        this.user = user;
+        this.chapter = chapter;
         this.createAt = createAt;
         this.content = content;
     }
 
-
-
-    public String getUser_id() {
-        return user_id;
+    public int getId() {
+        return id;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public User getUser() {
+        return user;
     }
 
-    public String getChapterId() {
-        return chapterId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public void setChapterId(String chapterId) {
-        this.chapterId = chapterId;
+    public Chapter getChapter() {
+        return chapter;
     }
 
-    public LocalDateTime getCreateAt() {
+    public void setChapter(Chapter chapter) {
+        this.chapter = chapter;
+    }
+
+    public Date getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(LocalDateTime createAt) {
+    public void setCreateAt(Date createAt) {
         this.createAt = createAt;
     }
 

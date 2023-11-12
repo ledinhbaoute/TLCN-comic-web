@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "images")
 public class ChapterImage {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @ManyToOne
     @JoinColumn(name = "chapter_id")

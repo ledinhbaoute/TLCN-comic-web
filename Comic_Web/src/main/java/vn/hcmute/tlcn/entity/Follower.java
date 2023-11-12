@@ -1,30 +1,43 @@
 package vn.hcmute.tlcn.entity;
 
+import jakarta.persistence.*;
+import vn.hcmute.tlcn.PrimaryKey.FollowKey;
+
+@Entity
+@Table(name = "follow")
+@IdClass(FollowKey.class)
 public class Follower {
-    private int followerId;
-    private int userID;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "follower_id")
+    private User follower;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+
+    private User user;
 
     public Follower() {
     }
 
-    public Follower(int followerId, int userID) {
-        this.followerId = followerId;
-        this.userID = userID;
+    public Follower(User follower, User user) {
+        this.follower = follower;
+        this.user = user;
     }
 
-    public int getFollowerId() {
-        return followerId;
+    public User getFollower() {
+        return follower;
     }
 
-    public void setFollowerId(int followerId) {
-        this.followerId = followerId;
+    public void setFollower(User follower) {
+        this.follower = follower;
     }
 
-    public int getUserID() {
-        return userID;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

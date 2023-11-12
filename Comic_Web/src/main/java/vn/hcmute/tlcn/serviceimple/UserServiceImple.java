@@ -1,7 +1,10 @@
 package vn.hcmute.tlcn.serviceimple;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import vn.hcmute.tlcn.utils.Converter;
 import vn.hcmute.tlcn.utils.GenerateId;
 import vn.hcmute.tlcn.utils.ValidatePassword;
@@ -24,6 +27,8 @@ public class UserServiceImple implements IUserService {
     private GenerateId generateId;
     @Autowired
     ValidatePassword validatePassword;
+    @Autowired
+    ImageStorageService imageStorageService;
 
     @Override
     public UserDTO getUser(String username, String password) {
@@ -102,6 +107,22 @@ public class UserServiceImple implements IUserService {
         }
         return check;
 
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> uploadAvatar(String username, String password, MultipartFile file) {
+        Optional<User>optionalUser=userRepository.findOneByUserNameAndPassword(username,password);
+        if(!optionalUser.isPresent())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseObject(false,"Username or password not valid!",""));
+        User user=optionalUser.get();
+        try {
+            String avatarfileName=imageStorageService.storeFile(file);
+            user.setAvatar(avatarfileName);
+            user=userRepository.save(user);
+            return ResponseEntity.ok(new ResponseObject(true,"Update Avatar Success!",user));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false,e.getMessage(),""));
+        }
     }
 
 

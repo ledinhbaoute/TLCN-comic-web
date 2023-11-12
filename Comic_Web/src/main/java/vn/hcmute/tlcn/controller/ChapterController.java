@@ -40,7 +40,6 @@ public class ChapterController {
         }
     }
 
-
     @PutMapping("")
     ResponseEntity<ResponseObject>updateChapter(@RequestParam("username")String username,@RequestParam("password") String password,
                                                 @RequestParam("chapterId")String chapterId,@RequestParam("newChapterName")String chapterName,

@@ -8,3 +8,4 @@ public class ComicWebApplication {
 		SpringApplication.run(ComicWebApplication.class, args);
 	}
 }
+

@@ -26,6 +26,12 @@ public class Converter {
     public UserDTO convertEntityToDto(User user){
         return modelMapper.map(user,UserDTO.class);
     }
+    public CommentDTO convertEntityToDto(Comment comment){return modelMapper.map(comment,CommentDTO.class);}
+    public RatingDTO convertEntityToDto(Rating rating){
+        UserDTO userDTO=this.convertEntityToDto(rating.getUser());
+        ComicBookDTO comicBookDTO=this.convertEntityToDto(rating.getComicBook());
+        return new RatingDTO(userDTO,comicBookDTO,rating.getScore(),rating.getComment());
+    }
     public ChapterImageDTO convertEntityToDto(ChapterImage chapterImage){
         return modelMapper.map(chapterImage,ChapterImageDTO.class);
     }

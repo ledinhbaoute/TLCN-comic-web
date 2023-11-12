@@ -1,35 +1,47 @@
 package vn.hcmute.tlcn.entity;
 
+import jakarta.persistence.*;
+import vn.hcmute.tlcn.PrimaryKey.RatingKey;
+
+@Entity
+@Table(name="ratings")
+@IdClass(RatingKey.class)
 public class Rating {
-    private String userId;
-    private String chapterId;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    @Id
+    @ManyToOne
+    @JoinColumn(name ="comic_id" )
+    private ComicBook comicBook;
     private int score;
     private String comment;
 
     public Rating() {
     }
 
-    public Rating(String userId, String chapterId, int score, String comment) {
-        this.userId = userId;
-        this.chapterId = chapterId;
+    public Rating(User user, ComicBook comicBook, int score, String comment) {
+        this.user = user;
+        this.comicBook = comicBook;
         this.score = score;
         this.comment = comment;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getChapterId() {
-        return chapterId;
+    public ComicBook getComicBook() {
+        return comicBook;
     }
 
-    public void setChapterId(String chapterId) {
-        this.chapterId = chapterId;
+    public void setComicBook(ComicBook comicBook) {
+        this.comicBook = comicBook;
     }
 
     public int getScore() {

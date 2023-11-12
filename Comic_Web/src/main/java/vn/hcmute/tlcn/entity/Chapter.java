@@ -18,6 +18,9 @@ public class Chapter {
 
     @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL)
     private List<ChapterImage> chapterImages;
+
+    @OneToMany(mappedBy = "chapter",cascade = CascadeType.ALL)
+    private List<Comment>comments;
     @Column(name = "publish_date")
     private Date publishDate;
     @Column(name = "ordinal_number")
