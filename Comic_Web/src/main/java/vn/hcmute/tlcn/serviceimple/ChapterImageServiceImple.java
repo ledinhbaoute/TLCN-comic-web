@@ -79,19 +79,21 @@ public class ChapterImageServiceImple implements IChapterImageService {
 //    }
 
     @Override
-    public void deleteChapterImg(String fileName) {
+    public int deleteChapterImg(String username,String fileName) {
+        User user=userRepository.findOneByUserName(username).get();
         Optional<ChapterImage>optionalChapterImage=chapterImageRepository.findOneByLink(fileName);
         if(!optionalChapterImage.isPresent())
-            return ;
+            return 0;
+        ChapterImage chapterImage=optionalChapterImage.get();
+        if(!user.getId().equals(chapterImage.getChapter().getComicBook_Id().getActorId().getId()))
+            return 1;
         chapterImageRepository.delete(optionalChapterImage.get());
-
+        return 2;
     }
 
     @Override
-    public ResponseEntity<ResponseObject> addImageChapter(String username, String password, String chapterId, MultipartFile file) {
-        Optional<User>optionalUser=userRepository.findOneByUserNameAndPassword(username,password);
-        if(!optionalUser.isPresent())
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false,"User not exist!",""));
+    public ResponseEntity<ResponseObject> addImageChapter(String username, String chapterId, MultipartFile file) {
+        Optional<User>optionalUser=userRepository.findOneByUserName(username);
         Optional<Chapter> optionalChapter=chapterRepository.findById(chapterId);
         if (!optionalChapter.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false,"Chapter not exist!",""));

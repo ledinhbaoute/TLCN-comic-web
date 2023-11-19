@@ -31,10 +31,9 @@ public class CommentServiceImple implements ICommentService {
     @Autowired
     private CommentRepository commentRepository;
     @Override
-    public ResponseEntity<ResponseObject> addComment(String username, String password, String chapterId, String content) {
-        Optional<User>optionalUser=userRepository.findOneByUserNameAndPassword(username,password);
-        if(!optionalUser.isPresent())
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseObject(false,"User not exist!",""));
+    public ResponseEntity<ResponseObject> addComment(String username, String chapterId, String content) {
+        Optional<User>optionalUser=userRepository.findOneByUserName(username);
+
         Optional<Chapter>optionalChapter=chapterRepository.findById(chapterId);
         if(!optionalChapter.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false,"Chapter not exist!",""));

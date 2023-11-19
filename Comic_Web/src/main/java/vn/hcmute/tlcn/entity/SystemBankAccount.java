@@ -1,9 +1,9 @@
 package vn.hcmute.tlcn.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Table;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.Table;
 import vn.hcmute.tlcn.PrimaryKey.SystemBankAccountKey;
 
 @Entity

@@ -21,10 +21,9 @@ public class FollowServiceImple implements IFollowService {
     @Autowired
     FollowRepository followRepository;
     @Override
-    public ResponseEntity<ResponseObject> addFollow(String followerUserName, String followerPassword, String userName) {
-        Optional<User>optionalFollower=userRepository.findOneByUserNameAndPassword(followerUserName,followerPassword);
-        if(!optionalFollower.isPresent())
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false,"Follower Account not exist!",""));
+    public ResponseEntity<ResponseObject> addFollow(String followerUserName, String userName) {
+        Optional<User>optionalFollower=userRepository.findOneByUserName(followerUserName);
+
         Optional<User>userOptional=userRepository.findOneByUserName(userName);
         if(!userOptional.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false,"User Account not exist!",""));
@@ -39,10 +38,9 @@ public class FollowServiceImple implements IFollowService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> unFollow(String followerUserName, String followerPassword, String userName) {
-        Optional<User>optionalFollower=userRepository.findOneByUserNameAndPassword(followerUserName,followerPassword);
-        if(!optionalFollower.isPresent())
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false,"Follower Account not exist!",""));
+    public ResponseEntity<ResponseObject> unFollow(String followerUserName,  String userName) {
+        Optional<User>optionalFollower=userRepository.findOneByUserName(followerUserName);
+
         Optional<User>userOptional=userRepository.findOneByUserName(userName);
         if(!userOptional.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false,"User Account not exist!",""));

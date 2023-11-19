@@ -6,11 +6,11 @@ import vn.hcmute.tlcn.entity.ResponseObject;
 import vn.hcmute.tlcn.model.UserDTO;
 
 public interface IUserService {
-    UserDTO getUser(String username,String password);
+    UserDTO getUser(String username);
     Boolean checkUser(UserDTO userDTO);
     int checkRegisterCondition(String userName,String password,String confirmPass);
     ResponseObject register(String name, String email, String username, String pass, String conFirmPass);
     Boolean checkUserExist(String username);
     int changePassword(String username,String password,String newPass,String confirmPass);
-    ResponseEntity<ResponseObject> uploadAvatar(String username, String password, MultipartFile file);
+    ResponseEntity<ResponseObject> uploadAvatar(String username, MultipartFile file);
 }

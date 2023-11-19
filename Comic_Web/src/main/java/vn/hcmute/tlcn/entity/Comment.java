@@ -1,5 +1,5 @@
 package vn.hcmute.tlcn.entity;
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 
 import java.util.Date;

@@ -32,6 +32,11 @@ public class Converter {
         ComicBookDTO comicBookDTO=this.convertEntityToDto(rating.getComicBook());
         return new RatingDTO(userDTO,comicBookDTO,rating.getScore(),rating.getComment());
     }
+    public FavoriteComicDTO convertEntityToDto(FavoriteComic favoriteComic){
+        UserDTO userDTO=this.convertEntityToDto(favoriteComic.getUser());
+        ComicBookDTO comicBookDTO=this.convertEntityToDto(favoriteComic.getComicBook());
+        return new FavoriteComicDTO(userDTO,comicBookDTO);
+    }
     public ChapterImageDTO convertEntityToDto(ChapterImage chapterImage){
         return modelMapper.map(chapterImage,ChapterImageDTO.class);
     }

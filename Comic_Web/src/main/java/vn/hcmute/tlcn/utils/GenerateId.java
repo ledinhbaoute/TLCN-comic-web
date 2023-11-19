@@ -12,7 +12,5 @@ public class GenerateId {
         UUID uuid = UUID.randomUUID();
         String id = uuid.toString().substring(0,15);
         return id;
-
-
     }
 }

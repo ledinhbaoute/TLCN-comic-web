@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IChapterImageService {
     List<ChapterImageDTO>getImagesByChapter(String chapterId);
-    ResponseEntity<ResponseObject> addImageChapter(String username, String password, String chapterId, MultipartFile file);
+    ResponseEntity<ResponseObject> addImageChapter(String username, String chapterId, MultipartFile file);
 //    public byte[] readFileContent(String fileName);
-    void deleteChapterImg(String fileName);
+    int deleteChapterImg(String username,String fileName);
 }

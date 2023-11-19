@@ -1,6 +1,6 @@
 package vn.hcmute.tlcn.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import vn.hcmute.tlcn.PrimaryKey.FollowKey;
 
 @Entity

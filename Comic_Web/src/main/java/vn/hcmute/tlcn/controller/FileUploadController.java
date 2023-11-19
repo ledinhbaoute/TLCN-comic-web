@@ -3,22 +3,17 @@ package vn.hcmute.tlcn.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
-import vn.hcmute.tlcn.entity.ResponseObject;
 import vn.hcmute.tlcn.service.IChapterImageService;
-import vn.hcmute.tlcn.service.IStorageService;
 import vn.hcmute.tlcn.service.IUserService;
 import vn.hcmute.tlcn.serviceimple.ImageStorageService;
-import vn.hcmute.tlcn.serviceimple.UserServiceImple;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping(path = "api/v1/file-upload")
+@RequestMapping(path = "api/v1")
 public class FileUploadController {
     @Autowired
     private IChapterImageService chapterImageService;
@@ -27,19 +22,27 @@ public class FileUploadController {
     @Autowired
     IUserService userService;
 
-    @PostMapping("/chapters")
-    public ResponseEntity<ResponseObject>uploadImageForChapter(@RequestParam("username") String username,
-                                                    @RequestParam("password") String password,
-                                                    @RequestParam("chapterId")String chapterId,
-                                                    @RequestParam("file")MultipartFile file){
-       return chapterImageService.addImageChapter(username,password,chapterId,file);
+    @PostMapping("/user/chapterimg-upload")
+    public ResponseEntity<?> uploadImageForChapter(Authentication authentication,
+                                                                @RequestParam("chapterId") String chapterId,
+                                                                @RequestParam("file") MultipartFile file) {
+        if (authentication != null) {
+            UserDetails userDetails= (UserDetails) authentication.getPrincipal();
+            return chapterImageService.addImageChapter(userDetails.getUsername(), chapterId, file);
+        }
+        return ResponseEntity.status(401).body("Unauthoried!");
     }
-    @PostMapping("/users")
-    public ResponseEntity<ResponseObject>uploadAvatar(@RequestParam("username") String username,
-                                                               @RequestParam("password") String password,
-                                                               @RequestParam("file")MultipartFile file){
-        return userService.uploadAvatar(username,password,file);
+
+    @PostMapping("/user/avt-upload")
+    public ResponseEntity<?> uploadAvatar(Authentication authentication,
+                                                       @RequestParam("file") MultipartFile file) {
+        if (authentication != null) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return userService.uploadAvatar(userDetails.getUsername(), file);
+        }
+        return ResponseEntity.status(401).body("Unauthoried!");
     }
+
     @GetMapping("/files/{fileName:.+}")
     public ResponseEntity<byte[]> readDetailFile(@PathVariable String fileName) {
         try {

@@ -11,8 +11,8 @@ public interface IComicBookService {
     ComicBookDTO getDetailComic(String comicId);
     List<ComicBookDTO> getComicByActor(String actorId);
 
-    ComicBookDTO addComic(String name,String username,String password,List<String> genres);
-    ResponseObject updateComic(String username, String password, ComicBookDTO comicBookDTO);
-    int deleteComic(String comicId);
-    int checkUpdateCondition(String username,String password,ComicBookDTO comicBookDTO);
+    ComicBookDTO addComic(String name,String username,List<String> genres);
+    ResponseObject updateComic(String username,String comicId,String newName,int newStatus);
+    int deleteComic(String username,String comicId);
+
 }

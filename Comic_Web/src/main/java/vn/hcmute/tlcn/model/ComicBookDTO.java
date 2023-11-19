@@ -1,7 +1,5 @@
 package vn.hcmute.tlcn.model;
 
-import jakarta.persistence.*;
-import vn.hcmute.tlcn.entity.Genre;
 import vn.hcmute.tlcn.entity.User;
 
 import java.util.ArrayList;
@@ -13,7 +11,7 @@ public class ComicBookDTO {
     private String name;
     private Boolean isPremium;
 
-    private User actor;
+    private UserDTO actor;
     private int view;
     private float rate;
 
@@ -36,7 +34,7 @@ public class ComicBookDTO {
     public ComicBookDTO() {
     }
 
-    public ComicBookDTO(String id, String name, Boolean isPremium, User actorId, int view, float rate, Date publishDate, Date updateDate, int status) {
+    public ComicBookDTO(String id, String name, Boolean isPremium, UserDTO actorId, int view, float rate, Date publishDate, Date updateDate, int status) {
         this.id = id;
         this.name = name;
         this.isPremium = isPremium;
@@ -73,11 +71,11 @@ public class ComicBookDTO {
         isPremium = premium;
     }
 
-    public User getActorId() {
+    public UserDTO getActorId() {
         return actor;
     }
 
-    public void setActorId(User actorId) {
+    public void setActorId(UserDTO actorId) {
         this.actor = actorId;
     }
 

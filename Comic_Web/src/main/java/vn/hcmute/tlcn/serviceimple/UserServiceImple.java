@@ -3,6 +3,7 @@ package vn.hcmute.tlcn.serviceimple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import vn.hcmute.tlcn.utils.Converter;
@@ -29,16 +30,27 @@ public class UserServiceImple implements IUserService {
     ValidatePassword validatePassword;
     @Autowired
     ImageStorageService imageStorageService;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDTO getUser(String username, String password) {
-        UserDTO userDTO = new UserDTO();
-        Optional<User> user = userRepository.findOneByUserNameAndPassword(username, password);
+    public UserDTO getUser(String username) {
+        UserDTO userDTO = null;
+        Optional<User> user = userRepository.findOneByUserName(username);
         if (user.isPresent())
             userDTO = converter.convertEntityToDto(user.get());
         return userDTO;
     }
+    public ResponseEntity<ResponseObject> login(String username,String password){
+        UserDTO userDTO=getUser(username);
+        if(userDTO==null)
+            return ResponseEntity.badRequest().body(new ResponseObject(false,"User not exist!",""));
+        if(passwordEncoder.matches(password,userDTO.getPassword())){
+            return ResponseEntity.ok(new ResponseObject(true,"Login Success!",userDTO));
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseObject(false,"Password invalid!",""));
 
+    }
     @Override
     public Boolean checkUser(UserDTO userDTO) {
         boolean f = false;
@@ -59,15 +71,15 @@ public class UserServiceImple implements IUserService {
             check = 2;
         return check;
     }
-
     @Override
     public ResponseObject register(String name, String email, String username, String pass, String conFirmPass) {
         User user;
         UserDTO userDTO=new UserDTO();
         int check=checkRegisterCondition(username, pass, conFirmPass);
         if (check == 0) {
+            String passwordEncode=passwordEncoder.encode(pass);
             user = new User(generateId.generateId(), name, null, false, email, "+84xxx",
-                    username, pass, 0, null, null, 1);
+                    username, passwordEncode, 0, null, null, 1);
             userDTO=converter.convertEntityToDto( userRepository.saveAndFlush(user));
             return new ResponseObject(true,"Register Success!",userDTO);
         }
@@ -78,7 +90,6 @@ public class UserServiceImple implements IUserService {
             return new ResponseObject(false,"Password and confirm password doesn't match!","");
         else return validatePassword.checkPasswordValid(pass);
     }
-
     @Override
     public Boolean checkUserExist(String username) {
         boolean f = false;
@@ -92,28 +103,24 @@ public class UserServiceImple implements IUserService {
     @Override
     public int changePassword(String username, String password,String newPass, String confirmPass) {
         int check=0;
-        Optional<User>optionalUser=userRepository.findOneByUserNameAndPassword(username,password);
-        if(!optionalUser.isPresent())
-             return check;
+        Optional<User>optionalUser=userRepository.findOneByUserName(username);
         User user=optionalUser.get();
+        if(!passwordEncoder.matches(password,user.getPassword()))
+            return check;
         if(!validatePassword.checkPasswordValid(newPass).isStatus())
             check=3;
         else if(!newPass.equals(confirmPass))
             check=1;
         else {
             check=2;
-            user.setPassword(confirmPass);
+            user.setPassword(passwordEncoder.encode(confirmPass));
             userRepository.saveAndFlush(user);
         }
         return check;
-
     }
-
     @Override
-    public ResponseEntity<ResponseObject> uploadAvatar(String username, String password, MultipartFile file) {
-        Optional<User>optionalUser=userRepository.findOneByUserNameAndPassword(username,password);
-        if(!optionalUser.isPresent())
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseObject(false,"Username or password not valid!",""));
+    public ResponseEntity<ResponseObject> uploadAvatar(String username, MultipartFile file) {
+        Optional<User>optionalUser=userRepository.findOneByUserName(username);
         User user=optionalUser.get();
         try {
             String avatarfileName=imageStorageService.storeFile(file);

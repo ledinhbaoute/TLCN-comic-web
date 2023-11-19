@@ -1,6 +1,6 @@
 package vn.hcmute.tlcn.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "images")

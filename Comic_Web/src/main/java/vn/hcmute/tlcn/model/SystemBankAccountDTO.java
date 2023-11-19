@@ -1,7 +1,5 @@
 package vn.hcmute.tlcn.model;
 
-import jakarta.persistence.Id;
-
 public class SystemBankAccountDTO {
 
     private String bank_Account;

@@ -1,14 +1,18 @@
 package vn.hcmute.tlcn.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class UserDTO {
     private String id;
     private String name;
     private String avatar;
     private boolean isPremium;
     private String email;
+    @JsonIgnore
     private String phoneNumber;
 
     private String userName;
+    @JsonIgnore
     private String password;
     private int balance;
 
@@ -16,7 +20,6 @@ public class UserDTO {
 
     private String bankName;
     private int status;
-
     public UserDTO() {
     }
 

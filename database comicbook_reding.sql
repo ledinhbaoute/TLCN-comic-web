@@ -22,7 +22,7 @@ create table `users`(
     `email` varchar(128) not null,
     `phone_number` varchar(20) not null,
     `user_name` varchar(128) not null,
-    `password` varchar(20) not null,
+    `password` text not null,
     `balance` int unsigned default 0,
     `bank_account` varchar(20) default null,
 	`bank_name` varchar(20) default null,
@@ -69,14 +69,13 @@ ALTER TABLE `comicbooks_genres` DISABLE KEYS ;
 ALTER TABLE `comicbooks_genres` ENABLE KEYS ;
 UNLOCK TABLES;
 
-
 create table `admin`(
 	`id` int unsigned auto_increment not null,
     `name` nvarchar(128) not null,
     `email` varchar(128) not null,
     `phone_number` varchar(20) not null,
     `user_name` varchar(128) not null,
-    `password` varchar(20) not null,
+    `password` text not null,
     primary key (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

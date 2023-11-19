@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IChapterService {
     List<ChapterDTO> getChapterByComic(String comicId);
-    ResponseEntity<ResponseObject> addChapter(String username, String password, String chapterName, String comicId);
-    int deleteChapter(String chapterId,String username,String password);
-    ResponseEntity<ResponseObject> updateChapter(String username,String password,String chapterId,String newChapterName,int newOrdinalNumber);
+    ResponseEntity<ResponseObject> addChapter(String username, String chapterName, String comicId);
+    int deleteChapter(String chapterId,String username);
+    ResponseEntity<ResponseObject> updateChapter(String username,String chapterId,String newChapterName,int newOrdinalNumber);
 }

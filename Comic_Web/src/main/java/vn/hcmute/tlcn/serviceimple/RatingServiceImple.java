@@ -31,10 +31,8 @@ public class RatingServiceImple implements IRatingService {
     RatingRepository ratingRepository;
 
     @Override
-    public ResponseEntity<ResponseObject> addRating(String username, String password, String ComicId, int score, String comment) {
-        Optional<User> optionalUser = userRepository.findOneByUserNameAndPassword(username, password);
-        if (!optionalUser.isPresent())
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, "User not exist!", ""));
+    public ResponseEntity<ResponseObject> addRating(String username, String ComicId, int score, String comment) {
+        Optional<User> optionalUser = userRepository.findOneByUserName(username);
         Optional<ComicBook> optionalcomicBook = comicBookRepository.findById(ComicId);
         if (!optionalcomicBook.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, "Comic not exist!", ""));

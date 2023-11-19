@@ -1,10 +1,5 @@
 package vn.hcmute.tlcn.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import vn.hcmute.tlcn.entity.ComicBook;
-
 import java.util.Date;
 
 public class ChapterDTO {

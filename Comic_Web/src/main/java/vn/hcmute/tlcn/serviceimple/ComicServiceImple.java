@@ -77,9 +77,9 @@ public class ComicServiceImple implements IComicBookService {
     }
 
     @Override
-    public ComicBookDTO addComic(String name, String username,String password,List<String>genres) {
+    public ComicBookDTO addComic(String name, String username,List<String>genres) {
 
-        Optional<User> optionalUser=userRepository.findOneByUserNameAndPassword(username,password);
+        Optional<User> optionalUser=userRepository.findOneByUserName(username);
         if(!optionalUser.isPresent())
             return null;
         User user=optionalUser.get();
@@ -97,43 +97,39 @@ public class ComicServiceImple implements IComicBookService {
     }
 
     @Override
-    public ResponseObject updateComic(String username, String password, ComicBookDTO comicBookDTO) {
-        int check=checkUpdateCondition(username,password,comicBookDTO);
-        if(check==0)
-            return new ResponseObject(false,"User does not exist!","");
-        if(check==1)
-            return new ResponseObject(false,"Comic book not exist!","");
-        if(check==2)
-            return new ResponseObject(false,"This comic book is not owned by this user","");
-        ComicBook comicBook=converter.convertDtoToEntity(comicBookDTO);
-        return new ResponseObject(true,"Update Success!",comicBookRepository.save(comicBook));
-
-
-    }
-
-    @Override
-    public int deleteComic(String comicId) {
+    public ResponseObject updateComic(String username,String comicId,String newName,int newStatus) {
+        Optional<User>optionalUser=userRepository.findOneByUserName(username);
         Optional<ComicBook>optionalComicBook=comicBookRepository.findById(comicId);
-        if (!optionalComicBook.isPresent())
-            return 0;
-        comicBookRepository.deleteById(comicId);
-        return 1;
-    }
-
-    @Override
-    public int checkUpdateCondition(String username, String password, ComicBookDTO comicBookDTO) {
-        Optional<User>optionalUser=userRepository.findOneByUserNameAndPassword(username,password);
-        if(!optionalUser.isPresent())
-            return 0;
-        Optional<ComicBook>optionalComicBook=comicBookRepository.findById(comicBookDTO.getId());
         if(!optionalComicBook.isPresent())
-            return 1;
+             return new ResponseObject(false,"Comic book not exist!","");
         User user=optionalUser.get();
         ComicBook comicBook=optionalComicBook.get();
         if(!comicBook.getActorId().getId().equals(user.getId()))
-            return 2;
-        return 3;
+            return new ResponseObject(false,"This comic book is not owned by this user","");
+        comicBook.setName(newName);
+        comicBook.setStatus(newStatus);
+        return new ResponseObject(true,"Update Success!",converter.convertEntityToDto(comicBookRepository.save(comicBook)));
+
+
+
+
+
     }
+
+    @Override
+    public int deleteComic(String username,String comicId) {
+        User user=userRepository.findOneByUserName(username).get();
+        Optional<ComicBook>optionalComicBook=comicBookRepository.findById(comicId);
+        if (!optionalComicBook.isPresent())
+            return 0;
+        ComicBook comicBook=optionalComicBook.get();
+        if(!user.getId().equals(comicBook.getActorId().getId()))
+            return 1;
+        comicBookRepository.deleteById(comicId);
+        return 2;
+    }
+
+
 
 
 }

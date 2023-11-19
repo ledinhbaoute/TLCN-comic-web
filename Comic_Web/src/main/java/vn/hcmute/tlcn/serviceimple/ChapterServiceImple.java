@@ -46,10 +46,8 @@ public class ChapterServiceImple implements IChapterService {
         return chapterDTOS;
     }
 
-    public int checkCondition(String username, String password, String comicId) {
-        Optional<User> optionalUser = userRepository.findOneByUserNameAndPassword(username, password);
-        if (!optionalUser.isPresent())
-            return 0;
+    public int checkCondition(String username, String comicId) {
+        Optional<User> optionalUser = userRepository.findOneByUserName(username);
         Optional<ComicBook> optionalComicBook = comicBookRepository.findById(comicId);
         if (!optionalComicBook.isPresent())
             return 1;
@@ -62,10 +60,8 @@ public class ChapterServiceImple implements IChapterService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> addChapter(String username, String password, String chapterName, String comicId) {
-        int check = checkCondition(username, password, comicId);
-        if (check == 0)
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, "User not exist!", ""));
+    public ResponseEntity<ResponseObject> addChapter(String username, String chapterName, String comicId) {
+        int check = checkCondition(username, comicId);
         if (check == 1)
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, "Comic not exist!", ""));
         if (check == 2)
@@ -74,33 +70,30 @@ public class ChapterServiceImple implements IChapterService {
         ComicBook comicBook = optionalComicBook.get();
         int ordinalNumber = chapterRepository.findByComicBook_IdOrderByOrdinalNumberAsc(comicId).size() + 1;
         Chapter chapter = new Chapter(generateId.generateId(), chapterName, comicBook, new Date(), ordinalNumber);
-
-        return ResponseEntity.ok().body(new ResponseObject(true, "Add Chapter Success!", chapterRepository.save(chapter)));
+        return ResponseEntity.ok().body(new ResponseObject(true, "Add Chapter Success!",converter.convertEntityToDto( chapterRepository.save(chapter))));
     }
 
     @Override
-    public int deleteChapter(String chapterId, String username, String password) {
-        Optional<User> optionalUser = userRepository.findOneByUserNameAndPassword(username, password);
-        if (!optionalUser.isPresent())
-            return 0;
+    public int deleteChapter(String chapterId, String username) {
+        Optional<User> optionalUser = userRepository.findOneByUserName(username);
         Optional<Chapter> optionalChapter = chapterRepository.findById(chapterId);
         if (!optionalChapter.isPresent())
-            return 1;
+            return 0;
         User user = optionalUser.get();
         Chapter chapter = optionalChapter.get();
         if (!chapter.getComicBook_Id().getActorId().getId().equals(user.getId()))
-            return 2;
+            return 1;
         chapterRepository.deleteById(chapterId);
-        return 3;
+        return 2;
     }
 
     @Override
-    public ResponseEntity<ResponseObject> updateChapter(String username, String password, String chapterId, String newChapterName, int newOrdinalNumber) {
+    public ResponseEntity<ResponseObject> updateChapter(String username,  String chapterId, String newChapterName, int newOrdinalNumber) {
         Optional<Chapter> optionalChapter = chapterRepository.findById(chapterId);
         if (!optionalChapter.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, "Chapter not exist!", ""));
         Chapter chapter = optionalChapter.get();
-        int check = checkCondition(username, password, chapter.getComicBook_Id().getId());
+        int check = checkCondition(username, chapter.getComicBook_Id().getId());
         if (check == 0)
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, "User not exist!", ""));
         if (check == 2)
