@@ -113,7 +113,13 @@ public class ImageStorageService implements IStorageService {
 
 
     @Override
-    public void deleteAllFiles() {
+    public void deleteFile(String fileName) {
+        Path filePath=this.storageFolder.resolve(fileName);
+        try{
+            Files.delete(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot delete file",e);
+        }
 
     }
 }

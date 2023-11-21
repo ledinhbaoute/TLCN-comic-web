@@ -9,17 +9,17 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import vn.hcmute.tlcn.entity.ResponseObject;
+import org.springframework.web.bind.annotation.*;
+import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
+import vn.hcmute.tlcn.entity.User;
 import vn.hcmute.tlcn.jwt.JwtService;
 import vn.hcmute.tlcn.model.Token;
 import vn.hcmute.tlcn.repository.UserRepository;
 import vn.hcmute.tlcn.securiry.CustomUserDetailsService;
 import vn.hcmute.tlcn.serviceimple.UserServiceImple;
 import vn.hcmute.tlcn.utils.ValidatePassword;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/v1/")
@@ -37,10 +37,10 @@ public class UserController {
     @Autowired
     private ValidatePassword validatePassword;
 
-//    @GetMapping("/users")
-//    List<User> getAllUser(){
-//        return userRepository.findAll();
-//    }
+    @GetMapping("/users")
+    List<User> getAllUser(){
+        return userRepository.findAll();
+    }
 
 
 
@@ -96,4 +96,5 @@ public class UserController {
         }
 
     }
+
 }

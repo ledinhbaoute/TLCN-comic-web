@@ -3,6 +3,7 @@ import javax.persistence.*;
 
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="comments")
@@ -19,6 +20,8 @@ public class Comment {
     @Column(name = "created_at")
     private Date createAt;
     private String content;
+    @OneToMany(mappedBy = "comment",cascade = CascadeType.ALL)
+    private List<CommentReport>commentReports;
 
     public Comment() {
     }

@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import vn.hcmute.tlcn.entity.ComicBook;
 import vn.hcmute.tlcn.entity.Rating;
-import vn.hcmute.tlcn.entity.ResponseObject;
+import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
 import vn.hcmute.tlcn.entity.User;
 import vn.hcmute.tlcn.model.RatingDTO;
 import vn.hcmute.tlcn.repository.ComicBookRepository;

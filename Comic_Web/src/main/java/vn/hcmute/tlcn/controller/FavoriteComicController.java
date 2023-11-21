@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import vn.hcmute.tlcn.entity.ResponseObject;
+import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
 import vn.hcmute.tlcn.model.FavoriteComicDTO;
 import vn.hcmute.tlcn.service.IFavoriteComicService;
 

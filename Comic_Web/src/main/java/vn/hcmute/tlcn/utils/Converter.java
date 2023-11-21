@@ -40,11 +40,15 @@ public class Converter {
     public ChapterImageDTO convertEntityToDto(ChapterImage chapterImage){
         return modelMapper.map(chapterImage,ChapterImageDTO.class);
     }
+    public ComicReportDTO convertEntityToDto(ComicReport comicReport){
+        return modelMapper.map(comicReport,ComicReportDTO.class);
+    }
     public Genre convertDtoToEntity(GenreDTO genreDTO){
         return modelMapper.map(genreDTO,Genre.class);
     }
     public ComicBook convertDtoToEntity(ComicBookDTO comicBookDTO){
         return modelMapper.map(comicBookDTO,ComicBook.class);
     }
+
 
 }

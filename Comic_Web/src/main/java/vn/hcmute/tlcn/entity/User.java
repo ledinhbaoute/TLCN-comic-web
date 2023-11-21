@@ -1,5 +1,7 @@
 package vn.hcmute.tlcn.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -19,6 +21,7 @@ public class User {
 
     @Column(name="user_name")
     private String userName;
+    @JsonIgnore
     private String password;
     private int balance;
     @Column(name = "bank_account")

@@ -1,8 +1,7 @@
 package vn.hcmute.tlcn.service;
 
 import org.springframework.http.ResponseEntity;
-import vn.hcmute.tlcn.entity.Rating;
-import vn.hcmute.tlcn.entity.ResponseObject;
+import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
 import vn.hcmute.tlcn.model.RatingDTO;
 
 import java.util.List;

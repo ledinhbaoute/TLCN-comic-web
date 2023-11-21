@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import vn.hcmute.tlcn.entity.ResponseObject;
+import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
 import vn.hcmute.tlcn.model.OTP;
 import vn.hcmute.tlcn.serviceimple.EmailService;
 

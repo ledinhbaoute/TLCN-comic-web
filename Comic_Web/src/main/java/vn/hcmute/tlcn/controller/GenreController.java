@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import vn.hcmute.tlcn.utils.Converter;
-import vn.hcmute.tlcn.entity.ResponseObject;
+import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
 import vn.hcmute.tlcn.model.GenreDTO;
 import vn.hcmute.tlcn.repository.GenreRepository;
 import vn.hcmute.tlcn.service.IGenreService;

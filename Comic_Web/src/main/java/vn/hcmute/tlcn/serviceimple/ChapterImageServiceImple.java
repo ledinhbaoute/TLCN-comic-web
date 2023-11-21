@@ -1,16 +1,13 @@
 package vn.hcmute.tlcn.serviceimple;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 import vn.hcmute.tlcn.entity.Chapter;
 import vn.hcmute.tlcn.entity.ChapterImage;
-import vn.hcmute.tlcn.entity.ResponseObject;
+import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
 import vn.hcmute.tlcn.entity.User;
 import vn.hcmute.tlcn.model.ChapterImageDTO;
 import vn.hcmute.tlcn.repository.ChapterImageRepository;
@@ -19,9 +16,6 @@ import vn.hcmute.tlcn.repository.UserRepository;
 import vn.hcmute.tlcn.service.IChapterImageService;
 import vn.hcmute.tlcn.utils.Converter;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -88,6 +82,7 @@ public class ChapterImageServiceImple implements IChapterImageService {
         if(!user.getId().equals(chapterImage.getChapter().getComicBook_Id().getActorId().getId()))
             return 1;
         chapterImageRepository.delete(optionalChapterImage.get());
+        imageStorageService.deleteFile(fileName);
         return 2;
     }
 

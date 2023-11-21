@@ -35,7 +35,10 @@ public class ComicBook {
 
     private List<Genre> genres=new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "comicBook",cascade = CascadeType.ALL)
+    private List<Chapter>chapters;
+    @OneToMany(mappedBy = "comicBook",cascade = CascadeType.ALL)
+    private List<ComicReport>comicReports;
     public List<Genre> getGenres() {
         return genres;
     }

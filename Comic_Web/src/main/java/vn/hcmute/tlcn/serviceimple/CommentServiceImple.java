@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import vn.hcmute.tlcn.entity.Chapter;
 import vn.hcmute.tlcn.entity.Comment;
-import vn.hcmute.tlcn.entity.ResponseObject;
+import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
 import vn.hcmute.tlcn.entity.User;
 import vn.hcmute.tlcn.model.CommentDTO;
 import vn.hcmute.tlcn.repository.ChapterRepository;

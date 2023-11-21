@@ -9,6 +9,6 @@ public interface IStorageService {
     public String storeFile(MultipartFile multipartFile);
     public Stream<Path>loadAll();
 
-    public void deleteAllFiles();
+    public void deleteFile(String fileName);
     public byte[] readFileContent(String fileName);
 }

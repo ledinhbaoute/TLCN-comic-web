@@ -1,8 +1,7 @@
 package vn.hcmute.tlcn.service;
 
 import org.springframework.http.ResponseEntity;
-import vn.hcmute.tlcn.entity.FavoriteComic;
-import vn.hcmute.tlcn.entity.ResponseObject;
+import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
 import vn.hcmute.tlcn.model.FavoriteComicDTO;
 
 import java.util.List;

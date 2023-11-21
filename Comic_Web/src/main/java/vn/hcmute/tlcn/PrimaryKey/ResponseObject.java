@@ -1,4 +1,4 @@
-package vn.hcmute.tlcn.entity;
+package vn.hcmute.tlcn.PrimaryKey;
 
 public class ResponseObject {
     private boolean status;

@@ -2,7 +2,7 @@ package vn.hcmute.tlcn.service;
 
 import org.springframework.http.ResponseEntity;
 import vn.hcmute.tlcn.entity.Follower;
-import vn.hcmute.tlcn.entity.ResponseObject;
+import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
 
 import java.util.List;
 

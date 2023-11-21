@@ -2,7 +2,7 @@ package vn.hcmute.tlcn.serviceimple;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import vn.hcmute.tlcn.entity.ResponseObject;
+import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
 import vn.hcmute.tlcn.utils.Converter;
 import vn.hcmute.tlcn.utils.GenerateId;
 import vn.hcmute.tlcn.entity.ComicBook;
@@ -75,6 +75,13 @@ public class ComicServiceImple implements IComicBookService {
         }
         return comicBookDTOS;
     }
+    @Override
+    public List<ComicBookDTO>searchComicByInput(String input){
+        List<ComicBookDTO> comicBookDTOS=new ArrayList<>();
+        List<ComicBook>comicBooks=comicBookRepository.findByInputString(input);
+        comicBookDTOS=comicBooks.stream().map(p-> converter.convertEntityToDto(p)).toList();
+        return comicBookDTOS;
+    }
 
     @Override
     public ComicBookDTO addComic(String name, String username,List<String>genres) {
@@ -109,12 +116,7 @@ public class ComicServiceImple implements IComicBookService {
         comicBook.setName(newName);
         comicBook.setStatus(newStatus);
         return new ResponseObject(true,"Update Success!",converter.convertEntityToDto(comicBookRepository.save(comicBook)));
-
-
-
-
-
-    }
+}
 
     @Override
     public int deleteComic(String username,String comicId) {
@@ -128,8 +130,5 @@ public class ComicServiceImple implements IComicBookService {
         comicBookRepository.deleteById(comicId);
         return 2;
     }
-
-
-
 
 }
