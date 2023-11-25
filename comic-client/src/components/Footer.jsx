@@ -14,25 +14,25 @@ const Footer = () => {
       });
   };
   return (
-    <footer class="footer">
-      <div class="page-up">
+    <footer className="footer">
+      <div className="page-up">
         <a onClick={handleScrollToTop} id="scrollToTopButton">
-          <span class="arrow_carrot-up"></span>
+          <span className="arrow_carrot-up"></span>
         </a>
       </div>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-3">
-            <div class="footer__logo">
+      <div className="container">
+        <div className="row">
+          <div className="col-lg-3">
+            <div className="footer__logo">
               <Link to="./index.html">
                 <img src={logoUrl} alt="" />
               </Link>
             </div>
           </div>
-          <div class="col-lg-6">
-            <div class="footer__nav">
+          <div className="col-lg-6">
+            <div className="footer__nav">
               <ul>
-                <li class="active">
+                <li className="active">
                   <Link to="./">Về chúng tôi</Link>
                 </li>
                 <li>

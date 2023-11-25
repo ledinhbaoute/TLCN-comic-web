@@ -1,19 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../sass/style.scss";
 import "../css/AllStyles";
 import { Link, NavLink } from "react-router-dom";
+import axios from "axios";
+import API_URL from "../config/config";
+import Cookies from "js-cookie";
+import {checkAuth} from "../security/Authentication";
 
 const Header = () => {
   const logoUrl = `${process.env.PUBLIC_URL}/images/logo.png`;
 
-  var genres = [
-    "Lãng mạn",
-    "Trinh thám",
-    "Hài hước",
-    "Chuyển sinh",
-    "Học đường",
-    "Hành động",
-  ];
+  const [genres, setGenres] = useState([]);
+
+  
+
+  const logout = () => {
+    Cookies.remove("access_token");
+  };
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/genres`);
+        setGenres(response.data.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+    checkAuth();
+  }, []);
+
   return (
     <header className="header">
       <div className="container">
@@ -44,12 +65,14 @@ const Header = () => {
                     </NavLink>
                     <ul className="dropdown">
                       <li>
-                        {genres.map((item, index) => (
-                          <Link to="./" key={index}>{item}</Link>
+                        {genres.map((item) => (
+                          <Link to="./" key={item.id}>
+                            {item.name}
+                          </Link>
                         ))}
                       </li>
                       <li>
-                        <Link to="./anime-detail">Anime Details</Link>
+                        <Link to="./comic-detail">Comic Details</Link>
                       </li>
                       <li>
                         <Link to="./anime-watching.html">Anime Watching</Link>
@@ -62,24 +85,33 @@ const Header = () => {
                       </li>
                     </ul>
                   </li>
-                  {/* <li>
-                      <Link to="./blog.html">Our Blog</Link>
-                    </li>
-                    <li>
-                      <Link to="#">Contacts</Link>
-                    </li> */}
                 </ul>
               </nav>
             </div>
           </div>
           <div className="col-lg-2">
             <div className="header__right">
-              <a href="#" className="search-switch">
+              <Link to="./search" className="search-switch">
                 <span className="icon_search"></span>
-              </a>
-              <Link to="./login">
-                <span className="icon_profile"></span>
               </Link>
+              {checkAuth() ? (
+                <a>
+                  <Link to="./profile">
+                    <span className="icon_profile"></span>
+                  </Link>
+                  <Link to="./">
+                    <span
+                      title="Đăng xuất"
+                      onClick={handleLogout}
+                      className="icon_close_alt"
+                    ></span>
+                  </Link>
+                </a>
+              ) : (
+                <Link to="./login">
+                  <span className="icon_profile"></span>
+                </Link>
+              )}
             </div>
           </div>
         </div>

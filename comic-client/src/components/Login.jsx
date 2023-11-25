@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import "../sass/style.scss";
 import "../css/AllStyles";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import API_URL from "../config/config";
+import Cookies from "js-cookie";
 
 const Login = () => {
-  const imgBgUrl = `${process.env.PUBLIC_URL}images/normal-breadcrumb.jpg`
+  const imgBgUrl = `${process.env.PUBLIC_URL}images/normal-breadcrumb.jpg`;
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  var message
+  const navigate = useNavigate();
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -18,28 +21,42 @@ const Login = () => {
     setPassword(event.target.value);
   };
 
+  const login = async () => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/u/login`,
+        { username: username, password: password },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+        Cookies.set("access_token", response.data.accessToken);
+        navigate("/")
+    } catch (error) {
+      window.alert("Login failed")
+      console.error(error);
+    }
+  };
+
   const handleFormSubmit = (event) => {
     event.preventDefault();
 
-    if(username=="Bao" && password=="Bao")
-      message = "Đăng nhập thành công"
-    else
-      message = "Đăng nhập thất bại"
-
-    window.alert(message)
+    login();
   };
 
   return (
     <div>
       {/* <!-- Normal Breadcrumb Begin --> */}
       <section
-        class="normal-breadcrumb set-bg"
-        style={{ backgroundImage: `url(${imgBgUrl})`}}
+        className="normal-breadcrumb set-bg"
+        style={{ backgroundImage: `url(${imgBgUrl})` }}
       >
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-12 text-center">
-              <div class="normal__breadcrumb__text">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12 text-center">
+              <div className="normal__breadcrumb__text">
                 <h2>Đăng nhập</h2>
                 <p>Chào mừng đến với BQComic</p>
               </div>
@@ -50,14 +67,14 @@ const Login = () => {
       {/* <!-- Normal Breadcrumb End --> */}
 
       {/* <!-- Login Section Begin --> */}
-      <section class="login spad">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="login__form">
+      <section className="login spad">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-6">
+              <div className="login__form">
                 <h3>Đăng nhập</h3>
                 <form onSubmit={handleFormSubmit}>
-                  <div class="input__item">
+                  <div className="input__item">
                     <input
                       type="text"
                       id="username"
@@ -65,9 +82,9 @@ const Login = () => {
                       value={username}
                       onChange={handleUsernameChange}
                     />
-                    <span class="icon_mail"></span>
+                    <span className="icon_mail"></span>
                   </div>
-                  <div class="input__item">
+                  <div className="input__item">
                     <input
                       type="password"
                       id="password"
@@ -75,21 +92,21 @@ const Login = () => {
                       value={password}
                       onChange={handlePasswordChange}
                     />
-                    <span class="icon_lock"></span>
+                    <span className="icon_lock"></span>
                   </div>
-                  <button type="submit" class="site-btn">
+                  <button type="submit" className="site-btn">
                     Đăng nhập
                   </button>
                 </form>
-                <Link to="../forgetpass" class="forget_pass">
+                <Link to="../forgetpass" className="forget_pass">
                   Quên mật khẩu?
                 </Link>
               </div>
             </div>
-            <div class="col-lg-6">
-              <div class="login__register">
+            <div className="col-lg-6">
+              <div className="login__register">
                 <h3>Chưa có tài khoản?</h3>
-                <Link to="../register" class="primary-btn">
+                <Link to="../register" className="primary-btn">
                   Đăng ký ngay
                 </Link>
               </div>

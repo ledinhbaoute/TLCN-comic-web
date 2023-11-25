@@ -41,14 +41,14 @@ const ForgetPassword = () => {
   }
 
   return (
-    <section class="login spad">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-6">
-            <div class="login__form">
+    <section className="login spad">
+      <div className="container">
+        <div className="row">
+          <div className="col-lg-6">
+            <div className="login__form">
               <h3>Lấy lại mật khẩu</h3>
               <form onSubmit={handleFormInfoSubmit}>
-                <div class="input__item">
+                <div className="input__item">
                   <input
                     type="text"
                     id="username"
@@ -56,9 +56,9 @@ const ForgetPassword = () => {
                     value={username}
                     onChange={handleUsernameChange}
                   />
-                  <span class="icon_profile"></span>
+                  <span className="icon_profile"></span>
                 </div>
-                <div class="input__item">
+                <div className="input__item">
                   <input
                     type="text"
                     id="email"
@@ -66,16 +66,16 @@ const ForgetPassword = () => {
                     value={email}
                     onChange={handleEmailChange}
                   />
-                  <span class="icon_mail"></span>
+                  <span className="icon_mail"></span>
                 </div>
-                <button type="submit" class="site-btn">
+                <button type="submit" className="site-btn">
                   Xác nhận
                 </button>
               </form>
               <div>
                 {isOpen && (
                   <form onSubmit={handleFormOtpSubmit}>
-                  <div class="input__item">
+                  <div className="input__item">
                     <input
                       type="text"
                       id="otp"
@@ -83,9 +83,9 @@ const ForgetPassword = () => {
                       value={otp}
                       onChange={handleOtpChange}
                     />
-                    <span class="icon_lock"></span>
+                    <span className="icon_lock"></span>
                   </div>
-                  <button type="submit" class="site-btn">
+                  <button type="submit" className="site-btn">
                     Xác nhận
                   </button>
                 </form>
@@ -93,10 +93,10 @@ const ForgetPassword = () => {
               </div>
             </div>
           </div>
-          <div class="col-lg-6">
-            <div class="login__register">
+          <div className="col-lg-6">
+            <div className="login__register">
               <h3>Đã có tài khoản?</h3>
-              <Link to="../login" class="primary-btn">
+              <Link to="../login" className="primary-btn">
                 Đăng nhập ngay
               </Link>
             </div>

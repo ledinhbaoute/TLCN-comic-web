@@ -2,8 +2,10 @@
 import React from "react";
 import ReactDOM from 'react-dom/client';
 
-const AnimeItem = () => {
+const ComicItem = () => {
     const itemImageUrl = `${process.env.PUBLIC_URL}/images/popular/popular-1.jpg`
+
+    
     return (
         <div class="col-lg-4 col-md-6 col-sm-6">
         <div class="product__item">
@@ -24,4 +26,4 @@ const AnimeItem = () => {
 
     )
 }
-export default AnimeItem;
+export default ComicItem;

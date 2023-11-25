@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 function getImageUrl(imageName){
     return `${process.env.PUBLIC_URL}/images/sidebar/`+imageName
 }
-const AnimeList=()=>{
+const ComicList=()=>{
   
     return(
         
@@ -40,4 +40,4 @@ const AnimeList=()=>{
 //   <React.StrictMode>
 //     <AnimeList/>
 //   </React.StrictMode>);
-export default AnimeList;
+export default ComicList;
