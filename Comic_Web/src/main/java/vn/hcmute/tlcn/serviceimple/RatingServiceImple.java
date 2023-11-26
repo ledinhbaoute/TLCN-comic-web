@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import vn.hcmute.tlcn.entity.ComicBook;
 import vn.hcmute.tlcn.entity.Rating;
-import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
+import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.entity.User;
 import vn.hcmute.tlcn.model.RatingDTO;
 import vn.hcmute.tlcn.repository.ComicBookRepository;
@@ -44,7 +44,6 @@ public class RatingServiceImple implements IRatingService {
         updateComicRating(ComicId);
         return ResponseEntity.ok(new ResponseObject(true, "Rating Success!",rating));
     }
-
     @Override
     public List<RatingDTO> getRatingByComic(String comicId) {
         List<Rating>ratings=ratingRepository.findByComicBook_Id(comicId);

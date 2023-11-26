@@ -1,4 +1,4 @@
-package vn.hcmute.tlcn.PrimaryKey;
+package vn.hcmute.tlcn.primaryKey;
 
 import vn.hcmute.tlcn.entity.ComicBook;
 import vn.hcmute.tlcn.entity.User;

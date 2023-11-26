@@ -1,6 +1,10 @@
 package vn.hcmute.tlcn.model;
 
+import vn.hcmute.tlcn.entity.ReportReason;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ComicReportDTO {
     private int id;
@@ -10,12 +14,25 @@ public class ComicReportDTO {
     private Date reportDate;
     private int status;
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public ComicReportDTO() {
     }
     public ComicReportDTO(ComicBookDTO comicBook, Date reportDate, int status) {
         this.comicBook = comicBook;
         this.reportDate = reportDate;
         this.status = status;
+    }
+    List<ReportReason> reportReasons=new ArrayList<>();
+
+    public List<ReportReason> getReportReasons() {
+        return reportReasons;
+    }
+
+    public void setReportReasons(List<ReportReason> reportReasons) {
+        this.reportReasons = reportReasons;
     }
 
     public int getId() {

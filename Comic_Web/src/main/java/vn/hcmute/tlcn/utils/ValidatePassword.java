@@ -4,7 +4,7 @@ import org.passay.PasswordData;
 import org.passay.PasswordValidator;
 import org.passay.RuleResult;
 import org.springframework.stereotype.Component;
-import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
+import vn.hcmute.tlcn.model.ResponseObject;
 
 @Component
 public class ValidatePassword {
@@ -19,6 +19,5 @@ public class ValidatePassword {
             return new ResponseObject(true,"Password valid","");
         return new ResponseObject(false,passwordValidator.getMessages(ruleResult).toString(),"");
     }
-
 
 }

@@ -19,6 +19,8 @@ public class ComicBookDTO {
 
     private Date updateDate;
     private int status;
+    private String image;
+    private String discription;
 
 
     private List<GenreDTO> genres=new ArrayList<>();
@@ -34,7 +36,7 @@ public class ComicBookDTO {
     public ComicBookDTO() {
     }
 
-    public ComicBookDTO(String id, String name, Boolean isPremium, UserDTO actorId, int view, float rate, Date publishDate, Date updateDate, int status) {
+    public ComicBookDTO(String id, String name, Boolean isPremium, UserDTO actorId, int view, float rate, Date publishDate, Date updateDate, int status,String discription,String image) {
         this.id = id;
         this.name = name;
         this.isPremium = isPremium;
@@ -44,6 +46,8 @@ public class ComicBookDTO {
         this.publishDate = publishDate;
         this.updateDate = updateDate;
         this.status = status;
+        this.image=image;
+        this.discription=discription;
     }
 
 
@@ -118,4 +122,19 @@ public class ComicBookDTO {
     public void setStatus(int status) {
         this.status = status;
     }
+    public String getDiscription() {
+        return discription;
+    }
+
+    public void setDiscription(String discription) {
+        this.discription = discription;
+    }
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
 }

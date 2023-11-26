@@ -10,7 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
+import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.entity.User;
 import vn.hcmute.tlcn.jwt.JwtService;
 import vn.hcmute.tlcn.model.Token;
@@ -59,10 +59,8 @@ public class UserController {
 
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(username);
-
         final String token = jwtService.generateToken( userDetails);
-        System.out.println(userDetails.getAuthorities());
-
+        userServiceImple.deleteExpiredPremiumPackage(userDetails.getUsername());
         return ResponseEntity.ok(new Token(token));
     }
 
@@ -95,6 +93,15 @@ public class UserController {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
 
+    }
+
+    @PostMapping("/user/register_premium")
+    ResponseEntity<?>registerPremium(Authentication authentication,@RequestParam("package_id")int packageId){
+        if(authentication!=null){
+            UserDetails userDetails= (UserDetails) authentication.getPrincipal();
+            return ResponseEntity.ok(userServiceImple.updatePremium(userDetails.getUsername(),packageId));
+        }
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
 
 }

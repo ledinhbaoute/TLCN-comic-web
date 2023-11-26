@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
-import vn.hcmute.tlcn.PrimaryKey.SystemBankAccountKey;
+import vn.hcmute.tlcn.primaryKey.SystemBankAccountKey;
 
 @Entity
 @Table(name = "system_bank_account")

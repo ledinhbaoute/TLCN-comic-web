@@ -24,6 +24,10 @@ public class CommentDTO {
         this.content = content;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

@@ -17,10 +17,17 @@ public class ComicReport {
     @Column(name = "report_date")
     private Date reportDate;
     private int status;
-    @ManyToMany
-    @JoinTable(name="comic_report_reason",joinColumns = @JoinColumn(name = "report_id"),
+    @ManyToMany()
+    @JoinTable(name="comic_report_reasons",joinColumns = @JoinColumn(name = "report_id"),
             inverseJoinColumns = @JoinColumn(name = "reason_id"))
     List<ReportReason>reportReasons=new ArrayList<>();
+    public List<ReportReason> getReportReasons() {
+        return reportReasons;
+    }
+
+    public void setReportReasons(List<ReportReason> reportReasons) {
+        this.reportReasons = reportReasons;
+    }
     public ComicReport() {
     }
 
@@ -28,14 +35,6 @@ public class ComicReport {
         this.comicBook = comicBook;
         this.reportDate = reportDate;
         this.status = status;
-    }
-
-    public List<ReportReason> getReportReasons() {
-        return reportReasons;
-    }
-
-    public void setReportReasons(List<ReportReason> reportReasons) {
-        this.reportReasons = reportReasons;
     }
 
     public int getId() {

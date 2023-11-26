@@ -22,6 +22,7 @@ public class EmailService {
         long EXPIRATION_TIME_MINUTES = 5;
         long currentTime= Instant.now().getEpochSecond();
         long expireTime=currentTime+ TimeUnit.MINUTES.toSeconds(EXPIRATION_TIME_MINUTES);
+        TimeUnit.DAYS.toSeconds(1);
         Random rnd = new Random();
         int number = rnd.nextInt(999999);
         String otp= String.format("%06d", number);

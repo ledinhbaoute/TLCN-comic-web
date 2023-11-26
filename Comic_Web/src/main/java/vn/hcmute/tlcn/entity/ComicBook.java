@@ -17,7 +17,6 @@ public class ComicBook {
     private String id;
     private String name;
     private Boolean isPremium;
-
     @ManyToOne
     @JoinColumn(name="actor_id")
     private User actor;
@@ -28,7 +27,8 @@ public class ComicBook {
     @Column(name="update_date")
     private Date updateDate;
     private int status;
-
+    private String image;
+    private String discription;
     @ManyToMany()
     @JoinTable(name="comicbooks_genres",joinColumns = @JoinColumn(name = "comicbook_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
@@ -50,7 +50,7 @@ public class ComicBook {
     public ComicBook() {
     }
 
-    public ComicBook(String id, String name, Boolean isPremium, User actorId, int view, float rate, Date publishDate, Date updateDate, int status) {
+    public ComicBook(String id, String name, Boolean isPremium, User actorId, int view, float rate, Date publishDate, Date updateDate, int status,String image,String discription) {
         this.id = id;
         this.name = name;
         this.isPremium = isPremium;
@@ -60,6 +60,8 @@ public class ComicBook {
         this.publishDate = publishDate;
         this.updateDate = updateDate;
         this.status = status;
+        this.discription=discription;
+        this.image=image;
     }
 
     public String getId() {
@@ -132,5 +134,19 @@ public class ComicBook {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+    public String getDiscription() {
+        return discription;
+    }
+
+    public void setDiscription(String discription) {
+        this.discription = discription;
+    }
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

@@ -2,7 +2,13 @@ package vn.hcmute.tlcn.serviceimple;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+import vn.hcmute.tlcn.controller.FileUploadController;
+import vn.hcmute.tlcn.entity.UserPremium;
+import vn.hcmute.tlcn.model.ResponseObject;
+import vn.hcmute.tlcn.repository.UserPremiumRepo;
 import vn.hcmute.tlcn.utils.Converter;
 import vn.hcmute.tlcn.utils.GenerateId;
 import vn.hcmute.tlcn.entity.ComicBook;
@@ -33,13 +39,22 @@ public class ComicServiceImple implements IComicBookService {
     private GenerateId generateId;
     @Autowired
     private GenreRepository genreRepository;
+    @Autowired
+    private ImageStorageService imageStorageService;
+    @Autowired
+    private UserPremiumRepo userPremiumRepo;
     @Override
     public List<ComicBookDTO> getAllComic() {
         List<ComicBookDTO>comicBookDTOS=new ArrayList<>();
         List<ComicBook>comicBooks=comicBookRepository.findAll();
         for (ComicBook comic:comicBooks
              ) {
-            comicBookDTOS.add(converter.convertEntityToDto(comic));
+
+            String urlPath= MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+                    "readDetailFile", comic.getImage()).build().toUri().toString();
+            ComicBookDTO comicBookDTO=converter.convertEntityToDto(comic);
+            comicBookDTO.setImage(urlPath);
+            comicBookDTOS.add(comicBookDTO);
         }
         return comicBookDTOS;
     }
@@ -50,17 +65,24 @@ public class ComicServiceImple implements IComicBookService {
         List<ComicBook>comicBooks=comicBookRepository.findByGenres_Id(genreId);
         for (ComicBook comic:comicBooks
              ) {
-            comicBookDTOS.add(converter.convertEntityToDto(comic));
+            String urlPath= MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+                    "readDetailFile", comic.getImage()).build().toUri().toString();
+            ComicBookDTO comicBookDTO=converter.convertEntityToDto(comic);
+            comicBookDTO.setImage(urlPath);
+            comicBookDTOS.add(comicBookDTO);
         }
         return comicBookDTOS;
     }
-
     @Override
     public ComicBookDTO getDetailComic(String comicId) {
         ComicBookDTO comicBookDTO=new ComicBookDTO();
         Optional<ComicBook> comicBook=comicBookRepository.findById(comicId);
-        if (comicBook.isPresent())
+        if (comicBook.isPresent()){
             comicBookDTO= converter.convertEntityToDto(comicBook.get());
+            String urlPath= MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+                    "readDetailFile", comicBookDTO.getImage()).build().toUri().toString();
+            comicBookDTO.setImage(urlPath);
+        }
         return comicBookDTO;
     }
 
@@ -68,9 +90,13 @@ public class ComicServiceImple implements IComicBookService {
     public List<ComicBookDTO> getComicByActor(String actorId) {
         List<ComicBook>comicBooks=comicBookRepository.findByActor_Id(actorId);
         List<ComicBookDTO>comicBookDTOS=new ArrayList<>();
-        for (ComicBook cm:comicBooks
+        for (ComicBook comic:comicBooks
              ) {
-            comicBookDTOS.add(converter.convertEntityToDto(cm));
+            String urlPath= MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+                    "readDetailFile", comic.getImage()).build().toUri().toString();
+            ComicBookDTO comicBookDTO=converter.convertEntityToDto(comic);
+            comicBookDTO.setImage(urlPath);
+            comicBookDTOS.add(comicBookDTO);
 
         }
         return comicBookDTOS;
@@ -79,19 +105,26 @@ public class ComicServiceImple implements IComicBookService {
     public List<ComicBookDTO>searchComicByInput(String input){
         List<ComicBookDTO> comicBookDTOS=new ArrayList<>();
         List<ComicBook>comicBooks=comicBookRepository.findByInputString(input);
-        comicBookDTOS=comicBooks.stream().map(p-> converter.convertEntityToDto(p)).toList();
+        for (ComicBook comic:comicBooks
+        ) {
+            String urlPath= MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+                    "readDetailFile", comic.getImage()).build().toUri().toString();
+            ComicBookDTO comicBookDTO=converter.convertEntityToDto(comic);
+            comicBookDTO.setImage(urlPath);
+            comicBookDTOS.add(comicBookDTO);
+
+        }
         return comicBookDTOS;
     }
-
     @Override
-    public ComicBookDTO addComic(String name, String username,List<String>genres) {
+    public ComicBookDTO addComic(String name, String username, List<String>genres, String discription, MultipartFile file) {
 
         Optional<User> optionalUser=userRepository.findOneByUserName(username);
         if(!optionalUser.isPresent())
             return null;
         User user=optionalUser.get();
         List<Genre>genreList=new ArrayList<>();
-        ComicBook comicBook=new ComicBook(generateId.generateId(),name,false,user,0,0,new Date(),new Date(),1);
+        ComicBook comicBook=new ComicBook(generateId.generateId(),name,false,user,0,0,new Date(),new Date(),1,null,discription);
         for (String id:genres
              ) {
             Optional<Genre>genre=genreRepository.findById(id);
@@ -99,6 +132,9 @@ public class ComicServiceImple implements IComicBookService {
                 genreList.add(genre.get());
         }
         comicBook.setGenres(genreList);
+        String image=imageStorageService.storeFile(file);
+        comicBook.setImage(image);
+
         comicBookRepository.save(comicBook);
         return converter.convertEntityToDto(comicBook);
     }
@@ -127,8 +163,31 @@ public class ComicServiceImple implements IComicBookService {
         ComicBook comicBook=optionalComicBook.get();
         if(!user.getId().equals(comicBook.getActorId().getId()))
             return 1;
-        comicBookRepository.deleteById(comicId);
-        return 2;
+        try {
+            comicBookRepository.deleteById(comicId);
+            imageStorageService.deleteFile(comicBook.getImage());
+            return 2;
+        }
+        catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Transactional
+    @Override
+    public ResponseObject upgradePremium(String username,String comicId){
+        User user=userRepository.findOneByUserName(username).get();
+        ComicBook comicBook=comicBookRepository.findById(comicId).orElse(null);
+        if(comicBook==null)
+            return new ResponseObject(false,"Comic not exist!","");
+        if(!user.getId().equals(comicBook.getActorId().getId()))
+            return new ResponseObject(false,"Cannot upgrade someone else's book!","");
+        UserPremium userPremium=userPremiumRepo.findOneByUser_UserName(username).orElse(null);
+        if (userPremium!=null){
+            comicBook.setPremium(true);
+            return new ResponseObject(true,"Upgrade Comic Success!",converter.convertEntityToDto(comicBook));
+        }
+        return new ResponseObject(false,"You need upgrade to Premium Account!","");
     }
 
 }

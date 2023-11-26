@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
+import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.entity.SystemBankAccount;
 import vn.hcmute.tlcn.repository.SystemBankAccountRepository;
 

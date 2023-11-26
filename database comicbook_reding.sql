@@ -2,7 +2,7 @@ CREATE DATABASE  IF NOT EXISTS `comicbooks_reading`;
 USE `comicbooks_reading`;
 
 -- drop database `comicbooks_reading`
-	
+
 CREATE TABLE `genres` (
   `id` varchar(20) NOT NULL,
   `name` nvarchar(128) NOT NULL unique,
@@ -18,15 +18,13 @@ create table `users`(
 	`id` varchar(20) not null,
     `name` nvarchar(128) not null,
     `avatar` varchar(200) default null,
-    `isPremium` tinyint(1) default 0,
     `email` varchar(128) not null,
     `phone_number` varchar(20) not null,
     `user_name` varchar(128) not null,
     `password` text not null,
-    `balance` int unsigned default 0,
     `bank_account` varchar(20) default null,
 	`bank_name` varchar(20) default null,
-    `status` int default 1 check (`status`>=1 and `status`<=2),
+    `isLocked` tinyint(1) default 0,
     primary key (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -41,6 +39,8 @@ CREATE TABLE `comicbooks` (
   `name` nvarchar(128) NOT NULL,
   `isPremium` tinyint(1) default 0,
   `actor_id` varchar(20) NOT NULL,
+  `image` text,
+  `discription` text,
   `view` int unsigned NOT NULL default 0,
   `rate` decimal(2,1) NOT NULL,
   `publish_date` date NOT NULL, 
@@ -250,16 +250,32 @@ ALTER TABLE `annouce` DISABLE KEYS ;
 ALTER TABLE `annouce` ENABLE KEYS ;
 UNLOCK TABLES;
 
-create table `price`(
+create table `package_premium`(
 	`id` int auto_increment,
-    `type` varchar(50) not null,
     `cost` int not null,
+    `duration` int not null,
     primary key(`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-LOCK TABLES `price` WRITE;
-ALTER TABLE `price` DISABLE KEYS ;
-ALTER TABLE `price` ENABLE KEYS ;
+LOCK TABLES `package_premium` WRITE;
+ALTER TABLE `package_premium` DISABLE KEYS ;
+ALTER TABLE `package_premium` ENABLE KEYS ;
+UNLOCK TABLES;
+
+create table `user_premium`(
+	`id` int auto_increment,
+	`user_id` varchar(20) unique,
+    `package_id` int,
+    `start_date` date not null,
+    primary key(`id`),
+    foreign key(`user_id`) references `users`(`id`),
+    foreign key(`package_id`) references `package_premium`(`id`)
+)
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+LOCK TABLES `user_premium` WRITE;
+ALTER TABLE `user_premium` DISABLE KEYS ;
+ALTER TABLE `user_premium` ENABLE KEYS ;
 UNLOCK TABLES;
 
 create table `favorite_comic`(
@@ -275,25 +291,55 @@ ALTER TABLE `favorite_comic` DISABLE KEYS ;
 ALTER TABLE `favorite_comic` ENABLE KEYS ;
 UNLOCK TABLES;
 
-create table `donate_history`(
+
+create table `wallets`(
 	`id` int auto_increment,
-	`donater_id` varchar(20) not null,
-    `receiver_id` varchar(20) not null,
-    `message` text default null,
-    `total_money` int not null check(`total_money`>0),
-    `donate_date` date not null,
+    `user_id` varchar(20) not null unique,
+    `balance` int default 0,
+    `created_at` timestamp(6) not null default current_timestamp(6),
     primary key(`id`),
-    constraint `fk_donate_history_donater` foreign key (`donater_id`) references `users`(`id`),
-    constraint `fk_donate_history_receiver` foreign key (`receiver_id`) references `users`(`id`)
+    constraint `fk_user_wallet` foreign key(`user_id`) references `users`(`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-LOCK TABLES `donate_history` WRITE;
-ALTER TABLE `donate_history` DISABLE KEYS ;
-ALTER TABLE `donate_history` ENABLE KEYS ;
+LOCK TABLES `wallets` WRITE;
+ALTER TABLE `wallets` DISABLE KEYS ;
+ALTER TABLE `wallets` ENABLE KEYS ;
 UNLOCK TABLES;
 
+create table `donate`(
+	`id` varchar(30),
+	`donater_id` int not null,
+    `receiver_id` int not null,
+    `title` text not null,
+    `message` text default null,
+    `amount` int not null check(`amount`>0),
+    `created_at` timestamp(6) not null default current_timestamp(6),
+    primary key(`id`),
+    constraint `fk_donate_donater` foreign key (`donater_id`) references `wallets`(`id`),
+    constraint `fk_donate_receiver` foreign key (`receiver_id`) references `wallets`(`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+LOCK TABLES `donate` WRITE;
+ALTER TABLE `donate` DISABLE KEYS ;
+ALTER TABLE `donate` ENABLE KEYS ;
+UNLOCK TABLES;
 
+create table `transactions`(
+	`id` int auto_increment,
+    `wallet_id` int,
+    `type` int not null,
+    `title` text not null,
+    `content` text,
+    `amount` int not null,
+    `created_at` timestamp(6) not null default current_timestamp(6),
+    primary key(`id`),
+    constraint `fk_wallet_transactions` foreign key(`wallet_id`) references `wallets`(`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+LOCK TABLES `transactions` WRITE;
+ALTER TABLE `transactions` DISABLE KEYS ;
+ALTER TABLE `transactions` ENABLE KEYS ;
+unlock tables;
 
 
 

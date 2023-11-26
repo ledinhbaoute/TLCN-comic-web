@@ -10,14 +10,16 @@ import java.util.Collections;
 
 public class CustomUserDeTails implements UserDetails {
     private User user;
-
-    public CustomUserDeTails(User user) {
+    private Collection<? extends GrantedAuthority> authorities;
+    private boolean accountNonLocked;
+    public CustomUserDeTails(User user,Collection<? extends GrantedAuthority> authorities) {
         this.user = user;
+        this.authorities=authorities;
+        this.accountNonLocked=!user.isLocked();
     }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+        return authorities;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class CustomUserDeTails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return accountNonLocked;
     }
 
     @Override

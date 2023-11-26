@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import vn.hcmute.tlcn.jwt.JwtService;
 import vn.hcmute.tlcn.model.Token;
 import vn.hcmute.tlcn.securiry.CustomAdminDetailService;
 import vn.hcmute.tlcn.service.IAdminService;
+import vn.hcmute.tlcn.serviceimple.AdminServiceImplement;
 
 @RestController
 @RequestMapping("api/v1/")
@@ -27,6 +29,8 @@ public class AdminController {
     JwtService jwtService;
     @Autowired
     private CustomAdminDetailService adminDetailService;
+    @Autowired
+    private AdminServiceImplement adminServiceImplement;
 
     @PostMapping("a/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestParam("username") String username,@RequestParam("password")String pass) throws Exception {
@@ -40,6 +44,14 @@ public class AdminController {
         System.out.println(userDetails.getAuthorities());
 
         return ResponseEntity.ok(new Token(token));
+    }
+    @PostMapping("/admin/lock-or-unlock_user")
+    private ResponseEntity<?>lockUser(Authentication authentication,@RequestParam("username")String username){
+        if(authentication!=null){
+            adminServiceImplement.lockOrUnlockAccountUser(username);
+            return ResponseEntity.ok("Success!");
+        }
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
     private void authenticate(String username, String password) throws Exception {
         try {

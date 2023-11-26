@@ -45,7 +45,6 @@ public class AppConfig {
                 new CharacterRule(EnglishCharacterData.Digit, 1), // Ít nhất 1 chữ số
                 new CharacterRule(EnglishCharacterData.Special, 1) // Ít nhất 1 ký tự đặc biệt
         );
-
         return new PasswordValidator(rules);
     }
 }

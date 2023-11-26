@@ -6,15 +6,16 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
     @Id
     private String id;
     private String name;
     private String avatar;
-    private boolean isPremium;
+
     private String email;
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -23,29 +24,26 @@ public class User {
     private String userName;
     @JsonIgnore
     private String password;
-    private int balance;
     @Column(name = "bank_account")
     private String bankAccount;
     @Column(name="bank_name")
     private String bankName;
-    private int status;
+    private boolean isLocked;
 
     public User() {
     }
 
-    public User(String id, String name, String avatar, boolean isPremium, String email, String phoneNumber, String userName, String password, int balance, String bankAccount, String bankName, int status) {
+    public User(String id, String name, String avatar, String email, String phoneNumber, String userName, String password, String bankAccount, String bankName, boolean isLocked) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;
-        this.isPremium = isPremium;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.userName = userName;
         this.password = password;
-        this.balance = balance;
         this.bankAccount = bankAccount;
         this.bankName = bankName;
-        this.status = status;
+        this.isLocked = isLocked;
     }
 
     public String getId() {
@@ -72,13 +70,6 @@ public class User {
         this.avatar = avatar;
     }
 
-    public boolean isPremium() {
-        return isPremium;
-    }
-
-    public void setPremium(boolean premium) {
-        isPremium = premium;
-    }
 
     public String getEmail() {
         return email;
@@ -112,13 +103,6 @@ public class User {
         this.password = password;
     }
 
-    public int getBalance() {
-        return balance;
-    }
-
-    public void setBalance(int balance) {
-        this.balance = balance;
-    }
 
     public String getBankAccount() {
         return bankAccount;
@@ -136,11 +120,11 @@ public class User {
         this.bankName = bankName;
     }
 
-    public int getStatus() {
-        return status;
+    public boolean isLocked() {
+        return isLocked;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setLocked(boolean locked) {
+        isLocked = locked;
     }
 }

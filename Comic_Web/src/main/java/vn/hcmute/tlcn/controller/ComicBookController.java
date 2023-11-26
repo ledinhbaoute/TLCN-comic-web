@@ -6,7 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
+import org.springframework.web.multipart.MultipartFile;
+import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.model.ComicBookDTO;
 import vn.hcmute.tlcn.service.IComicBookService;
 
@@ -21,14 +22,14 @@ public class ComicBookController {
     @GetMapping("/comicbooks")
     ResponseEntity<ResponseObject> getAllComicBooks() {
         List<ComicBookDTO> comicBookList = service.getAllComic();
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query Successfull!", comicBookList));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query Successfully!", comicBookList));
     }
 
     @GetMapping("/comicbooks/{comicbookId}")
     public ResponseEntity<ResponseObject> getComicBookDeTail(@PathVariable String comicbookId) {
         ComicBookDTO comicBook = service.getDetailComic(comicbookId);
         if (comicBook.getId() != null) {
-            return ResponseEntity.ok().body(new ResponseObject(true, "Query Successfull!", comicBook));
+            return ResponseEntity.ok().body(new ResponseObject(true, "Query Successfully!", comicBook));
         } else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Cannot find Comic Book with Id" + comicbookId, ""));
 
@@ -49,13 +50,15 @@ public class ComicBookController {
 
 
 
+
     @PostMapping("user/comicbooks")
     ResponseEntity<?> addComic(@RequestParam("comicName") String comicName,
-                               @RequestParam("genreIds") List<String> genresId, Authentication authentication) {
+                               @RequestParam("genreIds") List<String> genresId, @RequestParam("discription")String discription,
+                               @RequestParam("image") MultipartFile image, Authentication authentication) {
         if (authentication != null) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
-            ComicBookDTO comicBookDTO = service.addComic(comicName, username, genresId);
+            ComicBookDTO comicBookDTO = service.addComic(comicName, username, genresId,discription,image);
             if (comicBookDTO == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseObject(false, "Don't have user with username=" + username, ""));
             } else
@@ -63,7 +66,7 @@ public class ComicBookController {
 
         }
 
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
 
 
@@ -76,12 +79,21 @@ public class ComicBookController {
             ResponseObject responseObject = service.updateComic(userDetails.getUsername(), id,newName,status);
             return ResponseEntity.status(HttpStatus.OK).body(responseObject);
         }
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
+    }
+    @PutMapping("/user/comic/upgrade_premium")
+    ResponseEntity<?>upgradeComic(Authentication authentication,@RequestParam("comicId")String comicId){
+        if(authentication!=null)
+        {
+            UserDetails userDetails= (UserDetails) authentication.getPrincipal();
+            return ResponseEntity.ok(service.upgradePremium(userDetails.getUsername(),comicId));
+        }
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
 
 
     @DeleteMapping("/user/comicbooks")
-    ResponseEntity<?> deteleComic(@RequestParam("comicId") String comicId, Authentication authentication) {
+    ResponseEntity<?> deleteComic(@RequestParam("comicId") String comicId, Authentication authentication) {
         if (authentication != null) {
             UserDetails userDetails= (UserDetails) authentication.getPrincipal();
             try {
@@ -97,7 +109,7 @@ public class ComicBookController {
             }
 
         }
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
 
 }

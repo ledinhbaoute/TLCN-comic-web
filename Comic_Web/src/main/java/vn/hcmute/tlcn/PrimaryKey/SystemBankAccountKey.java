@@ -1,4 +1,4 @@
-package vn.hcmute.tlcn.PrimaryKey;
+package vn.hcmute.tlcn.primaryKey;
 
 import java.io.Serializable;
 

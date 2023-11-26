@@ -12,10 +12,12 @@ public class ReportReason {
     private int id;
     private String reason;
     private int type;
+
     @ManyToMany(mappedBy ="reportReasons" )
     private List<ComicReport>comicReports=new ArrayList<>();
-    @ManyToMany(mappedBy = "reportReasons")
+    @ManyToMany(mappedBy = "reportReason")
     private List<CommentReport>commentReports=new ArrayList<>();
+
     public ReportReason() {
     }
 

@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import vn.hcmute.tlcn.entity.ComicBook;
-import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
+import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.entity.User;
 import vn.hcmute.tlcn.repository.ComicBookRepository;
 import vn.hcmute.tlcn.repository.UserRepository;

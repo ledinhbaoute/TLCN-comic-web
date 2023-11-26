@@ -6,21 +6,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import vn.hcmute.tlcn.entity.*;
+import vn.hcmute.tlcn.model.ResponseObject;
+import vn.hcmute.tlcn.model.UserDTO;
+import vn.hcmute.tlcn.repository.*;
+import vn.hcmute.tlcn.service.IUserService;
 import vn.hcmute.tlcn.utils.Converter;
 import vn.hcmute.tlcn.utils.GenerateId;
 import vn.hcmute.tlcn.utils.ValidatePassword;
-import vn.hcmute.tlcn.PrimaryKey.ResponseObject;
-import vn.hcmute.tlcn.entity.User;
-import vn.hcmute.tlcn.model.UserDTO;
-import vn.hcmute.tlcn.repository.UserRepository;
-import vn.hcmute.tlcn.service.IUserService;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImple implements IUserService {
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -33,6 +37,14 @@ public class UserServiceImple implements IUserService {
     ImageStorageService imageStorageService;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    PackagePremiumRepository packagePremiumRepository;
+    @Autowired
+    UserPremiumRepo userPremiumRepo;
+    @Autowired
+    WalletRepository walletRepository;
+    @Autowired
+    TransactionRepository transactionRepository;
 
     @Override
     public UserDTO getUser(String username) {
@@ -41,25 +53,6 @@ public class UserServiceImple implements IUserService {
         if (user.isPresent())
             userDTO = converter.convertEntityToDto(user.get());
         return userDTO;
-    }
-
-    public ResponseEntity<ResponseObject> login(String username, String password) {
-        UserDTO userDTO = getUser(username);
-        if (userDTO == null)
-            return ResponseEntity.badRequest().body(new ResponseObject(false, "User not exist!", ""));
-        if (passwordEncoder.matches(password, userDTO.getPassword())) {
-            return ResponseEntity.ok(new ResponseObject(true, "Login Success!", userDTO));
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseObject(false, "Password invalid!", ""));
-
-    }
-
-    @Override
-    public Boolean checkUser(UserDTO userDTO) {
-        boolean f = false;
-        if (userDTO.getUserName() != null && userDTO.getPassword() != null)
-            f = true;
-        return f;
     }
 
     @Override
@@ -74,7 +67,6 @@ public class UserServiceImple implements IUserService {
             check = 2;
         return check;
     }
-
     @Override
     public ResponseObject register(String name, String email, String username, String pass, String conFirmPass) {
         User user;
@@ -82,8 +74,8 @@ public class UserServiceImple implements IUserService {
         int check = checkRegisterCondition(username, pass, conFirmPass);
         if (check == 0) {
             String passwordEncode = passwordEncoder.encode(pass);
-            user = new User(generateId.generateId(), name, null, false, email, "+84xxx",
-                    username, passwordEncode, 0, null, null, 1);
+            user = new User(generateId.generateId(), name, null, email, "+84xxx",
+                    username, passwordEncode, null, null, false);
             userDTO = converter.convertEntityToDto(userRepository.saveAndFlush(user));
             return new ResponseObject(true, "Register Success!", userDTO);
         } else if (check == 1) {
@@ -121,7 +113,6 @@ public class UserServiceImple implements IUserService {
         }
         return check;
     }
-
     @Override
     public ResponseEntity<ResponseObject> uploadAvatar(String username, MultipartFile file) {
         Optional<User> optionalUser = userRepository.findOneByUserName(username);
@@ -151,5 +142,48 @@ public class UserServiceImple implements IUserService {
         return  userDTOS;
     }
 
+    public ResponseObject updatePremium(String username,int packageId){
+        User user=userRepository.findOneByUserName(username).get();
+        Optional<PackagePremium> optionalPackagePremium=packagePremiumRepository.findById(packageId);
+        if(!optionalPackagePremium.isPresent())
+            return new ResponseObject(false,"Package not exist!","");
+        PackagePremium packagePremium=optionalPackagePremium.get();
+        Optional<Wallet>optional=walletRepository.findOneByUser_UserName(username);
+        if(!optional.isPresent())
+            return new ResponseObject(false,"You need Wallet to register Premium!","");
+        Wallet wallet=optional.get();
+        if(wallet.getBalance()<packagePremium.getCost())
+            return new ResponseObject(false,"Not enough money to register this package!","");
 
+        try {
+
+            UserPremium userPremium=new UserPremium(user,packagePremium,new Date());
+            userPremiumRepo.saveAndFlush(userPremium);
+
+            wallet.setBalance(wallet.getBalance()-packagePremium.getCost());
+            walletRepository.save(wallet);
+            Transaction transaction=new Transaction(wallet,"Register Premium "+packagePremium.getDuration()+" days","",packagePremium.getCost(),new Date(),2);
+            transactionRepository.save(transaction);
+            return new ResponseObject(true,"Register Premium Success!",userPremium);
+        }
+        catch (Exception e){
+
+            return new ResponseObject(false,e.getMessage(),"");
+        }
+    }
+    public void deleteExpiredPremiumPackage(String username){
+        UserPremium userPremium=userPremiumRepo.findOneByUser_UserName(username).orElse(null);
+        if(userPremium!=null)
+        {
+            PackagePremium packagePremium=userPremium.getPackagePremium();
+            Date startDate=userPremium.getStartDate();
+            Instant startInstant=startDate.toInstant();
+            long expireTime=startInstant.getEpochSecond()+ TimeUnit.DAYS.toSeconds(packagePremium.getDuration());
+            System.out.println(Instant.now().getEpochSecond());
+            System.out.println(expireTime);
+            if(expireTime<Instant.now().getEpochSecond()){
+                userPremiumRepo.delete(userPremium);
+            }
+        }
+    }
 }

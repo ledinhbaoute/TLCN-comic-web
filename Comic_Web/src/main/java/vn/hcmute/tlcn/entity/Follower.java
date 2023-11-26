@@ -1,7 +1,7 @@
 package vn.hcmute.tlcn.entity;
 
 import javax.persistence.*;
-import vn.hcmute.tlcn.PrimaryKey.FollowKey;
+import vn.hcmute.tlcn.primaryKey.FollowKey;
 
 @Entity
 @Table(name = "follow")

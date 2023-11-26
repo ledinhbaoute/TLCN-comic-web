@@ -18,9 +18,9 @@ public class CommentReport {
     private Date reportDate;
     private int status;
     @ManyToMany
-    @JoinTable(name="comic_report_reason",joinColumns = @JoinColumn(name = "report_id"),
+    @JoinTable(name="comment_report_reasons",joinColumns = @JoinColumn(name = "report_id"),
             inverseJoinColumns = @JoinColumn(name = "reason_id"))
-    List<ReportReason>reportReasons=new ArrayList<>();
+    List<ReportReason>reportReason=new ArrayList<>();
 
     public CommentReport() {
     }
@@ -29,6 +29,14 @@ public class CommentReport {
         this.comment = comment;
         this.reportDate = reportDate;
         this.status = status;
+    }
+
+    public List<ReportReason> getReportReasons() {
+        return reportReason;
+    }
+
+    public void setReportReasons(List<ReportReason> reportReasons) {
+        this.reportReason = reportReasons;
     }
 
     public int getId() {

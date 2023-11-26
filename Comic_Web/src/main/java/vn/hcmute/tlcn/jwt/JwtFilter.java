@@ -29,15 +29,12 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String requestTokenHeader = request.getHeader("Authorization");
-        String username = null;
-        String jwtToken = null;
-        List<String> role = null;
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+        String username = null;String jwtToken = null;List<String> role = null;
+        if (requestTokenHeader != null    &&    requestTokenHeader.startsWith("Bearer ")   ) {
             jwtToken = requestTokenHeader.substring(7);
             try {
                 username = jwtProvider.getUserNameFromToken(jwtToken);
                 role = jwtProvider.getRoleFromToken(jwtToken);
-
             } catch (IllegalArgumentException e) {
                 System.out.println("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {
@@ -48,21 +45,21 @@ public class JwtFilter extends OncePerRequestFilter {
             if (role.contains("ROLE_USER") ) {
                 UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
                 if (jwtProvider.validateToken(jwtToken, userDetails)) {
-                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 }
             } else if (role.contains("ROLE_ADMIN") ) {
                 UserDetails userDetails=customAdminDetailService.loadUserByUsername(username);
                 if(jwtProvider.validateToken(jwtToken,userDetails)){
-                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 }
             }
         }
-
         filterChain.doFilter(request, response);
-
     }
 }

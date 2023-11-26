@@ -6,7 +6,6 @@ public class UserDTO {
     private String id;
     private String name;
     private String avatar;
-    private boolean isPremium;
     private String email;
     @JsonIgnore
     private String phoneNumber;
@@ -14,28 +13,25 @@ public class UserDTO {
     private String userName;
     @JsonIgnore
     private String password;
-    private int balance;
-
     private String bankAccount;
 
     private String bankName;
-    private int status;
+    private boolean isLocked;
     public UserDTO() {
     }
 
-    public UserDTO(String id, String name, String avatar, boolean isPremium, String email, String phoneNumber, String userName, String password, int balance, String bankAccount, String bankName, int status) {
+    public UserDTO(String id, String name, String avatar,  String email, String phoneNumber, String userName, String password, String bankAccount, String bankName, boolean isLocked) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;
-        this.isPremium = isPremium;
+
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.userName = userName;
         this.password = password;
-        this.balance = balance;
         this.bankAccount = bankAccount;
         this.bankName = bankName;
-        this.status = status;
+        this.isLocked=isLocked;
     }
 
     public String getId() {
@@ -62,13 +58,7 @@ public class UserDTO {
         this.avatar = avatar;
     }
 
-    public boolean isPremium() {
-        return isPremium;
-    }
 
-    public void setPremium(boolean premium) {
-        isPremium = premium;
-    }
 
     public String getEmail() {
         return email;
@@ -102,13 +92,6 @@ public class UserDTO {
         this.password = password;
     }
 
-    public int getBalance() {
-        return balance;
-    }
-
-    public void setBalance(int balance) {
-        this.balance = balance;
-    }
 
     public String getBankAccount() {
         return bankAccount;
@@ -126,11 +109,11 @@ public class UserDTO {
         this.bankName = bankName;
     }
 
-    public int getStatus() {
-        return status;
+    public boolean isLocked() {
+        return isLocked;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setLocked(boolean locked) {
+        isLocked = locked;
     }
 }

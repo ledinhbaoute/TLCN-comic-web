@@ -63,17 +63,15 @@ public class ImageStorageService implements IStorageService {
             String fileExtension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
             String generatedFileName = UUID.randomUUID().toString().replace("-", "");
             generatedFileName = generatedFileName + "." + fileExtension;
-            Path destinationFilePath = this.storageFolder.resolve(Paths.get(generatedFileName)).normalize().toAbsolutePath();
+            Path destinationFilePath = this.storageFolder.resolve(Paths.get(generatedFileName)).normalize()
+                    .toAbsolutePath();
             if (!destinationFilePath.getParent().equals(this.storageFolder.toAbsolutePath())) {
                 throw new RuntimeException("Cannot store file outside current directory.");
             }
             try (InputStream inputStream = multipartFile.getInputStream()) {
                 Files.copy(inputStream, destinationFilePath, StandardCopyOption.REPLACE_EXISTING);
-
             }
             return generatedFileName;
-
-
         } catch (IOException exception) {
             throw new RuntimeException("Failed to store file", exception);
         }
@@ -81,8 +79,6 @@ public class ImageStorageService implements IStorageService {
 
     @Override
     public byte[] readFileContent(String fileName) {
-
-
         try {
             Path file = storageFolder.resolve(fileName);
             Resource resource = new UrlResource(file.toUri());
@@ -110,7 +106,6 @@ public class ImageStorageService implements IStorageService {
             throw new RuntimeException("Failed to load stored files", e);
         }
     }
-
 
     @Override
     public void deleteFile(String fileName) {

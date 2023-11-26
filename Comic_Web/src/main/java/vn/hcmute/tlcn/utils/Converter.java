@@ -32,17 +32,26 @@ public class Converter {
         ComicBookDTO comicBookDTO=this.convertEntityToDto(rating.getComicBook());
         return new RatingDTO(userDTO,comicBookDTO,rating.getScore(),rating.getComment());
     }
+    public ReportReasonDTO convertEntityToDto(ReportReason reportReason){return modelMapper.map(reportReason,ReportReasonDTO.class);}
     public FavoriteComicDTO convertEntityToDto(FavoriteComic favoriteComic){
         UserDTO userDTO=this.convertEntityToDto(favoriteComic.getUser());
         ComicBookDTO comicBookDTO=this.convertEntityToDto(favoriteComic.getComicBook());
         return new FavoriteComicDTO(userDTO,comicBookDTO);
     }
+    public CommentReportDTO convertEntityToDto(CommentReport commentReport){return modelMapper.map(commentReport,CommentReportDTO.class);}
     public ChapterImageDTO convertEntityToDto(ChapterImage chapterImage){
         return modelMapper.map(chapterImage,ChapterImageDTO.class);
+    }
+    public TransactionDTO convertEntityToDto(Transaction transaction){
+        return modelMapper.map(transaction,TransactionDTO.class);
     }
     public ComicReportDTO convertEntityToDto(ComicReport comicReport){
         return modelMapper.map(comicReport,ComicReportDTO.class);
     }
+    public DonateDTO convertEntityToDto(Donate donate){
+        return modelMapper.map(donate,DonateDTO.class);
+    }
+    public WalletDTO convertEntityToDto(Wallet wallet){return modelMapper.map(wallet,WalletDTO.class);}
     public Genre convertDtoToEntity(GenreDTO genreDTO){
         return modelMapper.map(genreDTO,Genre.class);
     }
