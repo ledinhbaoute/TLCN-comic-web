@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import vn.hcmute.tlcn.entity.Chapter;
 import vn.hcmute.tlcn.entity.ReadingHistory;
 import vn.hcmute.tlcn.entity.User;
-import vn.hcmute.tlcn.primaryKey.ReadingHistoryKey;
+import vn.hcmute.tlcn.primarykey.ReadingHistoryKey;
 import vn.hcmute.tlcn.repository.ChapterRepository;
 import vn.hcmute.tlcn.repository.ReadingHistoryRepo;
 import vn.hcmute.tlcn.repository.UserRepository;

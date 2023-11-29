@@ -1,7 +1,7 @@
 package vn.hcmute.tlcn.entity;
 
 import javax.persistence.*;
-import vn.hcmute.tlcn.primaryKey.RatingKey;
+import vn.hcmute.tlcn.primarykey.RatingKey;
 
 @Entity
 @Table(name="ratings")

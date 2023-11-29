@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import vn.hcmute.tlcn.primaryKey.FavoriteComicKey;
+import vn.hcmute.tlcn.primarykey.FavoriteComicKey;
 import vn.hcmute.tlcn.entity.ComicBook;
 import vn.hcmute.tlcn.entity.FavoriteComic;
 import vn.hcmute.tlcn.model.ResponseObject;

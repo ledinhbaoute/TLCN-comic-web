@@ -1,6 +1,6 @@
 package vn.hcmute.tlcn.entity;
 
-import vn.hcmute.tlcn.primaryKey.ReadingHistoryKey;
+import vn.hcmute.tlcn.primarykey.ReadingHistoryKey;
 
 import javax.persistence.*;
 import java.util.Date;

@@ -2,7 +2,7 @@ package vn.hcmute.tlcn.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import vn.hcmute.tlcn.primaryKey.FavoriteComicKey;
+import vn.hcmute.tlcn.primarykey.FavoriteComicKey;
 import vn.hcmute.tlcn.entity.FavoriteComic;
 
 import java.util.List;

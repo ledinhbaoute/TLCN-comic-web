@@ -1,7 +1,4 @@
-package vn.hcmute.tlcn.primaryKey;
-
-import vn.hcmute.tlcn.entity.Chapter;
-import vn.hcmute.tlcn.entity.User;
+package vn.hcmute.tlcn.primarykey;
 
 import java.io.Serializable;
 import java.util.Objects;
