@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 const Pagination = () => {
 
     return (
-        <div class="product__pagination">
+        <div className="product__pagination">
             <a href="#" class="current-page">1</a>
             <a href="#">2</a>
             <a href="#">3</a>

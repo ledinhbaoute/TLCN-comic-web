@@ -33,7 +33,7 @@ const Home = () => {
   return (
     <div>
       {/*  Hero Section Begin  */}
-      <section className="hero">
+      {/* <section className="hero">
         <div className="container">
           <div className="hero__slider owl-carousel">
             <div
@@ -89,7 +89,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
       {/*  Hero Section End  */}
 
       {/* Product Section Begin */}

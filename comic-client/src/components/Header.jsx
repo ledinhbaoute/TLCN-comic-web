@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "../sass/style.scss";
 import "../css/AllStyles";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../config/config";
 import Cookies from "js-cookie";
-import {checkAuth} from "../security/Authentication";
+import { checkAuth } from "../security/Authentication";
 
 const Header = () => {
   const logoUrl = `${process.env.PUBLIC_URL}/images/logo.png`;
 
   const [genres, setGenres] = useState([]);
-
-  
+  const navigate = useNavigate();
 
   const logout = () => {
     Cookies.remove("access_token");
@@ -20,6 +19,11 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
+    navigate("/");
+    window.location.reload();
+    window.scrollTo({
+      top: 0
+    });
   };
 
   useEffect(() => {

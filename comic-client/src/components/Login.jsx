@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import "../sass/style.scss";
 import "../css/AllStyles";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../config/config";
 import Cookies from "js-cookie";
+import { useNavigateTo } from "../service/navigation";
 
 const Login = () => {
   const imgBgUrl = `${process.env.PUBLIC_URL}images/normal-breadcrumb.jpg`;
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+
+  const navigate = useNavigateTo();
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -33,7 +35,7 @@ const Login = () => {
         }
       );
         Cookies.set("access_token", response.data.accessToken);
-        navigate("/")
+        navigate("/");
     } catch (error) {
       window.alert("Login failed")
       console.error(error);

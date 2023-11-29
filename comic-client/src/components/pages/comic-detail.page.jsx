@@ -1,7 +1,7 @@
 import React from "react";
 import ComicDetail from "../ComicDetail";
-import Breadcrumb from "../breadcrumb";
-import Review from "../review";
+import Breadcrumb from "../Breadcrumb";
+import Review from "../Review";
 import ComicList from "../ComicList";
 const ComicDetailPage = () => {
     return (

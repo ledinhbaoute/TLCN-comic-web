@@ -1,6 +1,6 @@
 import React from "react";
 import ComicItem from "../ComicItem";
-import Breadcrumb from "../breadcrumb";
+import Breadcrumb from "../Breadcrumb";
 import ComicList from "../ComicList";
 import Pagination from "../Pagination";
 const GenresPage = () => {
