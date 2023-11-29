@@ -18,9 +18,9 @@ create table `users`(
 	`id` varchar(20) not null,
     `name` nvarchar(128) not null,
     `avatar` varchar(200) default null,
-    `email` varchar(128) not null,
+    `email` varchar(128) unique not null,
     `phone_number` varchar(20) not null,
-    `user_name` varchar(128) not null,
+    `user_name` varchar(128) unique not null,
     `password` text not null,
     `bank_account` varchar(20) default null,
 	`bank_name` varchar(20) default null,
@@ -72,9 +72,9 @@ UNLOCK TABLES;
 create table `admin`(
 	`id` int unsigned auto_increment not null,
     `name` nvarchar(128) not null,
-    `email` varchar(128) not null,
+    `email` varchar(128) unique not null,
     `phone_number` varchar(20) not null,
-    `user_name` varchar(128) not null,
+    `user_name` varchar(128) unique not null,
     `password` text not null,
     primary key (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -142,7 +142,6 @@ LOCK TABLES `comments` WRITE;
 ALTER TABLE `comments` DISABLE KEYS ;
 ALTER TABLE `comments` ENABLE KEYS ;
 UNLOCK TABLES;
-
 
 create table `images`(
 	`id` int unsigned auto_increment not null,
@@ -340,6 +339,24 @@ LOCK TABLES `transactions` WRITE;
 ALTER TABLE `transactions` DISABLE KEYS ;
 ALTER TABLE `transactions` ENABLE KEYS ;
 unlock tables;
+
+create table `history_reading`(
+    `user_id` varchar(20),
+    `chapter_id` varchar(20),
+    `reading_time` timestamp(6) default current_timestamp(6),
+    foreign key(`user_id`) references users(`id`),
+    foreign key(`chapter_id`) references chapters(`id`),
+    primary key(`user_id`,`chapter_id`)
+    
+)
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+LOCK TABLES `history_reading` WRITE;
+ALTER TABLE `history_reading` DISABLE KEYS ;
+ALTER TABLE `history_reading` ENABLE KEYS ;
+unlock tables;
+
+drop table history_reading;
 
 
 

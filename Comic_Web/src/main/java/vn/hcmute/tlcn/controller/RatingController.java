@@ -25,7 +25,7 @@ public class RatingController {
             UserDetails userDetails= (UserDetails) authentication.getPrincipal();
             return iRatingService.addRating(userDetails.getUsername(), comicId, score, comment);
         }
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
 
     @GetMapping("/ratings")

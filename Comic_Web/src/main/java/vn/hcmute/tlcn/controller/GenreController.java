@@ -40,7 +40,7 @@ public class GenreController {
 
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Insert Success!", ""));
         }
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
 
     @PutMapping("admin/genres")
@@ -51,7 +51,7 @@ public class GenreController {
 
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Update Success!", ""));
         }
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
 
     @DeleteMapping("admin/genres")
@@ -66,7 +66,7 @@ public class GenreController {
                 return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, e.getMessage(), ""));
             }
         }
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
 
     }
 }

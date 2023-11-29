@@ -26,6 +26,7 @@ public class Chapter {
     @Column(name = "ordinal_number")
     private int ordinalNumber;
 
+
     public Chapter() {
     }
 

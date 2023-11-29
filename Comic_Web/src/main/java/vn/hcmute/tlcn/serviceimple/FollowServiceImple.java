@@ -31,7 +31,7 @@ public class FollowServiceImple implements IFollowService {
         User userFollower=optionalFollower.get();
         User user=userOptional.get();
         if(userFollower.getUserName().equals(user.getUserName()))
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false,"Cannot follower yourseft! ",""));
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false,"Cannot follower yourself! ",""));
         Follower follower=new Follower(userFollower,user);
         followRepository.save(follower);
         return ResponseEntity.ok(new ResponseObject(false,"Add Follower Success!",follower));
@@ -47,7 +47,7 @@ public class FollowServiceImple implements IFollowService {
 
         User userFollower=optionalFollower.get();
         User user=userOptional.get();
-        FollowKey followKey=new FollowKey(userFollower,user);
+        FollowKey followKey=new FollowKey(userFollower.getId(),user.getId());
         try {
             Optional<Follower>optional=followRepository.findById(followKey);
             if(!optional.isPresent())

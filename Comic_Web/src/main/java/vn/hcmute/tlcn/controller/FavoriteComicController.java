@@ -27,7 +27,7 @@ public class FavoriteComicController {
                 return ResponseEntity.ok(new ResponseObject(true, "Query success!", favoriteComicDTOS));
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, "Favorite book is empty!", ""));
         }
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
 
     @PostMapping("user/favorite-comic")
@@ -37,7 +37,7 @@ public class FavoriteComicController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             return favoriteComicService.addFavoriteComic(userDetails.getUsername(), comicId);
         }
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
 
     @DeleteMapping("user/favorite-comic")
@@ -48,7 +48,7 @@ public class FavoriteComicController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             return favoriteComicService.removeFavoriteComic(userDetails.getUsername(), comicId);
         }
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
 
 }

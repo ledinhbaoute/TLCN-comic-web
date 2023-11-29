@@ -8,6 +8,7 @@ import vn.hcmute.tlcn.entity.Rating;
 import java.util.List;
 
 @Repository
+
 public interface RatingRepository extends JpaRepository<Rating, RatingKey> {
     List<Rating>findByComicBook_Id(String comicId);
 }

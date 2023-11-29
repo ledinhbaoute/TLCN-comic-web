@@ -20,7 +20,7 @@ public class FollowController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             return iFollowService.addFollow(userDetails.getUsername(), userName);
         }
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
 
     @DeleteMapping("user/follows")
@@ -30,6 +30,6 @@ public class FollowController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             return iFollowService.unFollow(userDetails.getUsername(), userName);
         }
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
 }

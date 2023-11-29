@@ -2,6 +2,7 @@ package vn.hcmute.tlcn.model;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class WalletDTO {
@@ -29,10 +30,10 @@ public class WalletDTO {
         return id;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public String getCreatedAt() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        return formatter.format(createdAt);
     }
-
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }

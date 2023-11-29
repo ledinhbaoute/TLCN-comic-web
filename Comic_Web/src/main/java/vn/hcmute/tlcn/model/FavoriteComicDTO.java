@@ -6,7 +6,6 @@ public class FavoriteComicDTO {
 
     public FavoriteComicDTO() {
     }
-
     public FavoriteComicDTO(UserDTO userDTO, ComicBookDTO comicBookDTO) {
         this.userDTO = userDTO;
         this.comicBookDTO = comicBookDTO;

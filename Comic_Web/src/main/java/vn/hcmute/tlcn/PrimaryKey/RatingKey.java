@@ -1,28 +1,47 @@
 package vn.hcmute.tlcn.primaryKey;
 
-import vn.hcmute.tlcn.entity.ComicBook;
-import vn.hcmute.tlcn.entity.User;
-
 import java.io.Serializable;
+import java.util.Objects;
 
 public class RatingKey implements Serializable {
-    private User user;
-    private ComicBook comicBook;
+    private String user;
+    private String comicBook;
 
+    public RatingKey(String userId, String comicId) {
+        this.user = userId;
+        this.comicBook = comicId;
+    }
 
-    public User getUser() {
+    public RatingKey() {
+    }
+
+    public String getUserId() {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(String userId) {
+        this.user = userId;
     }
 
-    public ComicBook getComicBook() {
+    public String getComicId() {
         return comicBook;
     }
 
-    public void setComicBook(ComicBook comicBook) {
-        this.comicBook = comicBook;
+    public void setComicId(String comicId) {
+        this.comicBook = comicId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user, comicBook);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RatingKey ratingId = (RatingKey) o;
+        return Objects.equals(user, ratingId.user) &&
+                Objects.equals(comicBook, ratingId.comicBook);
     }
 }

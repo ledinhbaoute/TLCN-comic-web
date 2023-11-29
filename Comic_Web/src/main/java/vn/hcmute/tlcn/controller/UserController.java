@@ -10,12 +10,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+import vn.hcmute.tlcn.model.OTP;
 import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.entity.User;
 import vn.hcmute.tlcn.jwt.JwtService;
 import vn.hcmute.tlcn.model.Token;
 import vn.hcmute.tlcn.repository.UserRepository;
 import vn.hcmute.tlcn.securiry.CustomUserDetailsService;
+import vn.hcmute.tlcn.serviceimple.EmailService;
 import vn.hcmute.tlcn.serviceimple.UserServiceImple;
 import vn.hcmute.tlcn.utils.ValidatePassword;
 
@@ -48,10 +51,26 @@ public class UserController {
     ResponseEntity<ResponseObject>registerUser(@RequestParam("name") String name,@RequestParam("email") String email,
                                                @RequestParam("username")String username,@RequestParam("password")String pass,
                                                @RequestParam("confirmPass")String confirmPass){
+
         ResponseObject responseObject=userServiceImple.register(name,email,username,pass,confirmPass);
         return ResponseEntity.status(HttpStatus.OK).body(responseObject);
     }
-
+    @PostMapping("/verify_registration")
+    ResponseEntity<ResponseObject>verifyRegistration(@RequestParam("otp")String otpCode,@RequestParam("email")String email){
+        return ResponseEntity.ok(userServiceImple.verifyRegister(otpCode,email));
+    }
+    @PostMapping("/forgot_password")
+    ResponseEntity<ResponseObject>forgotPassword(@RequestParam("username")String username,@RequestParam("email")String email){
+        return ResponseEntity.ok(userServiceImple.forgotPassword(username,email));
+    }
+    @PostMapping("/verify_resetPassword")
+    ResponseEntity<?>verifyResetPassword(@RequestParam String otpCode,@RequestParam String email){
+        return ResponseEntity.ok(userServiceImple.verifyResetPassword(otpCode,email));
+    }
+    @PostMapping("/reset_password")
+    ResponseEntity<?>resetPassword(@RequestParam String email,@RequestParam String newPass,@RequestParam String confirmPass){
+        return ResponseEntity.ok(userServiceImple.resetPassword(email,newPass,confirmPass));
+    }
     @PostMapping("u/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestParam("username") String username,@RequestParam("password")String pass) throws Exception {
 
@@ -81,9 +100,14 @@ public class UserController {
             else if (check==2)return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true,"Change password success!",""));
             else return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(validatePassword.checkPasswordValid(newPass));
         }
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
 
     }
+//    @PostMapping("/forgot_password")
+//    public ResponseEntity<?>forgotPassword(@RequestParam String username,@RequestParam String email,@RequestParam String newPass,
+//                                           @RequestParam String confirmPass){
+//        return ResponseEntity.ok(userServiceImple.forgotPassword(username,email,newPass,confirmPass));
+//    }
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,String> {
     Optional<User> findOneByUserNameAndPassword(String username,String password);
     Optional<User> findOneByUserName(String username);
-
+    Optional<User>findOneByEmail(String email);
     @Query("SELECT t FROM User t WHERE LOWER(t.name) LIKE LOWER(CONCAT('%', :input, '%'))")
     List<User> searchByInput(String input);
 }

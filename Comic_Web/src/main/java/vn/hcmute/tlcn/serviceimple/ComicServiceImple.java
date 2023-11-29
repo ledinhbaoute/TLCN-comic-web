@@ -189,5 +189,12 @@ public class ComicServiceImple implements IComicBookService {
         }
         return new ResponseObject(false,"You need upgrade to Premium Account!","");
     }
-
+    @Override
+    public void increaseView(String comicId){
+        ComicBook comicBook=comicBookRepository.findById(comicId).orElse(null);
+        if (comicBook==null)
+            return;
+        comicBook.setView(comicBook.getView()+1);
+        comicBookRepository.save(comicBook);
+    }
 }

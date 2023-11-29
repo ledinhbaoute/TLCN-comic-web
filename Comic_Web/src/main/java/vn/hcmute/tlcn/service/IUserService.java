@@ -7,9 +7,9 @@ import vn.hcmute.tlcn.model.UserDTO;
 
 public interface IUserService {
     UserDTO getUser(String username);
-    int checkRegisterCondition(String userName,String password,String confirmPass);
+    int checkRegisterCondition(String userName,String password,String confirmPass,String email);
     ResponseObject register(String name, String email, String username, String pass, String conFirmPass);
-    Boolean checkUserExist(String username);
+    boolean checkUserExist(String username,String email);
     int changePassword(String username,String password,String newPass,String confirmPass);
     ResponseEntity<ResponseObject> uploadAvatar(String username, MultipartFile file);
 }

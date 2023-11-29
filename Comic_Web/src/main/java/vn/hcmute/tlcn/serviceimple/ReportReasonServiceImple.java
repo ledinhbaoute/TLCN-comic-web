@@ -15,13 +15,11 @@ public class ReportReasonServiceImple implements IReportResonService {
     ReportReasonRepository reportReasonRepository;
     @Autowired
     Converter converter;
-
     public List<ReportReasonDTO> getReasonReportForComic(){
 
          return reportReasonRepository.findAllByType(1).stream().map(p->converter.convertEntityToDto(p)).toList();
     }
     public List<ReportReasonDTO>getReasonReportForComment(){
-
         return reportReasonRepository.findAllByType(2).stream().map(p->converter.convertEntityToDto(p)).toList();
     }
 }
