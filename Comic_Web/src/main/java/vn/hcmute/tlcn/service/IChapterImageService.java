@@ -12,4 +12,5 @@ public interface IChapterImageService {
     ResponseEntity<ResponseObject> addImageChapter(String username, String chapterId, MultipartFile file);
 //    public byte[] readFileContent(String fileName);
     int deleteChapterImg(String username,String fileName);
+
 }

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import vn.hcmute.tlcn.primaryKey.FavoriteComicKey;
+import vn.hcmute.tlcn.primarykey.FavoriteComicKey;
 import vn.hcmute.tlcn.entity.ComicBook;
 import vn.hcmute.tlcn.entity.FavoriteComic;
 import vn.hcmute.tlcn.model.ResponseObject;
@@ -57,7 +57,7 @@ public class FavoriteComicServiceImple implements IFavoriteComicService {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false,"Comic not exist!",""));
         User user=optionalUser.get();
         ComicBook comicBook=optionalComicBook.get();
-        FavoriteComicKey favoriteComicKey=new FavoriteComicKey(user,comicBook);
+        FavoriteComicKey favoriteComicKey=new FavoriteComicKey(user.getId(),comicBook.getId());
         Optional<FavoriteComic>optional=favoriteComicRepository.findById(favoriteComicKey);
         if (!optional.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false,"Don't have this comic in this user's favorite comic list!",""));

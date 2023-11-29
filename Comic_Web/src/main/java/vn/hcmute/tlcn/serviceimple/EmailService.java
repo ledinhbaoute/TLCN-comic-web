@@ -17,7 +17,6 @@ public class EmailService {
     public EmailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
-
     public OTP generateOtp() {
         long EXPIRATION_TIME_MINUTES = 5;
         long currentTime= Instant.now().getEpochSecond();
@@ -33,7 +32,7 @@ public class EmailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);
-        message.setText("Your OTP (One Time Password) is: " + otp.getCode());
+        message.setText("Here is your OTP (One Time Password) ,valid for 5 minutes: " + otp.getCode());
         javaMailSender.send(message);
     }
     public int verifyOtp(String otpCodeFromUser,String emailUser,OTP otpOriginal){

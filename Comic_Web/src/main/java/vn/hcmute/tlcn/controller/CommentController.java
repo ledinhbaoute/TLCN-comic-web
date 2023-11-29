@@ -24,7 +24,7 @@ public class CommentController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             return iCommentService.addComment(userDetails.getUsername(), chapterId, content);
         }
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
 
     @GetMapping("/comments")

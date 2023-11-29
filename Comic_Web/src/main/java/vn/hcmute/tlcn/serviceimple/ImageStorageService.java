@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -106,7 +107,6 @@ public class ImageStorageService implements IStorageService {
             throw new RuntimeException("Failed to load stored files", e);
         }
     }
-
     @Override
     public void deleteFile(String fileName) {
         Path filePath=this.storageFolder.resolve(fileName);

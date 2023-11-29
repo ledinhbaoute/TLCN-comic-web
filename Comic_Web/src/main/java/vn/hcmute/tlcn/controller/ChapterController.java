@@ -42,7 +42,7 @@ public class ChapterController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseObject(false, e.getMessage(), ""));
             }
         }
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
 
     @PutMapping("/user/chapters")
@@ -57,7 +57,7 @@ public class ChapterController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseObject(false, e.getMessage(), ""));
             }
         }
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
 
     @DeleteMapping("/user/chapters")
@@ -72,12 +72,12 @@ public class ChapterController {
                 if (check == 1)
                     return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, "Chapter not exist!", ""));
                 if (check == 2)
-                    return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, "You cann't delete chapter in someone else's comic!", ""));
-                return ResponseEntity.ok().body(new ResponseObject(true, "Delete Succes!", ""));
+                    return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, "You can't delete chapter in someone else's comic!", ""));
+                return ResponseEntity.ok().body(new ResponseObject(true, "Delete Success!", ""));
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseObject(false, e.getMessage(), ""));
             }
-        } return ResponseEntity.status(401).body("Unauthoried!");
+        } return ResponseEntity.status(401).body("Unauthorized!");
     }
 
 

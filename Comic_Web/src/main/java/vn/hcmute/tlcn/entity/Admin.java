@@ -11,6 +11,7 @@ public class Admin {
     @Id
     private  int id;
     private String name;
+
     private String email;
     @Column(name = "phone_number")
     private String phoneNumber;

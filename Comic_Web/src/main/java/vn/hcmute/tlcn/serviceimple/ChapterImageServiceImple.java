@@ -138,4 +138,11 @@ public class ChapterImageServiceImple implements IChapterImageService {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, exception.getMessage(), ""));
         }
     }
+   public List<String>getAllImageByComic(String comicId){
+        return  chapterImageRepository.findAllByChapter_ComicBook_Id(comicId).stream().map(i->i.getLink()).toList();
+   }
+    public List<String>getAllImageByChapter(String chapterId){
+        return  chapterImageRepository.findByChapter_IdOrderByOrdinalNumberAsc(chapterId).stream().map(i->i.getLink()).toList();
+    }
 }
+

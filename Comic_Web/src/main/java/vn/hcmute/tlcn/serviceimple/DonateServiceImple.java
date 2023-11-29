@@ -33,7 +33,6 @@ public class DonateServiceImple {
     PasswordEncoder passwordEncoder;
     @Autowired
     Converter converter;
-
     @Transactional
     public ResponseObject donate(String dnt_username, String rcv_username, int amount, String message, String password) {
 

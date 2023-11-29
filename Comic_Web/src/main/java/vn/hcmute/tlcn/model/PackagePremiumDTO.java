@@ -10,7 +10,6 @@ public class PackagePremiumDTO {
         this.cost = cost;
         this.duration = duration;
     }
-
     public PackagePremiumDTO() {
     }
 
@@ -18,6 +17,9 @@ public class PackagePremiumDTO {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getCost() {
         return cost;

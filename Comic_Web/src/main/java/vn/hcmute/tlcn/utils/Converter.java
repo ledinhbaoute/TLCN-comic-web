@@ -51,6 +51,9 @@ public class Converter {
     public DonateDTO convertEntityToDto(Donate donate){
         return modelMapper.map(donate,DonateDTO.class);
     }
+    public PackagePremiumDTO convertEntityToDto(PackagePremium packagePremium){
+        return modelMapper.map(packagePremium,PackagePremiumDTO.class);
+    }
     public WalletDTO convertEntityToDto(Wallet wallet){return modelMapper.map(wallet,WalletDTO.class);}
     public Genre convertDtoToEntity(GenreDTO genreDTO){
         return modelMapper.map(genreDTO,Genre.class);

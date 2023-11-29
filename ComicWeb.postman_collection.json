@@ -164,7 +164,7 @@
 							"urlencoded": [
 								{
 									"key": "name",
-									"value": "Lai Van Quy",
+									"value": "Nguyen Van A",
 									"type": "text"
 								},
 								{
@@ -174,7 +174,7 @@
 								},
 								{
 									"key": "username",
-									"value": "Quyne",
+									"value": "motododix",
 									"type": "text"
 								},
 								{
@@ -209,34 +209,35 @@
 					"name": "change password",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKd3QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJRdXluZSIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwMDQzNTU5MywiaWF0IjoxNzAwNDE3NTkzfQ.WvU5sFnACyuOWKyAxGSPVAuDHtckZTgSDLNelHajDPLuEZJ42Kw5kSE8PZL7P_TJmEKCOJtZxXd7l0bSoJxKAA",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "urlencoded",
 							"urlencoded": [
 								{
-									"key": "comicName",
-									"value": "Doraemon",
-									"type": "text"
-								},
-								{
-									"key": "username",
-									"value": "Quynee",
-									"type": "text"
-								},
-								{
 									"key": "password",
-									"value": "123456",
+									"value": "Lvq0612@",
 									"type": "text"
 								},
 								{
-									"key": "genreIds",
-									"value": "GR_01,GR_02",
+									"key": "newPass",
+									"value": "Lvq0612@a",
+									"type": "text"
+								},
+								{
+									"key": "confirmPass",
+									"value": "Lvq0612@a",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/v1/comicbooks",
+							"raw": "http://localhost:8081/api/v1/user/change-password",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -245,7 +246,121 @@
 							"path": [
 								"api",
 								"v1",
-								"comicbooks"
+								"user",
+								"change-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgotPassword",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "motododix",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "lvqshopp@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v1/forgot_password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"forgot_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verifyResetPassword",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "otpCode",
+									"value": "535759",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "lvqshopp@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v1/verify_resetPassword",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"verify_resetPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "resetPassword",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "lvqshopp@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "newPass",
+									"value": "Aaaa123@",
+									"type": "text"
+								},
+								{
+									"key": "confirmPass",
+									"value": "Aaaa123@",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v1/reset_password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"reset_password"
 							]
 						}
 					},
@@ -321,6 +436,42 @@
 								"v1",
 								"user",
 								"register_premium"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verifyRegistration",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "otp",
+									"value": "766253",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "lvqshopp@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v1/verify_registration",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"verify_registration"
 							]
 						}
 					},
@@ -675,6 +826,38 @@
 								"user",
 								"comic",
 								"upgrade_premium"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "increaseView",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "comicId",
+									"value": "B_001",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v1/comic/view",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"comic",
+								"view"
 							]
 						}
 					},
@@ -1228,80 +1411,6 @@
 			]
 		},
 		{
-			"name": "otp",
-			"item": [
-				{
-					"name": "sendOtp",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "receivedMail",
-									"value": "lvqshopp@bcs.co",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://localhost:8081/api/v1/otp/send-otp",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"api",
-								"v1",
-								"otp",
-								"send-otp"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "verifyOTP",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "otp",
-									"value": "199634",
-									"type": "text"
-								},
-								{
-									"key": "email",
-									"value": "lvqshopp@gmail.com",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://localhost:8081/api/v1/system-bank-account/verify-otp",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"api",
-								"v1",
-								"system-bank-account",
-								"verify-otp"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "follow",
 			"item": [
 				{
@@ -1311,7 +1420,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer ",
+								"value": "Bearer eyJ0eXAiOiJKd3QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb3RvZG9kaXgiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE3MDEyNDQwMTIsImlhdCI6MTcwMTIyOTYxMn0.EJOK1rc8APabcx9-OHVx7z1c2HEMnFrxC2YVeUJiQofdhAJsZG7KRLtQ38tDnmbSR_AsFpbLqI_SHuYioyn3wQ",
 								"type": "text"
 							}
 						],
@@ -1320,7 +1429,7 @@
 							"urlencoded": [
 								{
 									"key": "username",
-									"value": "Baone",
+									"value": "Quyne",
 									"type": "text"
 								}
 							]
@@ -1768,6 +1877,14 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "getPersonalWallet",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			]
 		},
@@ -1908,6 +2025,285 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "addPackage",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKd3QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOlsiUk9MRV9BRE1JTiJdLCJleHAiOjE3MDEyNTUyMjgsImlhdCI6MTcwMTI0MDgyOH0.brXSdI-0YRsQmBX3-YIuaJ6sYaNdI3legTPLMGyoZPrTCmd3prPfa5KHrFhfDdP9WX7jTBQv7jCHQjDqNSDSlw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cost\":\"20000\",\r\n    \"duration\":\"180\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v1/admin/package_premium",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"package_premium"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePackage",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKd3QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOlsiUk9MRV9BRE1JTiJdLCJleHAiOjE3MDEyNTUyMjgsImlhdCI6MTcwMTI0MDgyOH0.brXSdI-0YRsQmBX3-YIuaJ6sYaNdI3legTPLMGyoZPrTCmd3prPfa5KHrFhfDdP9WX7jTBQv7jCHQjDqNSDSlw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "packageId",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "newCost",
+									"value": "10000",
+									"type": "text"
+								},
+								{
+									"key": "newDuration",
+									"value": "270",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v1/admin/package_premium",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"package_premium"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "HistoryReading",
+			"item": [
+				{
+					"name": "addHistory",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "chapterId",
+									"value": "CH_001",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v1/user/history_reading",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"history_reading"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getHistoryByUser",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v1/user/history_reading",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"history_reading"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FavoriteComic",
+			"item": [
+				{
+					"name": "addFavoriteComic",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKd3QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb3RvZG9kaXgiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE3MDEyNDQwMTIsImlhdCI6MTcwMTIyOTYxMn0.EJOK1rc8APabcx9-OHVx7z1c2HEMnFrxC2YVeUJiQofdhAJsZG7KRLtQ38tDnmbSR_AsFpbLqI_SHuYioyn3wQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "comicId",
+									"value": "B_001",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v1/user/favorite-comic",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"favorite-comic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getFavoriteComicByUser",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKd3QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb3RvZG9kaXgiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE3MDEyNDQwMTIsImlhdCI6MTcwMTIyOTYxMn0.EJOK1rc8APabcx9-OHVx7z1c2HEMnFrxC2YVeUJiQofdhAJsZG7KRLtQ38tDnmbSR_AsFpbLqI_SHuYioyn3wQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v1/user/favorite-comic",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"favorite-comic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteFavoriteComic",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKd3QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb3RvZG9kaXgiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE3MDEyNDQwMTIsImlhdCI6MTcwMTIyOTYxMn0.EJOK1rc8APabcx9-OHVx7z1c2HEMnFrxC2YVeUJiQofdhAJsZG7KRLtQ38tDnmbSR_AsFpbLqI_SHuYioyn3wQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "comicId",
+									"value": "B_001",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v1/user/favorite-comic",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"favorite-comic"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1927,58 +2323,6 @@
 						"api",
 						"v1",
 						"users"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "test Copy 2",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "name",
-							"value": "Thomas",
-							"type": "text"
-						},
-						{
-							"key": "email",
-							"value": "lvqshopp@gmail.com",
-							"type": "text"
-						},
-						{
-							"key": "username",
-							"value": "lvqshop",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "123456",
-							"type": "text"
-						},
-						{
-							"key": "confirmPass",
-							"value": "123456",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "http://localhost:8081/api/v1/users/register",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"api",
-						"v1",
-						"users",
-						"register"
 					]
 				}
 			},

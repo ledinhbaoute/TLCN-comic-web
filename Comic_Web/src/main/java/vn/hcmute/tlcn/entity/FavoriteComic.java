@@ -1,7 +1,7 @@
 package vn.hcmute.tlcn.entity;
 
 import javax.persistence.*;
-import vn.hcmute.tlcn.primaryKey.FavoriteComicKey;
+import vn.hcmute.tlcn.primarykey.FavoriteComicKey;
 
 @Entity
 @Table(name = "favorite_comic")

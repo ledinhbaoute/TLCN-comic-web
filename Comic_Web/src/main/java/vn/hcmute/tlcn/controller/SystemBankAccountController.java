@@ -23,7 +23,7 @@ public class SystemBankAccountController {
         if(!systemBankAccounts.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true,"Query Successful!",systemBankAccounts));
         }
-        else return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false,"Not excuted!",""));
+        else return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false,"Not executed!",""));
         }
 
 

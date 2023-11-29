@@ -16,5 +16,6 @@ public interface IComicBookService {
     ResponseObject updateComic(String username,String comicId,String newName,int newStatus);
     int deleteComic(String username,String comicId);
     List<ComicBookDTO>searchComicByInput(String input);
-    public ResponseObject upgradePremium(String username,String comicId);
+    ResponseObject upgradePremium(String username,String comicId);
+    void increaseView(String comicId);
 }

@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface ChapterImageRepository extends JpaRepository<ChapterImage,Integer> {
     List<ChapterImage>findByChapter_IdOrderByOrdinalNumberAsc(String chapterId);
     Optional<ChapterImage>findOneByLink(String fileName);
+    List<ChapterImage>findAllByChapter_ComicBook_Id(String comicId);
 }

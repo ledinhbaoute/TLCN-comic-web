@@ -30,7 +30,7 @@ public class FileUploadController {
             UserDetails userDetails= (UserDetails) authentication.getPrincipal();
             return chapterImageService.addImageChapter(userDetails.getUsername(), chapterId, file);
         }
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
 
     @PostMapping("/user/avt-upload")
@@ -40,7 +40,7 @@ public class FileUploadController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             return userService.uploadAvatar(userDetails.getUsername(), file);
         }
-        return ResponseEntity.status(401).body("Unauthoried!");
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
 
     @GetMapping("/files/{fileName:.+}")

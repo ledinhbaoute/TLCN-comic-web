@@ -20,18 +20,6 @@ public class ChapterImageController {
     @Autowired
     private IChapterImageService imageService;
 
-//    @GetMapping("chapter_images")
-//    public ResponseEntity<ResponseObject> getImagesByChapter(@RequestParam String chapterId) {
-//        try {
-//            List<ChapterImageDTO> chapterImageDTOS = imageService.getImagesByChapter(chapterId);
-//            int size = chapterImageDTOS.size();
-//            if (size > 0) return ResponseEntity.ok().body(new ResponseObject(true, "Query Success!", chapterImageDTOS));
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "ChapterImage not found!", ""));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, e.getMessage(), ""));
-//        }
-//
-//    }
 
     @GetMapping("/chapter_images/{chapterId}")
     public ResponseEntity<ResponseObject> getImagesDetailByChapter(Authentication authentication,@PathVariable String chapterId) {

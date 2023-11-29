@@ -11,7 +11,6 @@ import vn.hcmute.tlcn.repository.WalletRepository;
 import vn.hcmute.tlcn.utils.Converter;
 
 import java.util.Date;
-import java.util.Optional;
 
 @Service
 public class WalletServiceImple {
@@ -19,7 +18,6 @@ public class WalletServiceImple {
     WalletRepository walletRepository;
     @Autowired
     Converter converter;
-
     @Autowired
     UserRepository userRepository;
     public ResponseObject registerWallet(String username){
@@ -32,11 +30,10 @@ public class WalletServiceImple {
         catch (Exception e){
             return new ResponseObject(false,e.getMessage(),"");
         }
-
     }
-
     public WalletDTO getWalletByUser(String username){
 
-        return converter.convertEntityToDto( walletRepository.findOneByUser_UserName(username).orElse(null));
+        WalletDTO walletDTO= converter.convertEntityToDto( walletRepository.findOneByUser_UserName(username).orElse(null));
+        return walletDTO;
     }
 }

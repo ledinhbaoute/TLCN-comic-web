@@ -111,5 +111,9 @@ public class ComicBookController {
         }
         return ResponseEntity.status(401).body("Unauthorized!");
     }
+    @PostMapping("comic/view")
+    public void increaseView(@RequestParam String comicId){
+        service.increaseView(comicId);
+    }
 
 }
