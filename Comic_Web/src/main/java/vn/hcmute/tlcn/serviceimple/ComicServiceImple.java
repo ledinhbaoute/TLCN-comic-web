@@ -43,6 +43,8 @@ public class ComicServiceImple implements IComicBookService {
     private ImageStorageService imageStorageService;
     @Autowired
     private UserPremiumRepo userPremiumRepo;
+    @Autowired
+    private ChapterImageServiceImple chapterImageServiceImple;
     @Override
     public List<ComicBookDTO> getAllComic() {
         List<ComicBookDTO>comicBookDTOS=new ArrayList<>();
@@ -164,8 +166,14 @@ public class ComicServiceImple implements IComicBookService {
         if(!user.getId().equals(comicBook.getActorId().getId()))
             return 1;
         try {
+            List<String>imageList=chapterImageServiceImple.getAllImageByComic(comicId);
             comicBookRepository.deleteById(comicId);
             imageStorageService.deleteFile(comicBook.getImage());
+
+            for (String imageName:imageList
+                 ) {
+                imageStorageService.deleteFile(imageName);
+            }
             return 2;
         }
         catch (Exception e){

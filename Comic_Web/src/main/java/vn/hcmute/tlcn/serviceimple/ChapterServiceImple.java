@@ -34,6 +34,10 @@ public class ChapterServiceImple implements IChapterService {
     private ComicBookRepository comicBookRepository;
     @Autowired
     GenerateId generateId;
+    @Autowired
+    ChapterImageServiceImple chapterImageServiceImple;
+    @Autowired
+    ImageStorageService imageStorageService;
 
     @Override
     public List<ChapterDTO> getChapterByComic(String comicId) {
@@ -83,7 +87,13 @@ public class ChapterServiceImple implements IChapterService {
         Chapter chapter = optionalChapter.get();
         if (!chapter.getComicBook_Id().getActorId().getId().equals(user.getId()))
             return 1;
+        List<String>imageList=chapterImageServiceImple.getAllImageByChapter(chapterId);
         chapterRepository.deleteById(chapterId);
+        for (String imageName:imageList
+             ) {
+            imageStorageService.deleteFile(imageName);
+        }
+
         return 2;
     }
 
