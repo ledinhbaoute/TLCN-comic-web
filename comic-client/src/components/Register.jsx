@@ -7,6 +7,11 @@ import axios from "axios";
 import API_URL from "../config/config";
 import { useNavigateTo } from "../service/navigation";
 import OtpDialogInput from "./OTPDialogInput";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
 const Register = () => {
   const imgBgUrl = `${process.env.PUBLIC_URL}images/normal-breadcrumb.jpg`;
@@ -16,7 +21,7 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [otp ,setOtp] = useState("");
+  const [otp, setOtp] = useState("");
   const [otpDialogOpen, setOtpDialogOpen] = useState(false);
 
   const navigate = useNavigateTo();
@@ -31,7 +36,7 @@ const Register = () => {
 
   const handleOtpChange = (event) => {
     setOtp(event.target.value);
-  }
+  };
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -53,6 +58,12 @@ const Register = () => {
     setOtpDialogOpen(false);
   };
 
+  const handleOtpSubmit = () => {
+    // Xử lý logic khi người dùng gửi mã OTP
+    console.log("OTP:", otp);
+    handleCloseDialog();
+  };
+
   const register = async () => {
     try {
       const response = axios.post(
@@ -70,28 +81,15 @@ const Register = () => {
           },
         }
       );
-      navigate("/login");
-      window.alert("Tạo tài khoản thành công");
+      return response;
     } catch (error) {
       console.error(error);
     }
   };
 
-  const sendOtp = async () => {
-    const response = await axios.post(
-      `${API_URL}/otp/send-otp`,
-      { receivedMail: email },
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      }
-    );
-  };
-
   const verifyOtp = async (otp) => {
     const response = await axios.post(
-      `${API_URL}/otp/verify-otp`,
+      `${API_URL}/otp/verify_registration`,
       { otp: otp, email: email },
       {
         headers: {
@@ -99,20 +97,22 @@ const Register = () => {
         },
       }
     );
+    return response;
   };
 
-  const handleRegisterFormSubmit = (event) => {
-    register();
-    setOtpDialogOpen(true);
-    const verifyOtpResponse = verifyOtp();
-    if (verifyOtpResponse.data.status == true) register();
-    else if (verifyOtpResponse.data.message == "Otp Not Valid!")
-      window.alert("Sai OTP");
-    else if (verifyOtpResponse.data.message == "Otp Expired!")
-      window.alert("OTP đã hết hạn");
-    else window.alert("Lỗi!!");
-  };
+  const handleRegisterFormSubmit = async (event) => {
+    event.preventDefault();
 
+    const registerResponse = await register();
+    console.log(registerResponse.data);
+    if (!registerResponse.data.status)
+      window.alert("Tên đăng nhập hoặc email đã được sử dụng");
+    else {
+      handleOpenDialog();
+      console.log(otpDialogOpen);
+      handleOtpSubmit();
+    }
+  };
 
   return (
     <div>
@@ -196,7 +196,23 @@ const Register = () => {
                     Đăng ký
                   </button>
                 </form>
-                <OtpDialogInput open={otpDialogOpen} onClose={handleCloseDialog} />
+                {otpDialogOpen && <Dialog>
+                  <DialogTitle>Nhập OTP</DialogTitle>
+                  <DialogContent>
+                    <TextField
+                      label="OTP"
+                      variant="outlined"
+                      type="number"
+                      value={otp}
+                      onChange={handleOtpChange}
+                    />
+                  </DialogContent>
+                  <DialogContent>
+                    <Button variant="contained" onClick={handleOtpSubmit}>
+                      Xác nhận
+                    </Button>
+                  </DialogContent>
+                </Dialog>}
                 {/* <h5>
                   Đã có tài khoản?{" "}
                   <Link to="../login">

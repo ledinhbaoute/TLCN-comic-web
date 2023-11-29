@@ -21,7 +21,7 @@ const OtpDialogInput = ({ open, onClose }) => {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>OTP Input</DialogTitle>
+      <DialogTitle>Nhập OTP</DialogTitle>
       <DialogContent>
         <TextField
           label="OTP"
@@ -33,7 +33,7 @@ const OtpDialogInput = ({ open, onClose }) => {
       </DialogContent>
       <DialogContent>
         <Button variant="contained" onClick={handleSubmit}>
-          Submit
+          Xác nhận
         </Button>
       </DialogContent>
     </Dialog>
