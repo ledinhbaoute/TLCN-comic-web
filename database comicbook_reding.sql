@@ -356,7 +356,7 @@ ALTER TABLE `history_reading` DISABLE KEYS ;
 ALTER TABLE `history_reading` ENABLE KEYS ;
 unlock tables;
 
-drop table history_reading;
+
 
 
 
