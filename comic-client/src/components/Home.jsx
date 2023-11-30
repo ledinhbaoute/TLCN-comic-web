@@ -2,6 +2,7 @@ import React from "react";
 import "../sass/style.scss";
 import "../css/AllStyles";
 
+
 const Home = () => {
   const imgHeroUrl = `${process.env.PUBLIC_URL}images/hero/hero-1.jpg`;
   const imgTrendingUrl = [

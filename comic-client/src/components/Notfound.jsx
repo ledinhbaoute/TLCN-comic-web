@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 function NotFound() {
-  const img404Url = `${process.env.PUBLIC_URL}images/404.png`;
+  const img404Url = `${process.env.PUBLIC_URL}/images/404.png`;
 
   const imageContainerStyle = {
     display: 'flex',

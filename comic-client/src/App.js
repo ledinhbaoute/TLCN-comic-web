@@ -31,7 +31,7 @@ function App() {
           <Route path="/login" Component={Login} />
           <Route path='/register' Component={Register} />
           <Route path='/comic-detail' Component={ComicDetailPage} />
-          <Route path='/genres' Component={GenresPage} />
+          <Route path='/genres/:genreId' Component={GenresPage} />
           <Route path='/forgetpass' Component={ForgetPassword} />          
         </Route>
         <Route path="*" Component={NotFound} />

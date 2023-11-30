@@ -2,13 +2,25 @@ import React, { useState } from "react";
 import "../sass/style.scss";
 import "../css/AllStyles";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import API_URL from "../config/config";
+import { useNavigateTo } from "../service/navigation";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
 const ForgetPassword = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
+  const [otpDialogOpen, setOtpDialogOpen] = useState(false);
+  const [resetPassFormOpen, setResetPassFormOpen] = useState(false);
+  const [newPass, setNewPass] = useState("");
+  const [confirmPass, setConfỉrmPass] = useState("");
+
+  const navigate = useNavigateTo();
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -22,23 +34,106 @@ const ForgetPassword = () => {
     setOtp(event.target.value);
   };
 
-  const handleFormInfoSubmit = (event) => {
-    event.preventDefault();
-
-    if (username == "Bao" && email == "Bao") setIsOpen(true);
-    else setIsOpen(false);
+  const handleNewPassChange = (event) => {
+    setNewPass(event.target.value);
   };
 
-  const handleFormOtpSubmit = (event) => {
+  const handleConfirmPassChange = (event) => {
+    setConfỉrmPass(event.target.value);
+  };
+
+  const handleOpenDialog = () => {
+    setOtpDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOtpDialogOpen(false);
+  };
+
+  const forgetpass = async () => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/forgot_password`,
+        { username: username, email: email },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const verifyOtp = async () => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/verify_resetPassword`,
+        { otpCode: otp, email: email },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const resetpass = async () => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/reset_password`,
+        { email: email, newPass: newPass, confirmPass: confirmPass },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+      return response;
+    } catch (error) {}
+  };
+
+  const handleInfoSubmit = async (event) => {
     event.preventDefault();
-    var message
-    if (otp =="123456")
-        message = "Đúng"
-    else message = "Sai"
 
-    window.alert(message)
+    const forgetpassResponse = await forgetpass();
+    if (!forgetpassResponse.data.status)
+      window.alert(forgetpassResponse.data.message);
+    else {
+      handleOpenDialog();
+    }
+  };
 
+  const handleResetPassSubmit = async (event) => {
+    event.preventDefault();
+
+    const resetPassResponse = await resetpass();
+    if(!resetPassResponse.data.status)
+      window.alert(resetPassResponse.data.message);
+    else {
+      window.alert("Cập nhật mật khẩu thành công");
+      setResetPassFormOpen(false);
+      navigate("/login");
+    }
   }
+
+  const handleOtpSubmit = async (event) => {
+    event.preventDefault();
+
+    const verifyResponse = await verifyOtp();
+    if (!verifyResponse.data.status) window.alert(verifyResponse.data.message);
+    else {
+      window.alert("Xác thực thành công. Mời nhập mật khẩu mới");
+      handleCloseDialog();
+      setResetPassFormOpen(true);
+    }
+  };
 
   return (
     <section className="login spad">
@@ -47,41 +142,52 @@ const ForgetPassword = () => {
           <div className="col-lg-6">
             <div className="login__form">
               <h3>Lấy lại mật khẩu</h3>
-              <form onSubmit={handleFormInfoSubmit}>
-                <div className="input__item">
-                  <input
-                    type="text"
-                    id="username"
-                    placeholder="Tên đăng nhập"
-                    value={username}
-                    onChange={handleUsernameChange}
-                  />
-                  <span className="icon_profile"></span>
-                </div>
-                <div className="input__item">
-                  <input
-                    type="text"
-                    id="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={handleEmailChange}
-                  />
-                  <span className="icon_mail"></span>
-                </div>
-                <button type="submit" className="site-btn">
-                  Xác nhận
-                </button>
-              </form>
-              <div>
-                {isOpen && (
-                  <form onSubmit={handleFormOtpSubmit}>
+              {!resetPassFormOpen && (
+                <form onSubmit={handleInfoSubmit}>
                   <div className="input__item">
                     <input
                       type="text"
-                      id="otp"
-                      placeholder="Nhập otp"
-                      value={otp}
-                      onChange={handleOtpChange}
+                      id="username"
+                      placeholder="Tên đăng nhập"
+                      value={username}
+                      onChange={handleUsernameChange}
+                    />
+                    <span className="icon_profile"></span>
+                  </div>
+                  <div className="input__item">
+                    <input
+                      type="email"
+                      id="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={handleEmailChange}
+                    />
+                    <span className="icon_mail"></span>
+                  </div>
+                  <button type="submit" className="site-btn">
+                    Xác nhận
+                  </button>
+                </form>
+              )}
+              {resetPassFormOpen && (
+                <form onSubmit={handleResetPassSubmit}>
+                  <div className="input__item">
+                    <input
+                      type="password"
+                      id="newPass"
+                      placeholder="Mật khẩu mới"
+                      value={newPass}
+                      onChange={handleNewPassChange}
+                    />
+                    <span className="icon_lock"></span>
+                  </div>
+                  <div className="input__item">
+                    <input
+                      type="password"
+                      id="confirmPass"
+                      placeholder="Nhập lại mật khẩu"
+                      value={confirmPass}
+                      onChange={handleConfirmPassChange}
                     />
                     <span className="icon_lock"></span>
                   </div>
@@ -89,8 +195,25 @@ const ForgetPassword = () => {
                     Xác nhận
                   </button>
                 </form>
-                )}
-              </div>
+              )}
+              <Dialog open={otpDialogOpen}>
+                <DialogTitle>Nhập OTP</DialogTitle>
+                <DialogContent>
+                  <a>Nhập mã OTP được gửi tới email của bạn</a>
+                  <TextField
+                    label="OTP"
+                    variant="outlined"
+                    type="number"
+                    value={otp}
+                    onChange={handleOtpChange}
+                  />
+                </DialogContent>
+                <DialogContent>
+                  <Button variant="contained" onClick={handleOtpSubmit}>
+                    Xác nhận
+                  </Button>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
           <div className="col-lg-6">

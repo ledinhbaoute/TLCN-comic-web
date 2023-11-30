@@ -24,6 +24,16 @@ const Register = () => {
   const [otp, setOtp] = useState("");
   const [otpDialogOpen, setOtpDialogOpen] = useState(false);
 
+  const registerFailReasons = {
+    "Password must be 8 or more characters in length." : "Mật khẩu phải từ 8 ký tự trở lên",
+    "Password must contain 1 or more lowercase characters." : "Mật khẩu phải có tối thiểu 1 ký tự viết thường",
+    "Password must contain 1 or more uppercase characters." : "Mật khẩu phải có tối thiểu 1 ký tự viết hoa",
+    "Password must contain 1 or more digit characters." : "Mật khẩu phải có tối thiểu 1 ký tự số",
+    "Password must contain 1 or more special characters." : "Mật khẩu phải có tối thiểu 1 ký tự đặc biệt",
+    "User name or Email already exist!" : "Tên đăng nhập hoặc email đã được đăng ký",
+    "Password and confirm password doesn't match!" : "Mật khẩu nhập lại không khớp"
+  }
+
   const navigate = useNavigateTo();
 
   const handleFullnameChange = (event) => {
@@ -58,11 +68,7 @@ const Register = () => {
     setOtpDialogOpen(false);
   };
 
-  const handleOtpSubmit = () => {
-    // Xử lý logic khi người dùng gửi mã OTP
-    console.log("OTP:", otp);
-    handleCloseDialog();
-  };
+  
 
   const register = async () => {
     try {
@@ -87,31 +93,47 @@ const Register = () => {
     }
   };
 
-  const verifyOtp = async (otp) => {
-    const response = await axios.post(
-      `${API_URL}/otp/verify_registration`,
-      { otp: otp, email: email },
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      }
-    );
-    return response;
+  const verifyOtp = async () => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/verify_registration`,
+        { otp: otp, email: email },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleRegisterFormSubmit = async (event) => {
     event.preventDefault();
 
     const registerResponse = await register();
-    console.log(registerResponse.data);
+    // console.log(registerResponse.data);
     if (!registerResponse.data.status)
-      window.alert("Tên đăng nhập hoặc email đã được sử dụng");
+      window.alert(registerResponse.data.message);
     else {
       handleOpenDialog();
-      console.log(otpDialogOpen);
-      handleOtpSubmit();
+      // console.log(otpDialogOpen);
     }
+  };
+
+  const handleOtpSubmit = async () => {
+    // Xử lý logic khi người dùng gửi mã OTP
+    console.log("OTP:", otp);
+    const verifyResponse = await verifyOtp();
+    if(!verifyResponse.data.status)
+      window.alert(verifyResponse.data.message);
+    else{
+      window.alert("Tạo tài khoản thành công")
+      navigate("/login");
+    }
+    handleCloseDialog();
   };
 
   return (
@@ -196,9 +218,10 @@ const Register = () => {
                     Đăng ký
                   </button>
                 </form>
-                {otpDialogOpen && <Dialog>
+                <Dialog open={otpDialogOpen}>
                   <DialogTitle>Nhập OTP</DialogTitle>
                   <DialogContent>
+                    <a>Nhập mã OTP được gửi tới email của bạn</a>
                     <TextField
                       label="OTP"
                       variant="outlined"
@@ -212,7 +235,7 @@ const Register = () => {
                       Xác nhận
                     </Button>
                   </DialogContent>
-                </Dialog>}
+                </Dialog>
                 {/* <h5>
                   Đã có tài khoản?{" "}
                   <Link to="../login">

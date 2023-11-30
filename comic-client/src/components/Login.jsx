@@ -37,7 +37,7 @@ const Login = () => {
         Cookies.set("access_token", response.data.accessToken);
         navigate("/");
     } catch (error) {
-      window.alert("Login failed")
+      window.alert("Đăng nhập thất bại. Sai tên đăng nhập hoặc mật khẩu");
       console.error(error);
     }
   };
