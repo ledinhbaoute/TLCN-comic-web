@@ -862,6 +862,48 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "getComicTopView",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v1/comic_topview",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"comic_topview"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getComicTrendingByWeek",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v1/comic_trending",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"comic_trending"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

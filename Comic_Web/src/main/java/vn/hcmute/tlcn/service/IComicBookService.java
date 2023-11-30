@@ -1,6 +1,7 @@
 package vn.hcmute.tlcn.service;
 
 import org.springframework.web.multipart.MultipartFile;
+import vn.hcmute.tlcn.entity.ComicBook;
 import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.model.ComicBookDTO;
 
@@ -18,4 +19,6 @@ public interface IComicBookService {
     List<ComicBookDTO>searchComicByInput(String input);
     ResponseObject upgradePremium(String username,String comicId);
     void increaseView(String comicId);
+    List<ComicBookDTO>getComicTrendingByWeek();
+    List<ComicBookDTO>getComicTopView();
 }

@@ -356,6 +356,18 @@ ALTER TABLE `history_reading` DISABLE KEYS ;
 ALTER TABLE `history_reading` ENABLE KEYS ;
 unlock tables;
 
+create table `history_increase_view`(
+	`id`int auto_increment,
+    `comic_id` varchar(20) not null,
+    `date_increase` date not null,
+    primary key(`id`),
+    foreign key(`comic_id`) references comicbooks(`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+LOCK TABLES `history_increase_view` WRITE;
+ALTER TABLE `history_increase_view` DISABLE KEYS ;
+ALTER TABLE `history_increase_view` ENABLE KEYS ;
+unlock tables;
 
 
 

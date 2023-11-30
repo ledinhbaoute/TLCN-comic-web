@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import vn.hcmute.tlcn.entity.ComicBook;
 import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.model.ComicBookDTO;
 import vn.hcmute.tlcn.service.IComicBookService;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1")
+
 public class ComicBookController {
     @Autowired
     private IComicBookService service;
@@ -114,6 +116,15 @@ public class ComicBookController {
     @PostMapping("comic/view")
     public void increaseView(@RequestParam String comicId){
         service.increaseView(comicId);
+    }
+
+    @GetMapping("/comic_trending")
+    List<ComicBookDTO>getComicTrending(){
+        return service.getComicTrendingByWeek();
+    }
+    @GetMapping("comic_topview")
+    List<ComicBookDTO>getComicTopView(){
+        return service.getComicTopView();
     }
 
 }

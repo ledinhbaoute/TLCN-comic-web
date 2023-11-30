@@ -6,30 +6,20 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import vn.hcmute.tlcn.controller.FileUploadController;
-import vn.hcmute.tlcn.entity.UserPremium;
+import vn.hcmute.tlcn.entity.*;
 import vn.hcmute.tlcn.model.ResponseObject;
-import vn.hcmute.tlcn.repository.UserPremiumRepo;
+import vn.hcmute.tlcn.repository.*;
 import vn.hcmute.tlcn.utils.Converter;
 import vn.hcmute.tlcn.utils.GenerateId;
-import vn.hcmute.tlcn.entity.ComicBook;
-import vn.hcmute.tlcn.entity.Genre;
-import vn.hcmute.tlcn.entity.User;
 import vn.hcmute.tlcn.model.ComicBookDTO;
-import vn.hcmute.tlcn.repository.ComicBookRepository;
-import vn.hcmute.tlcn.repository.GenreRepository;
-import vn.hcmute.tlcn.repository.UserRepository;
 import vn.hcmute.tlcn.service.IComicBookService;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ComicServiceImple implements IComicBookService {
     @Autowired
     private ComicBookRepository comicBookRepository;
-
     @Autowired
     private UserRepository userRepository;
 
@@ -45,16 +35,19 @@ public class ComicServiceImple implements IComicBookService {
     private UserPremiumRepo userPremiumRepo;
     @Autowired
     private ChapterImageServiceImple chapterImageServiceImple;
+    @Autowired
+    private HistoryIncreaseViewRepo historyIncreaseViewRepo;
+
     @Override
     public List<ComicBookDTO> getAllComic() {
-        List<ComicBookDTO>comicBookDTOS=new ArrayList<>();
-        List<ComicBook>comicBooks=comicBookRepository.findAll();
-        for (ComicBook comic:comicBooks
-             ) {
+        List<ComicBookDTO> comicBookDTOS = new ArrayList<>();
+        List<ComicBook> comicBooks = comicBookRepository.findAll();
+        for (ComicBook comic : comicBooks
+        ) {
 
-            String urlPath= MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+            String urlPath = MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
                     "readDetailFile", comic.getImage()).build().toUri().toString();
-            ComicBookDTO comicBookDTO=converter.convertEntityToDto(comic);
+            ComicBookDTO comicBookDTO = converter.convertEntityToDto(comic);
             comicBookDTO.setImage(urlPath);
             comicBookDTOS.add(comicBookDTO);
         }
@@ -63,25 +56,26 @@ public class ComicServiceImple implements IComicBookService {
 
     @Override
     public List<ComicBookDTO> getComicByGenre(String genreId) {
-        List<ComicBookDTO> comicBookDTOS=new ArrayList<>();
-        List<ComicBook>comicBooks=comicBookRepository.findByGenres_Id(genreId);
-        for (ComicBook comic:comicBooks
-             ) {
-            String urlPath= MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+        List<ComicBookDTO> comicBookDTOS = new ArrayList<>();
+        List<ComicBook> comicBooks = comicBookRepository.findByGenres_Id(genreId);
+        for (ComicBook comic : comicBooks
+        ) {
+            String urlPath = MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
                     "readDetailFile", comic.getImage()).build().toUri().toString();
-            ComicBookDTO comicBookDTO=converter.convertEntityToDto(comic);
+            ComicBookDTO comicBookDTO = converter.convertEntityToDto(comic);
             comicBookDTO.setImage(urlPath);
             comicBookDTOS.add(comicBookDTO);
         }
         return comicBookDTOS;
     }
+
     @Override
     public ComicBookDTO getDetailComic(String comicId) {
-        ComicBookDTO comicBookDTO=new ComicBookDTO();
-        Optional<ComicBook> comicBook=comicBookRepository.findById(comicId);
-        if (comicBook.isPresent()){
-            comicBookDTO= converter.convertEntityToDto(comicBook.get());
-            String urlPath= MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+        ComicBookDTO comicBookDTO = new ComicBookDTO();
+        Optional<ComicBook> comicBook = comicBookRepository.findById(comicId);
+        if (comicBook.isPresent()) {
+            comicBookDTO = converter.convertEntityToDto(comicBook.get());
+            String urlPath = MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
                     "readDetailFile", comicBookDTO.getImage()).build().toUri().toString();
             comicBookDTO.setImage(urlPath);
         }
@@ -90,51 +84,53 @@ public class ComicServiceImple implements IComicBookService {
 
     @Override
     public List<ComicBookDTO> getComicByActor(String actorId) {
-        List<ComicBook>comicBooks=comicBookRepository.findByActor_Id(actorId);
-        List<ComicBookDTO>comicBookDTOS=new ArrayList<>();
-        for (ComicBook comic:comicBooks
-             ) {
-            String urlPath= MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
-                    "readDetailFile", comic.getImage()).build().toUri().toString();
-            ComicBookDTO comicBookDTO=converter.convertEntityToDto(comic);
-            comicBookDTO.setImage(urlPath);
-            comicBookDTOS.add(comicBookDTO);
-
-        }
-        return comicBookDTOS;
-    }
-    @Override
-    public List<ComicBookDTO>searchComicByInput(String input){
-        List<ComicBookDTO> comicBookDTOS=new ArrayList<>();
-        List<ComicBook>comicBooks=comicBookRepository.findByInputString(input);
-        for (ComicBook comic:comicBooks
+        List<ComicBook> comicBooks = comicBookRepository.findByActor_Id(actorId);
+        List<ComicBookDTO> comicBookDTOS = new ArrayList<>();
+        for (ComicBook comic : comicBooks
         ) {
-            String urlPath= MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+            String urlPath = MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
                     "readDetailFile", comic.getImage()).build().toUri().toString();
-            ComicBookDTO comicBookDTO=converter.convertEntityToDto(comic);
+            ComicBookDTO comicBookDTO = converter.convertEntityToDto(comic);
             comicBookDTO.setImage(urlPath);
             comicBookDTOS.add(comicBookDTO);
 
         }
         return comicBookDTOS;
     }
-    @Override
-    public ComicBookDTO addComic(String name, String username, List<String>genres, String discription, MultipartFile file) {
 
-        Optional<User> optionalUser=userRepository.findOneByUserName(username);
-        if(!optionalUser.isPresent())
+    @Override
+    public List<ComicBookDTO> searchComicByInput(String input) {
+        List<ComicBookDTO> comicBookDTOS = new ArrayList<>();
+        List<ComicBook> comicBooks = comicBookRepository.findByInputString(input);
+        for (ComicBook comic : comicBooks
+        ) {
+            String urlPath = MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+                    "readDetailFile", comic.getImage()).build().toUri().toString();
+            ComicBookDTO comicBookDTO = converter.convertEntityToDto(comic);
+            comicBookDTO.setImage(urlPath);
+            comicBookDTOS.add(comicBookDTO);
+
+        }
+        return comicBookDTOS;
+    }
+
+    @Override
+    public ComicBookDTO addComic(String name, String username, List<String> genres, String discription, MultipartFile file) {
+
+        Optional<User> optionalUser = userRepository.findOneByUserName(username);
+        if (!optionalUser.isPresent())
             return null;
-        User user=optionalUser.get();
-        List<Genre>genreList=new ArrayList<>();
-        ComicBook comicBook=new ComicBook(generateId.generateId(),name,false,user,0,0,new Date(),new Date(),1,null,discription);
-        for (String id:genres
-             ) {
-            Optional<Genre>genre=genreRepository.findById(id);
-            if(genre.isPresent())
+        User user = optionalUser.get();
+        List<Genre> genreList = new ArrayList<>();
+        ComicBook comicBook = new ComicBook(generateId.generateId(), name, false, user, 0, 0, new Date(), new Date(), 1, null, discription);
+        for (String id : genres
+        ) {
+            Optional<Genre> genre = genreRepository.findById(id);
+            if (genre.isPresent())
                 genreList.add(genre.get());
         }
         comicBook.setGenres(genreList);
-        String image=imageStorageService.storeFile(file);
+        String image = imageStorageService.storeFile(file);
         comicBook.setImage(image);
 
         comicBookRepository.save(comicBook);
@@ -142,67 +138,90 @@ public class ComicServiceImple implements IComicBookService {
     }
 
     @Override
-    public ResponseObject updateComic(String username,String comicId,String newName,int newStatus) {
-        Optional<User>optionalUser=userRepository.findOneByUserName(username);
-        Optional<ComicBook>optionalComicBook=comicBookRepository.findById(comicId);
-        if(!optionalComicBook.isPresent())
-             return new ResponseObject(false,"Comic book not exist!","");
-        User user=optionalUser.get();
-        ComicBook comicBook=optionalComicBook.get();
-        if(!comicBook.getActorId().getId().equals(user.getId()))
-            return new ResponseObject(false,"This comic book is not owned by this user","");
+    public ResponseObject updateComic(String username, String comicId, String newName, int newStatus) {
+        Optional<User> optionalUser = userRepository.findOneByUserName(username);
+        Optional<ComicBook> optionalComicBook = comicBookRepository.findById(comicId);
+        if (!optionalComicBook.isPresent())
+            return new ResponseObject(false, "Comic book not exist!", "");
+        User user = optionalUser.get();
+        ComicBook comicBook = optionalComicBook.get();
+        if (!comicBook.getActorId().getId().equals(user.getId()))
+            return new ResponseObject(false, "This comic book is not owned by this user", "");
         comicBook.setName(newName);
         comicBook.setStatus(newStatus);
-        return new ResponseObject(true,"Update Success!",converter.convertEntityToDto(comicBookRepository.save(comicBook)));
-}
+        return new ResponseObject(true, "Update Success!", converter.convertEntityToDto(comicBookRepository.save(comicBook)));
+    }
 
     @Override
-    public int deleteComic(String username,String comicId) {
-        User user=userRepository.findOneByUserName(username).get();
-        Optional<ComicBook>optionalComicBook=comicBookRepository.findById(comicId);
+    public int deleteComic(String username, String comicId) {
+        User user = userRepository.findOneByUserName(username).get();
+        Optional<ComicBook> optionalComicBook = comicBookRepository.findById(comicId);
         if (!optionalComicBook.isPresent())
             return 0;
-        ComicBook comicBook=optionalComicBook.get();
-        if(!user.getId().equals(comicBook.getActorId().getId()))
+        ComicBook comicBook = optionalComicBook.get();
+        if (!user.getId().equals(comicBook.getActorId().getId()))
             return 1;
         try {
-            List<String>imageList=chapterImageServiceImple.getAllImageByComic(comicId);
+            List<String> imageList = chapterImageServiceImple.getAllImageByComic(comicId);
             comicBookRepository.deleteById(comicId);
             imageStorageService.deleteFile(comicBook.getImage());
 
-            for (String imageName:imageList
-                 ) {
+            for (String imageName : imageList
+            ) {
                 imageStorageService.deleteFile(imageName);
             }
             return 2;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-
     @Transactional
     @Override
-    public ResponseObject upgradePremium(String username,String comicId){
-        User user=userRepository.findOneByUserName(username).get();
-        ComicBook comicBook=comicBookRepository.findById(comicId).orElse(null);
-        if(comicBook==null)
-            return new ResponseObject(false,"Comic not exist!","");
-        if(!user.getId().equals(comicBook.getActorId().getId()))
-            return new ResponseObject(false,"Cannot upgrade someone else's book!","");
-        UserPremium userPremium=userPremiumRepo.findOneByUser_UserName(username).orElse(null);
-        if (userPremium!=null){
+    public ResponseObject upgradePremium(String username, String comicId) {
+        User user = userRepository.findOneByUserName(username).get();
+        ComicBook comicBook = comicBookRepository.findById(comicId).orElse(null);
+        if (comicBook == null)
+            return new ResponseObject(false, "Comic not exist!", "");
+        if (!user.getId().equals(comicBook.getActorId().getId()))
+            return new ResponseObject(false, "Cannot upgrade someone else's book!", "");
+        UserPremium userPremium = userPremiumRepo.findOneByUser_UserName(username).orElse(null);
+        if (userPremium != null) {
             comicBook.setPremium(true);
-            return new ResponseObject(true,"Upgrade Comic Success!",converter.convertEntityToDto(comicBook));
+            return new ResponseObject(true, "Upgrade Comic Success!", converter.convertEntityToDto(comicBook));
         }
-        return new ResponseObject(false,"You need upgrade to Premium Account!","");
+        return new ResponseObject(false, "You need upgrade to Premium Account!", "");
     }
     @Override
-    public void increaseView(String comicId){
-        ComicBook comicBook=comicBookRepository.findById(comicId).orElse(null);
-        if (comicBook==null)
+    @Transactional
+    public void increaseView(String comicId) {
+        ComicBook comicBook = comicBookRepository.findById(comicId).orElse(null);
+        if (comicBook == null)
             return;
-        comicBook.setView(comicBook.getView()+1);
+        comicBook.setView(comicBook.getView() + 1);
         comicBookRepository.save(comicBook);
+        HistoryIncreaseView historyIncreaseView = new HistoryIncreaseView(comicBook, new Date());
+        historyIncreaseViewRepo.save(historyIncreaseView);
+        Date currentDate = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DAY_OF_YEAR, -8);
+        Date overOneWeekAgo = calendar.getTime();
+        historyIncreaseViewRepo.deleteOldRecord(overOneWeekAgo);
+    }
+    @Override
+    public List<ComicBookDTO>getComicTrendingByWeek(){
+        Date currentDate = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.WEEK_OF_YEAR, -1);
+        Date oneWeekAgo = calendar.getTime();
+
+        List<ComicBook>trendingList= historyIncreaseViewRepo.getTrending(oneWeekAgo,currentDate);
+        int endIndex = Math.min(trendingList.size(),10);
+        return trendingList.subList(0,endIndex).stream().map(c->converter.convertEntityToDto(c)).toList();
+    }
+    @Override
+    public List<ComicBookDTO>getComicTopView(){
+        return comicBookRepository.findTop10ByOrderByViewDesc().stream().map(c->converter.convertEntityToDto(c)).toList();
     }
 }
