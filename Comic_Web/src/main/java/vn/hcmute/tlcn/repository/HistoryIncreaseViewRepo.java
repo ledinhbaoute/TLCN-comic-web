@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import vn.hcmute.tlcn.entity.ComicBook;
 import vn.hcmute.tlcn.entity.HistoryIncreaseView;
-
 import java.util.Date;
 import java.util.List;
 

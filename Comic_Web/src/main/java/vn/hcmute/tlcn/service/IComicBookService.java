@@ -1,5 +1,6 @@
 package vn.hcmute.tlcn.service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 import vn.hcmute.tlcn.entity.ComicBook;
 import vn.hcmute.tlcn.model.ResponseObject;
@@ -21,4 +22,6 @@ public interface IComicBookService {
     void increaseView(String comicId);
     List<ComicBookDTO>getComicTrendingByWeek();
     List<ComicBookDTO>getComicTopView();
+    Page<ComicBookDTO> getAllComicPagination(int indexPage,String sortBy);
+    Page<ComicBookDTO> getComicByGenrePagination(String genreId,int indexPage,String sortBy);
 }

@@ -1,6 +1,9 @@
 package vn.hcmute.tlcn.serviceimple;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,6 +61,7 @@ public class ComicServiceImple implements IComicBookService {
     public List<ComicBookDTO> getComicByGenre(String genreId) {
         List<ComicBookDTO> comicBookDTOS = new ArrayList<>();
         List<ComicBook> comicBooks = comicBookRepository.findByGenres_Id(genreId);
+
         for (ComicBook comic : comicBooks
         ) {
             String urlPath = MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
@@ -175,6 +179,7 @@ public class ComicServiceImple implements IComicBookService {
             throw new RuntimeException(e);
         }
     }
+
     @Transactional
     @Override
     public ResponseObject upgradePremium(String username, String comicId) {
@@ -191,6 +196,7 @@ public class ComicServiceImple implements IComicBookService {
         }
         return new ResponseObject(false, "You need upgrade to Premium Account!", "");
     }
+
     @Override
     @Transactional
     public void increaseView(String comicId) {
@@ -208,20 +214,38 @@ public class ComicServiceImple implements IComicBookService {
         Date overOneWeekAgo = calendar.getTime();
         historyIncreaseViewRepo.deleteOldRecord(overOneWeekAgo);
     }
+
     @Override
-    public List<ComicBookDTO>getComicTrendingByWeek(){
+    public List<ComicBookDTO> getComicTrendingByWeek() {
         Date currentDate = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(currentDate);
         calendar.add(Calendar.WEEK_OF_YEAR, -1);
         Date oneWeekAgo = calendar.getTime();
 
-        List<ComicBook>trendingList= historyIncreaseViewRepo.getTrending(oneWeekAgo,currentDate);
-        int endIndex = Math.min(trendingList.size(),10);
-        return trendingList.subList(0,endIndex).stream().map(c->converter.convertEntityToDto(c)).toList();
+        List<ComicBook> trendingList = historyIncreaseViewRepo.getTrending(oneWeekAgo, currentDate);
+        int endIndex = Math.min(trendingList.size(), 10);
+        return trendingList.subList(0, endIndex).stream().map(c -> converter.convertEntityToDto(c)).toList();
+    }
+
+    @Override
+    public List<ComicBookDTO> getComicTopView() {
+        return comicBookRepository.findTop10ByOrderByViewDesc().stream().map(c -> converter.convertEntityToDto(c)).toList();
+    }
+
+    @Override
+    public Page<ComicBookDTO> getAllComicPagination(int indexPage, String sortBy) {
+        if (sortBy != null) {
+            Page<ComicBook> page = comicBookRepository.findAll(PageRequest.of(indexPage, 6, Sort.by(sortBy).descending()));
+            return page.map(converter::convertEntityToDto);
+
+        }
+        return comicBookRepository.findAll(PageRequest.of(indexPage, 6)).map(converter::convertEntityToDto);
     }
     @Override
-    public List<ComicBookDTO>getComicTopView(){
-        return comicBookRepository.findTop10ByOrderByViewDesc().stream().map(c->converter.convertEntityToDto(c)).toList();
+    public Page<ComicBookDTO> getComicByGenrePagination(String genreId, int indexPage, String sortBy) {
+        if (sortBy == null)
+            return comicBookRepository.findByGenres_Id(genreId, PageRequest.of(indexPage, 6)).map(converter::convertEntityToDto);
+        return comicBookRepository.findByGenres_Id(genreId, PageRequest.of(indexPage, 6, Sort.by(sortBy).descending())).map(converter::convertEntityToDto);
     }
 }
