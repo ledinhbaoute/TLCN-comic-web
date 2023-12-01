@@ -904,6 +904,78 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "getAllComicPagination",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v1/comic/all/pagination?indexPage=0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"comic",
+								"all",
+								"pagination"
+							],
+							"query": [
+								{
+									"key": "indexPage",
+									"value": "0"
+								},
+								{
+									"key": "sortBy",
+									"value": "view",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getComicByGenrePagination",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v1/comic/genre/pagination?indexPage=0&genreId=GR_01",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"comic",
+								"genre",
+								"pagination"
+							],
+							"query": [
+								{
+									"key": "indexPage",
+									"value": "0"
+								},
+								{
+									"key": "sortBy",
+									"value": "view",
+									"disabled": true
+								},
+								{
+									"key": "genreId",
+									"value": "GR_01"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -2351,6 +2423,27 @@
 		},
 		{
 			"name": "getAllUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "test",
 			"request": {
 				"method": "GET",
 				"header": [],
