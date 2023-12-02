@@ -1,6 +1,6 @@
 import React from "react";
-import "../sass/style.scss";
-import "../css/AllStyles";
+// import "../sass/style.scss";
+// import "../css/AllStyles";
 
 
 const Home = () => {
