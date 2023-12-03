@@ -7,14 +7,20 @@ const Pagination = (props) => {
 
     return (
         <div className="product__pagination">
-            <ul>
-                <Link to={`/genres/${currentGenre}/${props.currentPage - 1}`}><i className="fa fa-angle-double-left"></i></Link>
+             <ul>
+                {parseInt(props.currentPage) > 1 ? (
+                    <Link to={`/genres/${currentGenre}/${props.currentPage - 1}`}><i className="fa fa-angle-double-left"></i></Link>
+                ) : (<Link to={`/genres/${currentGenre}/${props.currentPage}`}><i className="fa fa-angle-double-left"></i></Link>)}
+
                 {numbers.map(number => (
 
                     <Link to={`/genres/${currentGenre}/${number}`} className={number == props.currentPage ? "current-page" : ""}>{number}
                     </Link>
                 ))}
-                <Link to={`/genres/${currentGenre}/${parseInt(props.currentPage) + 1}`}><i className="fa fa-angle-double-right"></i></Link>
+                {parseInt(props.currentPage) < numbers.length ? (
+                    <Link to={`/genres/${currentGenre}/${parseInt(props.currentPage) + 1}`}><i className="fa fa-angle-double-right"></i></Link>
+                ) : (<Link to={`/genres/${currentGenre}/${props.currentPage}`}><i className="fa fa-angle-double-right"></i></Link>)}
+
             </ul>
         </div>
     )
