@@ -1182,8 +1182,12 @@ ol {
   Anime Watching
 -----------------------*/
 
-.anime__video__player {
-	margin-bottom: 70px;
+.anime__video__playerr {
+	display: flex;
+  justify-content: center;
+}
+.anime__video__player__container{
+margin-bottom: 70px;
 }
 
 .anime__video__player .plyr--video {
