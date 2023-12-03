@@ -10,6 +10,7 @@ import AppContext from "../context/AppContext";
 
 const Header = () => {
   const appContext = useContext(AppContext);
+
   const logoUrl = `${process.env.PUBLIC_URL}/images/logo.png`;
 
   // const [genres, setGenres] = useState([]);
@@ -40,7 +41,7 @@ const Header = () => {
     // fetchData();
     // setGenres(appContext.genres);
     checkAuth();
-    console.log(appContext.genres)
+    //console.log(appContext.genres)
   }, []);
 
   return (      
@@ -73,9 +74,9 @@ const Header = () => {
                       </NavLink>
                       <ul className="dropdown">
                         <li>
-                          {appContext.genres.map((item) => (
+                          {appContext.map((item) => (
                             <Link
-                              to={{ pathname: `./genres/${item.id}` }}
+                              to={{ pathname: `./genres/${item.id}/1` }}
                               key={item.id}
                             >
                               {item.name}

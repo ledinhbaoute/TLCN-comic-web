@@ -242,10 +242,16 @@ public class ComicServiceImple implements IComicBookService {
         }
         return comicBookRepository.findAll(PageRequest.of(indexPage, 6)).map(converter::convertEntityToDto);
     }
+
     @Override
     public Page<ComicBookDTO> getComicByGenrePagination(String genreId, int indexPage, String sortBy) {
         if (sortBy == null)
             return comicBookRepository.findByGenres_Id(genreId, PageRequest.of(indexPage, 6)).map(converter::convertEntityToDto);
         return comicBookRepository.findByGenres_Id(genreId, PageRequest.of(indexPage, 6, Sort.by(sortBy).descending())).map(converter::convertEntityToDto);
+    }
+
+    @Override
+    public List<ComicBookDTO> getBookOrderByUpdateDate() {
+        return comicBookRepository.findTop10ByOrderByUpdateDateDesc().stream().map(c -> converter.convertEntityToDto(c)).toList();
     }
 }

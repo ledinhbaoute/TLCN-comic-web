@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vn.hcmute.tlcn.entity.ComicBook;
 import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.entity.User;
@@ -62,7 +63,7 @@ public class ChapterServiceImple implements IChapterService {
         return 3;
 
     }
-
+    @Transactional
     @Override
     public ResponseEntity<ResponseObject> addChapter(String username, String chapterName, String comicId) {
         int check = checkCondition(username, comicId);
@@ -74,6 +75,7 @@ public class ChapterServiceImple implements IChapterService {
         ComicBook comicBook = optionalComicBook.get();
         int ordinalNumber = chapterRepository.findByComicBook_IdOrderByOrdinalNumberAsc(comicId).size() + 1;
         Chapter chapter = new Chapter(generateId.generateId(), chapterName, comicBook, new Date(), ordinalNumber);
+        comicBook.setUpdateDate(new Date());
         return ResponseEntity.ok().body(new ResponseObject(true, "Add Chapter Success!",converter.convertEntityToDto( chapterRepository.save(chapter))));
     }
 

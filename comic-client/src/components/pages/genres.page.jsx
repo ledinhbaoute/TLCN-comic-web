@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import ComicItem from "../ComicItem";
-import Breadcrumb from "../Breadcrumb";
+import Breadcrumb from "../breadcrumb";
 import ComicList from "../ComicList";
 import Pagination from "../Pagination";
 import axios from "axios";
@@ -8,11 +8,18 @@ import API_URL from "../../config/config";
 import { useParams } from "react-router-dom";
 import AppContext from "../../context/AppContext";
 const GenresPage = () => {
-  const { genreId } = useParams();
+  const { genreId,indexPage } = useParams();
+
   const [comicItems, setComicItems] = useState([]);
   const appContext = useContext(AppContext);
   const [currentGenre, setCurrentGenre] = useState({});
-  
+  const [totalPage, setTotalPage] = useState({});
+  const [sortBy,setSortBy]=useState("name")
+
+  const handleOptionChange = (event) => {
+    const selectedValue = event.target.value;
+    setSortBy(selectedValue);
+  };
 
   useEffect(() => {
     const getComicByGenre = async () => {
@@ -20,9 +27,10 @@ const GenresPage = () => {
         if (genreId) {
           //   console.log(`${API_URL}/comicbooks/filter/genre/${genreId}`);
           const response = await axios.get(
-            `${API_URL}/comicbooks/filter/genre/${genreId}`
+            `${API_URL}/comic/genre/pagination?indexPage=${indexPage-1}&genreId=${genreId}&sortBy=${sortBy}`
           );
-          setComicItems(response.data.data);
+          setComicItems(response.data.content);
+          setTotalPage(response.data.totalPages)
           
         }
       } catch (error) {
@@ -30,12 +38,10 @@ const GenresPage = () => {
       }
     };
     getComicByGenre();
-    // console.log(currentGenres);
-    setCurrentGenre(appContext.genres.find((genre) => genre.id === genreId));
-    console.log(appContext);
-    console.log(currentGenre.name);
-  }, [genreId]);
-
+    
+    setCurrentGenre(appContext.find((genre) => genre.id === genreId));
+    
+  }, [genreId,indexPage,sortBy]);
   return (
     <>
       <Breadcrumb />
@@ -48,16 +54,16 @@ const GenresPage = () => {
                   <div className="row">
                     <div className="col-lg-8 col-md-8 col-sm-6">
                       <div className="section-title">
-                        <h4>{currentGenre.name}</h4>
+                        <h4>{currentGenre && currentGenre.name}</h4>
                       </div>
                     </div>
                     <div className="col-lg-4 col-md-4 col-sm-6">
                       <div className="product__page__filter">
                         <p>Order by:</p>
-                        <select>
-                          <option value="">Mới nhất</option>
-                          <option value="">Lượt xem</option>
-                          <option value="">Đánh giá</option>
+                        <select value={sortBy} onChange={handleOptionChange}>
+                          <option value="updateDate">Mới nhất</option>
+                          <option value="view">Lượt xem</option>
+                          <option value="rate">Đánh giá</option>
                         </select>
                       </div>
                     </div>
@@ -69,7 +75,7 @@ const GenresPage = () => {
                   ))}
                 </div>
               </div>
-              <Pagination />
+              <Pagination totalPage={totalPage} currentGR={genreId} currentPage={indexPage}/>
             </div>
             <div className="col-lg-4 col-md-6 col-sm-8">
               <ComicList />

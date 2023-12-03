@@ -1,16 +1,21 @@
 import React from "react";
 import ReactDOM from 'react-dom/client';
-const Pagination = () => {
+import { Link } from "react-router-dom";
+const Pagination = (props) => {
+    const numbers = Array.from({ length: props.totalPage }, (_, index) => index + 1);
+    const currentGenre = props.currentGR
 
     return (
         <div className="product__pagination">
-            <a href="#"><i className="fa fa-angle-double-left"></i></a>
-            <a href="#" className="current-page">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#">4</a>
-            <a href="#">5</a>
-            <a href="#"><i className="fa fa-angle-double-right"></i></a>
+            <ul>
+                <Link to={`/genres/${currentGenre}/${props.currentPage - 1}`}><i className="fa fa-angle-double-left"></i></Link>
+                {numbers.map(number => (
+
+                    <Link to={`/genres/${currentGenre}/${number}`} className={number == props.currentPage ? "current-page" : ""}>{number}
+                    </Link>
+                ))}
+                <Link to={`/genres/${currentGenre}/${parseInt(props.currentPage) + 1}`}><i className="fa fa-angle-double-right"></i></Link>
+            </ul>
         </div>
     )
 }

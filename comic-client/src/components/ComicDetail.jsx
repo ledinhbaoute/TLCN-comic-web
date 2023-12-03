@@ -1,24 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-const ComicDetail = () => {
+import { Link } from "react-router-dom";
+const ComicDetail = (props) => {
   const imgDetailUrl = `${process.env.PUBLIC_URL}/images/anime/details-pic.jpg`;
 
-  var demo = {
-    id: "1",
-    img: `${process.env.PUBLIC_URL}/images/anime/details-pic.jpg`,
-    name: "Fate Stay Night: Unlimited Blade",
-    author: "フェイト／ステイナイト, Feito／sutei naito",
-    rating: "4.5",
-    numberOfVote: "1050",
-    describe: `Every human inhabiting the world of Alcia is branded by a “Count” or a number written on
-        their body. For Hina’s mother, her total drops to 0 and she’s pulled into the Abyss,
-        never to be seen again. But her mother’s last words send Hina on a quest to find a
-        legendary hero from the Waste War - the fabled Ace!`,
-    genres: ["Action", "Adventure", "Fantasy", "Magic"],
-    datePublished: "Oct 02, 2019 to ?",
-    comicStatus: "Continue",
-    views: "131600",
-  };
+  const comic=props.comic;
+  
 
   return (
     <div class="anime__details__content">
@@ -26,22 +13,24 @@ const ComicDetail = () => {
         <div class="col-lg-3">
           <div
             class="anime__details__pic set-bg"
-            style={{ backgroundImage: `url(${demo.img})` }}
+            style={{ backgroundImage: `url(${comic.image})` }}
           >
             <div class="comment">
-              <i class="fa fa-comments"></i> 11
+              <i class="fa fa-star"></i> {comic.rate}
             </div>
             <div class="view">
-              <i class="fa fa-eye"></i> 9141
+              <i class="fa fa-eye"></i> {comic.view}
             </div>
           </div>
         </div>
         <div class="col-lg-9">
           <div class="anime__details__text">
             <div class="anime__details__title">
-              <h3>{demo.name}</h3>
-              <span>{demo.author}</span>
-            </div>
+              <h3>{comic.name}</h3>
+              {comic.actorId && (
+                 <span>Tác giả:{comic.actorId.name}</span>
+              )}
+                      </div>
             {/* <div class="anime__details__rating">
                             <div class="rating">
                                 <a href="#"><i class="fa fa-star"></i></a>
@@ -52,21 +41,23 @@ const ComicDetail = () => {
                             </div>
                             <span>1.029 Votes</span>
                         </div> */}
-            <p>{demo.describe}</p>
+            <p>{comic.discription}</p>
             <div class="anime__details__widget">
               <div class="row">
                 <div class="col-lg-6 col-md-6">
                   <ul>
                     <li>
-                      <span>Date published:</span> {demo.datePublished}
+                      <span>Ngày ra mắt:</span> {comic.publishDate}
                     </li>
                     <li>
-                      <span>Status:</span> {demo.comicStatus}
+                      <span>Trạng thái:</span> {comic.status===1 &&"Đang tiến hành"}
                     </li>
                     <li>
-                      <span>Genre:</span>
-                      {demo.genres.map((item, index) => (
-                        <a key={index}> {item} </a>
+                       
+                      <span>Thể loại:</span>
+                        
+                      {comic.genres && comic.genres.map((item, index) => (
+                        <a key={index}> {item.name} </a>
                       ))}
                     </li>
                   </ul>
@@ -77,7 +68,7 @@ const ComicDetail = () => {
                       <span>Scores:</span> 7.31 / 1,515
                     </li> */}
                     <li>
-                      <span>Rating:</span> {demo.rating} / {demo.numberOfVote} times
+                      <span>Đánh giá:</span> {comic.rate}/5 ⭐
                     </li>
                     {/* <li>
                       <span>Duration:</span> 24 min/ep
@@ -86,7 +77,7 @@ const ComicDetail = () => {
                       <span>Quality:</span> HD
                     </li> */}
                     <li>
-                      <span>Views:</span> {demo.views}
+                      <span>Lượt xem:</span> {comic.view}
                     </li>
                   </ul>
                 </div>
@@ -94,10 +85,10 @@ const ComicDetail = () => {
             </div>
             <div class="anime__details__btn">
               <a href="#" class="follow-btn">
-                <i class="fa fa-heart-o"></i> Follow
+                <i class="fa fa-heart-o"></i> Ưa thích
               </a>
               <a href="#" class="watch-btn">
-                <span>Read Now</span> <i class="fa fa-angle-right"></i>
+                <span> Đánh Giá</span> <i class="fa fa-angle-right"></i>
               </a>
             </div>
           </div>
@@ -106,9 +97,4 @@ const ComicDetail = () => {
     </div>
   );
 };
-// const root = ReactDOM.createRoot(document.getElementById('animeDetail'));
-// root.render(
-//   <React.StrictMode>
-//     <AnimeDetail />
-//   </React.StrictMode>);
 export default ComicDetail;

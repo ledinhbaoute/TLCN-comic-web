@@ -17,4 +17,5 @@ public interface ComicBookRepository extends JpaRepository<ComicBook,String> {
     @Query(value = "SELECT t FROM ComicBook t WHERE LOWER(t.name) LIKE LOWER(CONCAT('%', :input, '%'))")
     List<ComicBook>findByInputString(@Param("input")String input);
     List<ComicBook>findTop10ByOrderByViewDesc();
+    List<ComicBook>findTop10ByOrderByUpdateDateDesc();
 }

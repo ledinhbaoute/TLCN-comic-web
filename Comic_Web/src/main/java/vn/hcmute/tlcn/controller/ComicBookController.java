@@ -52,8 +52,6 @@ public class ComicBookController {
     }
 
 
-
-
     @PostMapping("user/comicbooks")
     ResponseEntity<?> addComic(@RequestParam("comicName") String comicName,
                                @RequestParam("genreIds") List<String> genresId, @RequestParam("discription")String discription,
@@ -134,5 +132,9 @@ public class ComicBookController {
     @GetMapping("comic/genre/pagination")
     Page<ComicBookDTO> getComicGenrePagination(@RequestParam int indexPage,@RequestParam String genreId,@RequestParam(required = false)String sortBy){
         return service.getComicByGenrePagination(genreId,indexPage,sortBy);
+    }
+    @GetMapping("comic/latest_update")
+    List<ComicBookDTO>getComicLatestUpdate(){
+        return service.getBookOrderByUpdateDate();
     }
 }
