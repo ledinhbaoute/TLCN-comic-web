@@ -6,7 +6,7 @@ const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
     const [genres, setGenres] = useState([]);
-    const [loading, setLoading] = useState(true);
+   
 
     const getGenres =useCallback(async () => {
         try {
@@ -19,14 +19,7 @@ export const AppProvider = ({ children }) => {
 
     useEffect(() => {
         getGenres();
-        setLoading(false);
-    },[]);
-    console.log(genres);
-
-    // const contextValue = {
-    //     genres,
-    //     loading,
-    // };
+        },[getGenres]);
 
     return (
         <AppContext.Provider value={genres}>

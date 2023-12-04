@@ -47,14 +47,12 @@ public class ComicServiceImple implements IComicBookService {
         List<ComicBook> comicBooks = comicBookRepository.findAll();
         for (ComicBook comic : comicBooks
         ) {
-
-            String urlPath = MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
-                    "readDetailFile", comic.getImage()).build().toUri().toString();
             ComicBookDTO comicBookDTO = converter.convertEntityToDto(comic);
-            comicBookDTO.setImage(urlPath);
             comicBookDTOS.add(comicBookDTO);
         }
-        return comicBookDTOS;
+        Collections.shuffle(comicBookDTOS);
+
+        return comicBookDTOS.subList(0,5);
     }
 
     @Override
@@ -216,16 +214,17 @@ public class ComicServiceImple implements IComicBookService {
     }
 
     @Override
-    public List<ComicBookDTO> getComicTrendingByWeek() {
+    public Page<ComicBookDTO> getComicTrendingByWeek(int indexPage) {
         Date currentDate = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(currentDate);
         calendar.add(Calendar.WEEK_OF_YEAR, -1);
         Date oneWeekAgo = calendar.getTime();
 
-        List<ComicBook> trendingList = historyIncreaseViewRepo.getTrending(oneWeekAgo, currentDate);
-        int endIndex = Math.min(trendingList.size(), 10);
-        return trendingList.subList(0, endIndex).stream().map(c -> converter.convertEntityToDto(c)).toList();
+        Page<ComicBook> trendingList = historyIncreaseViewRepo.getTrending(oneWeekAgo, currentDate, PageRequest.of(indexPage, 6));
+        return trendingList.map(converter::convertEntityToDto);
+//        int endIndex = Math.min(trendingList.size(), 10);
+//        return trendingList.subList(0, endIndex).stream().map(c -> converter.convertEntityToDto(c)).toList();
     }
 
     @Override
@@ -251,7 +250,12 @@ public class ComicServiceImple implements IComicBookService {
     }
 
     @Override
-    public List<ComicBookDTO> getBookOrderByUpdateDate() {
-        return comicBookRepository.findTop10ByOrderByUpdateDateDesc().stream().map(c -> converter.convertEntityToDto(c)).toList();
+    public Page<ComicBookDTO> getBookOrderByUpdateDate(int indexPage) {
+        Date currentDate = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.WEEK_OF_YEAR, -1);
+        Date oneWeekAgo = calendar.getTime();
+        return comicBookRepository.findComicsUpdatedWithinOneWeekOrderByUpdateDateDesc(oneWeekAgo,currentDate,PageRequest.of(indexPage,6)).map(converter::convertEntityToDto);
     }
 }

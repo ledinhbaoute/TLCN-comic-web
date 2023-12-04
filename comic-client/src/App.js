@@ -15,6 +15,7 @@ import PageLayout from './components/PageLayout';
 import { checkAuth } from './security/Authentication';
 
 import ComicReadingPage from './components/pages/comic-reading.page';
+import ComicPage from './components/ComicPage';
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
             <Route path='/genres/:genreId/:indexPage' Component={GenresPage} />
             <Route path='/forgetpass' Component={ForgetPassword} />
             <Route path='/chapter/:chapterId' Component={ComicReadingPage} />
+            <Route path='/comic/:listBy/:indexPage' Component={ComicPage} />
           </Route>
           <Route path="*" Component={NotFound} />
         </Routes>

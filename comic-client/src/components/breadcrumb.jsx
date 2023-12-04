@@ -1,5 +1,7 @@
 import React from "react";
-const Breadcrumb=()=>{
+import { Link } from "react-router-dom";
+const Breadcrumb=(props)=>{
+    const currentGenre=props.currentGenre
     return(
         
         <div className="breadcrumb-option">
@@ -7,9 +9,9 @@ const Breadcrumb=()=>{
             <div className="row">
                 <div className="col-lg-12">
                     <div className="breadcrumb__links">
-                        <a href="./index.html"><i className="fa fa-home"></i> Home</a>
-                        <a href="./categories.html">Categories</a>
-                        <span>Romance</span>
+                        <Link to="/" ><i className="fa fa-home"></i> Home</Link>
+                        {/* <a href="./categories.html">Categories</a> */}
+                        <span>{currentGenre&&currentGenre.name}</span>
                     </div>
                 </div>
             </div>

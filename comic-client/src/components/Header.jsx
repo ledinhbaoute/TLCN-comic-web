@@ -1,9 +1,7 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect,  useContext } from "react";
 // import "../sass/style.scss";
 // import "../css/AllStyles";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import axios from "axios";
-import API_URL from "../config/config";
 import Cookies from "js-cookie";
 import { checkAuth } from "../security/Authentication";
 import AppContext from "../context/AppContext";
@@ -28,7 +26,6 @@ const Header = () => {
       top: 0,
     });
   };
-
   useEffect(() => {
     // const fetchData = async () => {
     //   try {
@@ -83,18 +80,8 @@ const Header = () => {
                             </Link>
                           ))}
                         </li>
-                        <li>
-                          <Link to="./comic-detail">Comic Details</Link>
-                        </li>
-                        <li>
-                          <Link to="./anime-watching.html">Anime Watching</Link>
-                        </li>
-                        <li>
-                          <Link to="./register">Sign Up</Link>
-                        </li>
-                        <li>
-                          <Link to="./login">Login</Link>
-                        </li>
+                      
+                     
                       </ul>
                     </li>
                   </ul>
@@ -107,7 +94,7 @@ const Header = () => {
                   <span className="icon_search"></span>
                 </Link>
                 {checkAuth() ? (
-                  <a>
+                  <>
                     <Link to="./profile">
                       <span className="icon_profile"></span>
                     </Link>
@@ -118,7 +105,7 @@ const Header = () => {
                         className="icon_close_alt"
                       ></span>
                     </Link>
-                  </a>
+                  </>
                 ) : (
                   <Link to="./login">
                     <span className="icon_profile"></span>
