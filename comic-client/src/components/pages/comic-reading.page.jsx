@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import Breadcrumb from "../Breadcrumb";
 import Review from "../Review";
+=======
+import Breadcrumb from "../breadcrumb";
+import Comment from "../Comment";
+>>>>>>> e833aff08990548a7b4605313abe36c143c8434a
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../../config/config";
@@ -26,7 +31,7 @@ const ComicReadingPage = () => {
         };
         getChapterDetail();
 
-    }, [chapterId]);
+    }, [chapterId,imageList]);
 
     useEffect(() => {
         if (imageList.length>0) {
@@ -51,15 +56,15 @@ const ComicReadingPage = () => {
 
     return (
         <>
-            <Breadcrumb />
+            {/* <Breadcrumb /> */}
             <section className="anime-details spad">
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="anime__video__player__container">
-                                {imageList && imageList.map((item, index) => (
-                                    <div className="anime__video__playerr">
-                                        <img key={index} src={item.link} alt="aaa" />
+                                {imageList && imageList.map((item) => (
+                                    <div className="anime__video__playerr" key={item.id}>
+                                        <img key={item.id} src={item.link} alt="aaa" />
                                     </div>
                                 ))}
 
@@ -67,36 +72,18 @@ const ComicReadingPage = () => {
 
                             <div className="anime__details__episodes">
                                 <div className="section-title">
-                                    <h5>List Chapter</h5>
+                                    <h5>Chương truyện</h5>
                                 </div>
-                                {chapterList && chapterList.map((item, index) => (
-                                    <Link to={`/chapter/${item.id}`} key={index}> Chapter {item.ordinalNumber} </Link>
+                                {chapterList && chapterList.map((item) => (
+                                    <Link to={`/chapter/${item.id}`} key={item.id}> Chapter {item.ordinalNumber} </Link>
                                 ))}
-                                {/* <a href="#">Chap 01</a>
-                                <a href="#">Chap 02</a>
-                                <a href="#">Chap 03</a>
-                                <a href="#">Chap 04</a>
-                                <a href="#">Chap 05</a>
-                                <a href="#">Chap 06</a>
-                                <a href="#">Chap 07</a>
-                                <a href="#">Chap 08</a>
-                                <a href="#">Chap 09</a>
-                                <a href="#">Chap 10</a>
-                                <a href="#">Chap 11</a>
-                                <a href="#">Chap 12</a>
-                                <a href="#">Chap 13</a>
-                                <a href="#">Chap 14</a>
-                                <a href="#">Chap 15</a>
-                                <a href="#">Chap 16</a>
-                                <a href="#">Chap 17</a>
-                                <a href="#">Chap 18</a>
-                                <a href="#">Chap 19</a> */}
+                            
                             </div>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-lg-8">
-                            <Review />
+                            <Comment chapterId={chapterId}/>
                         </div>
                     </div>
                 </div>

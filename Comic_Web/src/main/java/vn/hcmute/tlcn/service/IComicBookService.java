@@ -20,9 +20,9 @@ public interface IComicBookService {
     List<ComicBookDTO>searchComicByInput(String input);
     ResponseObject upgradePremium(String username,String comicId);
     void increaseView(String comicId);
-    List<ComicBookDTO>getComicTrendingByWeek();
+    Page<ComicBookDTO>getComicTrendingByWeek(int indexPage);
     List<ComicBookDTO>getComicTopView();
     Page<ComicBookDTO> getAllComicPagination(int indexPage,String sortBy);
     Page<ComicBookDTO> getComicByGenrePagination(String genreId,int indexPage,String sortBy);
-    List<ComicBookDTO>getBookOrderByUpdateDate();
+    Page<ComicBookDTO>getBookOrderByUpdateDate(int indexPage);
 }

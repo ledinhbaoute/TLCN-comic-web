@@ -1,9 +1,7 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect,  useContext } from "react";
 // import "../sass/style.scss";
 // import "../css/AllStyles";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import axios from "axios";
-import API_URL from "../config/config";
 import Cookies from "js-cookie";
 import { checkAuth } from "../security/Authentication";
 import AppContext from "../context/AppContext";
@@ -45,9 +43,12 @@ const Header = () => {
       top: 0,
     });
   };
+<<<<<<< HEAD
 
   const handleSearchSubmit = () => {};
 
+=======
+>>>>>>> e833aff08990548a7b4605313abe36c143c8434a
   useEffect(() => {
     // const fetchData = async () => {
     //   try {
@@ -63,6 +64,7 @@ const Header = () => {
     //console.log(appContext.genres)
   }, []);
 
+<<<<<<< HEAD
   return (
     <header className="header">
       <div className="container">
@@ -162,6 +164,79 @@ const Header = () => {
                   <span className="icon_profile"></span>
                 </Link>
               )}
+=======
+  return (      
+      <header className="header">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-2">
+              <div className="header__logo">
+                <Link to="./">
+                  <img
+                    src={logoUrl}
+                    alt=""
+                    style={{ maxWidth: "93", maxHeight: "23" }}
+                  />
+                </Link>
+              </div>
+            </div>
+            <div className="col-lg-8">
+              <div className="header__nav">
+                <nav className="header__menu mobile-menu">
+                  <ul>
+                    <li>
+                      <NavLink to="./" activeclassname="active">
+                        Trang chủ
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="./genres" activeclassname="active">
+                        Thể loại <span className="arrow_carrot-down"></span>
+                      </NavLink>
+                      <ul className="dropdown">
+                        <li>
+                          {appContext.map((item) => (
+                            <Link
+                              to={{ pathname: `./genres/${item.id}/1` }}
+                              key={item.id}
+                            >
+                              {item.name}
+                            </Link>
+                          ))}
+                        </li>
+                      
+                     
+                      </ul>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+            <div className="col-lg-2">
+              <div className="header__right">
+                <Link to="./search" className="search-switch">
+                  <span className="icon_search"></span>
+                </Link>
+                {checkAuth() ? (
+                  <>
+                    <Link to="./profile">
+                      <span className="icon_profile"></span>
+                    </Link>
+                    <Link to="./">
+                      <span
+                        title="Đăng xuất"
+                        onClick={handleLogout}
+                        className="icon_close_alt"
+                      ></span>
+                    </Link>
+                  </>
+                ) : (
+                  <Link to="./login">
+                    <span className="icon_profile"></span>
+                  </Link>
+                )}
+              </div>
+>>>>>>> e833aff08990548a7b4605313abe36c143c8434a
             </div>
           </div>
         </div>

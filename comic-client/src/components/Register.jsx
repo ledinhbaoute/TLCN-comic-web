@@ -69,7 +69,6 @@ const Register = () => {
   };
 
   
-
   const register = async () => {
     try {
       const response = axios.post(

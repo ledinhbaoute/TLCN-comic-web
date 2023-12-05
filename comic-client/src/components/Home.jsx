@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
-// import "../sass/style.scss";
-// import "../css/AllStyles";
 import axios from "axios";
 import API_URL from "../config/config";
 import ComicList from "./ComicList";
 import ComicItem from "./ComicItem";
-
+import { Link } from "react-router-dom";
+import { Fade } from 'react-slideshow-image';
+import 'react-slideshow-image/dist/styles.css'
 const Home = () => {
-
+  const imgHeroUrl = `${process.env.PUBLIC_URL}images/hero/hero-1.jpg`;
   const [listTopView, setListTopView] = useState([])
   const [listTrending, setListTrending] = useState([])
   const [listLatestUpdate, setListLatestUpdate] = useState([])
+  const [listRamdomComic, setListRamdomComic] = useState([]);
   useEffect(() => {
     const getTopViewComic = async () => {
       try {
@@ -34,9 +35,9 @@ const Home = () => {
       try {
 
         const response = await axios.get(
-          `${API_URL}/comic_trending`
+          `${API_URL}/comic_trending?indexPage=0`
         );
-        setListTrending(response.data);
+        setListTrending(response.data.content);
       } catch (error) {
         console.log(error);
       }
@@ -51,9 +52,9 @@ const Home = () => {
       try {
 
         const response = await axios.get(
-          `${API_URL}/comic/latest_update`
+          `${API_URL}/comic/latest_update?indexPage=1`
         );
-        setListLatestUpdate(response.data);
+        setListLatestUpdate(response.data.content);
       } catch (error) {
         console.log(error);
       }
@@ -62,66 +63,39 @@ const Home = () => {
     getComicLatestUpdate();
 
   }, []);
+
+  useEffect(() => {
+    const getRandomComic = async () => {
+      try {
+       
+          const response = await axios.get(
+            `${API_URL}/comicbooks`
+          );
+          setListRamdomComic(response.data.data);
+        
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getRandomComic();
+
+  }, []);
+
   return (
     <div>
       {/*  Hero Section Begin  */}
-      {/* <section className="hero">
+      <section className="hero">
         <div className="container">
-          <div className="hero__slider owl-carousel">
-            <div
-              className="hero__items set-bg"
-              style={{ backgroundImage: `url(${imgHeroUrl})` }}
-            >
-              <div className="row">
-                <div className="col-lg-6">
-                  <div className="hero__text">
-                    <div className="label">Adventure</div>
-                    <h2>Fate / Stay Night: Unlimited Blade Works</h2>
-                    <p>After 30 days of travel across the world...</p>
-                    <a href="#">
-                      <span>Watch Now</span> <i className="fa fa-angle-right"></i>
-                    </a>
-                  </div>
-                </div>
+          <Fade>
+            {listRamdomComic.map((comic) => (
+              <div key={comic.id}>
+                <Link to={`/comic-detail/${comic.id}`}><img style={{ width: '1172px', height:'564px'}} src={`http://localhost:8081/api/v1/files/${comic.image}`} ></img></Link>
+              
               </div>
-            </div>
-            <div
-              className="hero__items set-bg"
-              style={{ backgroundImage: `url(${imgHeroUrl})` }}
-            >
-              <div className="row">
-                <div className="col-lg-6">
-                  <div className="hero__text">
-                    <div className="label">Adventure</div>
-                    <h2>Fate / Stay Night: Unlimited Blade Works</h2>
-                    <p>After 30 days of travel across the world...</p>
-                    <a href="#">
-                      <span>Watch Now</span> <i className="fa fa-angle-right"></i>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="hero__items set-bg"
-              style={{ backgroundImage: `url(${imgHeroUrl})` }}
-            >
-              <div className="row">
-                <div className="col-lg-6">
-                  <div className="hero__text">
-                    <div className="label">Adventure</div>
-                    <h2>Fate / Stay Night: Unlimited Blade Works</h2>
-                    <p>After 30 days of travel across the world...</p>
-                    <a href="#">
-                      <span>Watch Now</span> <i className="fa fa-angle-right"></i>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            ))}
+          </Fade>
         </div>
-      </section> */}
+      </section>
       {/*  Hero Section End  */}
 
       {/* Product Section Begin */}
@@ -138,9 +112,9 @@ const Home = () => {
                   </div>
                   <div className="col-lg-4 col-md-4 col-sm-4">
                     <div className="btn__all">
-                      <a href="#" className="primary-btn">
+                      <Link to="/comic/trending/1" className="primary-btn">
                         View All <span className="arrow_right"></span>
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -179,9 +153,9 @@ const Home = () => {
                   </div>
                   <div className="col-lg-4 col-md-4 col-sm-4">
                     <div className="btn__all">
-                      <a href="#" className="primary-btn">
+                      <Link to="/comic/new_update/1" className="primary-btn">
                         View All <span className="arrow_right"></span>
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -214,7 +188,7 @@ const Home = () => {
             </div>
             <div className="col-lg-4 col-md-6 col-sm-8">
               <ComicList listComic={listTopView} title="Top Views"></ComicList>
-              
+
             </div>
           </div>
         </div>

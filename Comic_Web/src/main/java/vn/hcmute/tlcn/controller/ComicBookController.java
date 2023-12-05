@@ -118,8 +118,8 @@ public class ComicBookController {
     }
 
     @GetMapping("/comic_trending")
-    List<ComicBookDTO>getComicTrending(){
-        return service.getComicTrendingByWeek();
+    Page<ComicBookDTO>getComicTrending(@RequestParam int indexPage){
+        return service.getComicTrendingByWeek(indexPage);
     }
     @GetMapping("comic_topview")
     List<ComicBookDTO>getComicTopView(){
@@ -134,7 +134,7 @@ public class ComicBookController {
         return service.getComicByGenrePagination(genreId,indexPage,sortBy);
     }
     @GetMapping("comic/latest_update")
-    List<ComicBookDTO>getComicLatestUpdate(){
-        return service.getBookOrderByUpdateDate();
+    Page<ComicBookDTO>getComicLatestUpdate(@RequestParam int indexPage){
+        return service.getBookOrderByUpdateDate(indexPage);
     }
 }

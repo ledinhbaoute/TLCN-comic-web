@@ -8,13 +8,14 @@ import API_URL from "../../config/config";
 import { useParams } from "react-router-dom";
 import AppContext from "../../context/AppContext";
 const GenresPage = () => {
-  const { genreId,indexPage } = useParams();
+  const { genreId, indexPage } = useParams();
 
   const [comicItems, setComicItems] = useState([]);
   const appContext = useContext(AppContext);
   const [currentGenre, setCurrentGenre] = useState({});
   const [totalPage, setTotalPage] = useState({});
-  const [sortBy,setSortBy]=useState("name")
+  const [listRamdomComic, setListRamdomComic] = useState([]);
+  const [sortBy, setSortBy] = useState("name")
 
   const handleOptionChange = (event) => {
     const selectedValue = event.target.value;
@@ -27,24 +28,43 @@ const GenresPage = () => {
         if (genreId) {
           //   console.log(`${API_URL}/comicbooks/filter/genre/${genreId}`);
           const response = await axios.get(
-            `${API_URL}/comic/genre/pagination?indexPage=${indexPage-1}&genreId=${genreId}&sortBy=${sortBy}`
+            `${API_URL}/comic/genre/pagination?indexPage=${indexPage - 1}&genreId=${genreId}&sortBy=${sortBy}`
           );
           setComicItems(response.data.content);
           setTotalPage(response.data.totalPages)
-          
+
         }
       } catch (error) {
         console.log(error);
       }
     };
     getComicByGenre();
-    
+
+  }, [genreId, indexPage, sortBy]);
+
+  useEffect(() => {
+    const getRandomComic = async () => {
+      try {
+       
+          const response = await axios.get(
+            `${API_URL}/comicbooks`
+          );
+          setListRamdomComic(response.data.data);
+        
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getRandomComic();
+
+  }, [genreId, indexPage, sortBy]);
+
+  useEffect(() => {
     setCurrentGenre(appContext.find((genre) => genre.id === genreId));
-    
-  }, [genreId,indexPage,sortBy]);
+  },[appContext,genreId])
   return (
     <>
-      <Breadcrumb />
+      <Breadcrumb currentGenre={currentGenre}/>
       <section className="product-page spad">
         <div className="container">
           <div className="row">
@@ -75,11 +95,10 @@ const GenresPage = () => {
                   ))}
                 </div>
               </div>
-              <Pagination totalPage={totalPage} currentGR={genreId} currentPage={indexPage}/>
+              <Pagination totalPage={totalPage}  currentGR={genreId} currentPage={indexPage} />
             </div>
             <div className="col-lg-4 col-md-6 col-sm-8">
-              <ComicList />
-              <ComicList />
+              <ComicList title="Có thể bạn sẽ thích" listComic={listRamdomComic} />
             </div>
           </div>
         </div>

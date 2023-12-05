@@ -660,7 +660,7 @@ ol {
 .product__item__pic .ep {
 	font-size: 13px;
 	color: #ffffff;
-	background: #e53637;
+	background: #ebbd34;
 	display: inline-block;
 	padding: 2px 12px;
 	border-radius: 4px;
@@ -776,7 +776,7 @@ ol {
 .product__sidebar__view__item .ep {
 	font-size: 13px;
 	color: #ffffff;
-	background: #e53637;
+	background: #ebbd34;
 	display: inline-block;
 	padding: 2px 12px;
 	border-radius: 4px;
@@ -806,7 +806,7 @@ ol {
 }
 
 .product__sidebar__view__item h5 a {
-	color: #ffffff;
+	color: #BDBDBD;
 	font-weight: 700;
 	line-height: 26px;
 }
