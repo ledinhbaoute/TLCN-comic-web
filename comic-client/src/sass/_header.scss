@@ -105,6 +105,31 @@
     text-align: right;
     padding: 20px 0 15px;
 
+    .dropdown {
+        position: absolute;
+        left: 0;
+        top: 82px;
+        width: 150px;
+        background: $white-color;
+        text-align: left;
+        padding: 5px 0;
+        z-index: 9;
+        opacity: 0;
+        @include transition(all, .3s);
+
+        li {
+            display: block;
+            margin-right: 0;
+
+            a {
+                font-size: 14px;
+                color: $heading-color;
+                font-weight: 500;
+                padding: 5px 20px;
+            }
+        }
+    }
+
     a {
         display: inline-block;
         font-size: 18px;

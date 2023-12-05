@@ -1,5 +1,5 @@
-import Breadcrumb from "../breadcrumb";
-import Review from "../review";
+import Breadcrumb from "../Breadcrumb";
+import Review from "../Review";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../../config/config";
