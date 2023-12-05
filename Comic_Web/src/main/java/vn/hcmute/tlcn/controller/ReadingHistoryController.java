@@ -31,4 +31,13 @@ public class ReadingHistoryController {
         return ResponseEntity.status(401).body("Unauthorized!");
 
     }
+    @DeleteMapping("/user/history_reading")
+    public ResponseEntity<?>deleteHistoryItem(Authentication authentication,@RequestParam String chapterId){
+        if(authentication!=null){
+            UserDetails userDetails= (UserDetails) authentication.getPrincipal();
+            historyService.deleteHistory(userDetails.getUsername(), chapterId);
+            return ResponseEntity.ok("Success!");
+        }
+        return ResponseEntity.status(401).body("Unauthorized!");
+    }
 }

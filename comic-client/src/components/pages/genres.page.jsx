@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import ComicItem from "../ComicItem";
-import Breadcrumb from "../Breadcrumb";
+import Breadcrumb from "../breadcrumb";
 import ComicList from "../ComicList";
 import Pagination from "../Pagination";
 import axios from "axios";

@@ -2,6 +2,7 @@ package vn.hcmute.tlcn.model;
 
 import vn.hcmute.tlcn.entity.User;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -99,18 +100,19 @@ public class ComicBookDTO {
         this.rate = rate;
     }
 
-    public Date getPublishDate() {
-        return publishDate;
+    public String getPublishDate() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+        return formatter.format(publishDate);
     }
 
     public void setPublishDate(Date publishDate) {
         this.publishDate = publishDate;
     }
 
-    public Date getUpdateDate() {
-        return updateDate;
+    public String getUpdateDate() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+        return formatter.format(updateDate);
     }
-
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }

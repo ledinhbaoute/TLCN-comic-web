@@ -1,14 +1,11 @@
-<<<<<<< HEAD
-import Breadcrumb from "../Breadcrumb";
-import Review from "../Review";
-=======
 import Breadcrumb from "../breadcrumb";
-import Comment from "../Comment";
->>>>>>> e833aff08990548a7b4605313abe36c143c8434a
+import Comment from "../Comment"
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../../config/config";
 import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { checkAuth } from "../../security/Authentication";
 
 const ComicReadingPage = () => {
     const { chapterId } = useParams();
@@ -31,7 +28,7 @@ const ComicReadingPage = () => {
         };
         getChapterDetail();
 
-    }, [chapterId,imageList]);
+    }, [chapterId]);
 
     useEffect(() => {
         if (imageList.length>0) {
@@ -54,6 +51,27 @@ const ComicReadingPage = () => {
 
     }, [imageList]);
 
+    const insertHistoryReading = async (chapterId) => {
+        try {
+            if (checkAuth) {
+                const response = await axios.post(
+                    `${API_URL}/user/history_reading`,
+                    { chapterId: chapterId },
+                    {
+                        headers: {
+                            "Authorization": "Bearer " + Cookies.get("access_token"),
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        }
+                    }
+
+                );
+            }
+            // setRatingList(response.data.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <>
             {/* <Breadcrumb /> */}
@@ -75,7 +93,7 @@ const ComicReadingPage = () => {
                                     <h5>Chương truyện</h5>
                                 </div>
                                 {chapterList && chapterList.map((item) => (
-                                    <Link to={`/chapter/${item.id}`} key={item.id}> Chapter {item.ordinalNumber} </Link>
+                                   <span onClick={()=>insertHistoryReading(item.id)}> <Link to={`/chapter/${item.id}`} key={item.id}> Chapter {item.ordinalNumber} </Link></span>
                                 ))}
                             
                             </div>

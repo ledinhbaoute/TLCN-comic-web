@@ -1,5 +1,6 @@
 package vn.hcmute.tlcn.model;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -48,8 +49,9 @@ public class CommentDTO {
         this.chapterDTO = chapter;
     }
 
-    public Date getCreateAt() {
-        return createAt;
+    public String getCreateAt() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        return formatter.format(createAt);
     }
 
     public void setCreateAt(Date createAt) {

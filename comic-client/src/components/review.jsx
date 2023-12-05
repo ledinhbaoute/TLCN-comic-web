@@ -66,7 +66,10 @@ const Review = (props) => {
             <div className="anime__details__review">
                 <div className="section-title">
                     <h5>Đánh giá</h5>
+                   
                 </div>
+                <div className="anime__details__title">
+                 <span>LƯỢt ĐÁNH GIÁ: {ratingList.length}</span></div>
                 {ratingList.length ? (ratingList.map((item) => (
                     <div key={item.id} className="anime__review__item">
                         <div className="anime__review__item__pic">
