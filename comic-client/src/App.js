@@ -18,6 +18,7 @@ import ComicReadingPage from './components/pages/comic-reading.page';
 import ComicPage from './components/ComicPage';
 import FavoriteComicPage from './components/FavoriteComicPage';
 import HistoryReadingPage from './components/HistoryReading';
+import SearchResutlItem from './components/SearchResultItem';
 
 
 function App() {

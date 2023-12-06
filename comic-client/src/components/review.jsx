@@ -96,7 +96,7 @@ const Review = (props) => {
                 </div>
                 <form onSubmit={handleSubmit}>
                     <Rating initialValue={ratingScore} onClick={handleRating} />
-                    <textarea value={ratingComment} onChange={handleTextareaChange} placeholder="Viết đánh giá vào đây"></textarea>
+                    <textarea className="inputText" value={ratingComment} onChange={handleTextareaChange} placeholder="Viết đánh giá vào đây"></textarea>
                     <button type="submit"  ><i className="fa fa-location-arrow"></i> Đánh giá</button>
                 </form>
             </div>

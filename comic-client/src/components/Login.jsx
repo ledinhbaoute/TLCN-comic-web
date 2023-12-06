@@ -78,6 +78,7 @@ const Login = () => {
                 <form onSubmit={handleFormSubmit}>
                   <div className="input__item">
                     <input
+                    className="inputText"
                       type="text"
                       id="username"
                       placeholder="Tên đăng nhập"
@@ -88,6 +89,7 @@ const Login = () => {
                   </div>
                   <div className="input__item">
                     <input
+                    className="inputText"
                       type="password"
                       id="password"
                       placeholder="Mật khẩu"

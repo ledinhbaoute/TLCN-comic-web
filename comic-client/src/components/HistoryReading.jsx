@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import { checkAuth } from "../security/Authentication";
 const HistoryReadingPage = () => {
     const [listComic, setListComic] = useState([])
-    const[listHistory,setListHistory]=useState([])
+    const [listHistory, setListHistory] = useState([])
 
     useEffect(() => {
         const getHistoryReading = async () => {
@@ -17,16 +17,16 @@ const HistoryReadingPage = () => {
                         `${API_URL}/user/history_reading`,
                         {
                             headers: {
-                            "Authorization":"Bearer "+ Cookies.get("access_token")                           
+                                "Authorization": "Bearer " + Cookies.get("access_token")
                             }
-                          }
+                        }
                     );
                     setListHistory(response.data);
-                    setListComic(listHistory.map((item,index)=>
+                    setListComic(listHistory.map((item, index) =>
                         item.chapter
                     ))
                     console.log(listHistory)
-                    
+
                 } catch (error) {
                     console.log(error);
                 }
@@ -34,7 +34,7 @@ const HistoryReadingPage = () => {
         }
         getHistoryReading();
     }, [listHistory.length]);
-    
+    const imageError = process.env.PUBLIC_URL + '/images/hihihi.png';
 
     return (
         <section className="product-page spad">
@@ -53,25 +53,29 @@ const HistoryReadingPage = () => {
                                 </div>
                             </div>
                             {
-                                listComic.length>0? (
+                                listComic.length > 0 ? (
                                     <div className="row">
-                                    {listComic.map((item,index) => (
-                                        <ComicItem chapter={item} item={item.comicBook_Id} key={index} />
-                                    ))}
-                                </div>
-                                ):(
+                                        {listComic.map((item, index) => (
+                                            <ComicItem chapter={item} item={item.comicBook_Id} key={index} />
+                                        ))}
+                                    </div>
+                                ) : (
                                     <div className="anime__details__title">
-                                        {checkAuth()? (
-                                            <h3>Chưa có lịch sử đọc truyện</h3>
-                                        ):(
-                                        <h3>Bạn cần đăng nhập</h3>)
+                                        {checkAuth() ? (
+                                            <div>
+                                                <h3>Chưa có lịch sử đọc truyện</h3>
+                                                <img src={imageError} alt="Error"></img>
+                                            </div>
+                                        ) : (
+                                            <div>
+                                                <h3>Bạn cần đăng nhập</h3>
+                                                <img src={imageError} alt="Error"></img>
+                                            </div>)
                                         }
-                                    
-                                   
-                                  </div>
+                                    </div>
                                 )
                             }
-                           
+
                         </div>
                         {/* <Pagination totalPage={totalPage} listBy={listBy} currentPage={indexPage} /> */}
                     </div>

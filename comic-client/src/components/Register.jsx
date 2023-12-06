@@ -165,6 +165,7 @@ const Register = () => {
                 <form onSubmit={handleRegisterFormSubmit}>
                   <div className="input__item">
                     <input
+                    className="inputText"
                       type="text"
                       id="username"
                       placeholder="Tên đăng nhập"
@@ -175,6 +176,7 @@ const Register = () => {
                   </div>
                   <div className="input__item">
                     <input
+                    className="inputText"
                       type="email"
                       id="email"
                       placeholder="Email"
@@ -185,6 +187,7 @@ const Register = () => {
                   </div>
                   <div className="input__item">
                     <input
+                    className="inputText"
                       type="text"
                       id="fullname"
                       placeholder="Họ và tên"
@@ -195,6 +198,7 @@ const Register = () => {
                   </div>
                   <div className="input__item">
                     <input
+                    className="inputText"
                       type="password"
                       id="password"
                       placeholder="Mật khẩu"
@@ -205,6 +209,7 @@ const Register = () => {
                   </div>
                   <div className="input__item">
                     <input
+                    className="inputText"
                       type="password"
                       id="confirmPassword"
                       placeholder="Nhập lại mật khẩu"

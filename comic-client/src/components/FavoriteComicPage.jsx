@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import { checkAuth } from "../security/Authentication";
 const FavoriteComicPage = () => {
     const [listComic, setListComic] = useState([])
-
+    const imageError = process.env.PUBLIC_URL + '/images/hihihi.png';
     useEffect(() => {
         const getFavoriteComic = async () => {
             if (checkAuth()) {
@@ -16,9 +16,9 @@ const FavoriteComicPage = () => {
                         `${API_URL}/user/favorite-comic`,
                         {
                             headers: {
-                            "Authorization":"Bearer "+ Cookies.get("access_token")                           
+                                "Authorization": "Bearer " + Cookies.get("access_token")
                             }
-                          }
+                        }
                     );
                     setListComic(response.data.data);
                 } catch (error) {
@@ -46,24 +46,33 @@ const FavoriteComicPage = () => {
                                 </div>
                             </div>
                             {
-                                listComic.length>0? (
+                                listComic.length > 0 ? (
                                     <div className="row">
-                                    {listComic.map((item,index) => (
-                                        <ComicItem item={item.comicBookDTO} key={index} />
-                                    ))}
-                                </div>
-                                ):(
+                                        {listComic.map((item, index) => (
+                                            <ComicItem item={item.comicBookDTO} key={index} />
+                                        ))}
+                                    </div>
+                                ) : (
                                     <div className="anime__details__title">
-                                    
-                                    {checkAuth()? (
-                                            <h3>Danh sách trống</h3>
-                                        ):(
-                                        <h3>Bạn cần đăng nhập</h3>)
+
+                                        {checkAuth() ? (
+                                            <div>
+                                                <h3>Danh sách trống</h3>
+                                                <img src={imageError} alt="Error"></img>
+                                            </div>
+                                        ) : (
+                                            <div>
+
+                                                <h3>Bạn cần đăng nhập</h3>
+                                                <img src={imageError} alt="Error"></img>
+                                            </div>
+                                        )
                                         }
-                                  </div>
+
+                                    </div>
                                 )
                             }
-                           
+
                         </div>
                         {/* <Pagination totalPage={totalPage} listBy={listBy} currentPage={indexPage} /> */}
                     </div>

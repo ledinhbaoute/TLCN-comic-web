@@ -39,6 +39,10 @@ body {
 	background: #0b0c2a;
 }
 
+.inputText{
+	color: #000000 !important;
+	font-size: 15px !important;
+}
 h1,
 h2,
 h3,
@@ -363,8 +367,16 @@ ol {
 	opacity: 1;
 	visibility: visible;
 }
+.header__menu ul li:hover .dropdown-search {
+	top: 62px;
+	opacity: 1;
+	visibility: visible;
+}
 
 .header__menu ul li:hover .dropdown li a {
+	background: transparent;
+}
+.header__menu ul li:hover .dropdown-search li a {
 	background: transparent;
 }
 
@@ -387,17 +399,42 @@ ol {
 	-o-transition: all, 0.3s;
 	transition: all, 0.3s;
 }
+.header__menu ul li .dropdown-search {
+	position: absolute;
+	left: 0;
+	top: 82px;
+	width: 250px;
+	background: #a8a232;
+	text-align: left;
+	padding: 5px 0;
+	z-index: 9;
+	opacity: 0;
+	visibility: hidden;
+	-webkit-transition: all, 0.3s;
+	-o-transition: all, 0.3s;
+	transition: all, 0.3s;
+}
+
 
 .header__menu ul li .dropdown li {
 	display: block;
 	margin-right: 0;
 }
-
+.header__menu ul li .dropdown-search li {
+	display: block;
+	margin-right: 0;
+}
 .header__menu ul li .dropdown li a {
 	font-size: 14px;
 	color: #111111;
 	font-weight: 500;
 	padding: 5px 20px;
+}
+.header__menu ul li .dropdown-search li a {
+	font-size: 14px;
+	color: #ffffff;
+	font-weight: 100;
+	padding: 5px 0px;
 }
 
 .header__menu ul li a {
@@ -416,6 +453,21 @@ ol {
 	font-size: 17px;
 	top: 2px;
 }
+
+.searchTerm {
+	width: 100%;
+	border: 3px solid #000000;
+	border-right: none;
+	padding: 5px;
+	height: 50px;
+	border-radius: 5px 5px 5px 5px;
+	outline: none;
+	color: #9DBFAF;
+  }
+  
+  .searchTerm:focus{
+	color: #000000;
+  }
 
 .header__right {
 	text-align: right;
@@ -828,13 +880,14 @@ ol {
 }
 
 .product__sidebar__comment__item {
-	margin-bottom: 20px;
 	overflow: hidden;
 }
 
 .product__sidebar__comment__item__pic {
 	float: left;
-	margin-right: 15px;
+	margin-right: 5px;
+	width: 25px;
+	height: 40px;
 }
 
 .product__sidebar__comment__item__text {
@@ -847,10 +900,10 @@ ol {
 
 .product__sidebar__comment__item__text ul li {
 	list-style: none;
-	font-size: 10px;
+	font-size: 20px;
 	color: #ffffff;
 	font-weight: 700;
-	padding: 1px 10px;
+	padding: 1px 11px;
 	background: rgba(255, 255, 255, 0.2);
 	border-radius: 50px;
 	display: inline-block;
@@ -863,14 +916,16 @@ ol {
 .product__sidebar__comment__item__text h5 a {
 	color: #ffffff;
 	font-weight: 700;
-	line-height: 26px;
+	line-height: 6px;
+	font-size: 1px;
 }
 
 .product__sidebar__comment__item__text span {
 	display: block;
-	font-size: 13px;
-	color: #b7b7b7;
+	font-size: 12px;
+	color: #ffffff;
 }
+
 
 .product__page__title {
 	border-bottom: 2px solid rgba(255, 255, 255, 0.2);

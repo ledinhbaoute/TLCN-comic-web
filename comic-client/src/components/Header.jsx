@@ -8,6 +8,7 @@ import AppContext from "../context/AppContext";
 import axios from "axios";
 import API_URL from "../config/config";
 import ReactSearchBox from "react-search-box";
+import SearchResutlItem from "./SearchResultItem";
 
 const Header = () => {
   const appContext = useContext(AppContext);
@@ -16,26 +17,32 @@ const Header = () => {
 
   const [keyWord, setKeyWord] = useState("");
   const [searchingList, setSearchingList] = useState([]);
+  useEffect(() => {
+    if (keyWord !== "") {
+      searchComic(keyWord)
+      console.log(searchingList);
+    }
+  }
+    , [keyWord]);
 
-  const [transformedArray, setData] = useState([])
-  const handleKeyWordChange = (value) => {
-    // setKeyWord(.target.value);
-    searchComic(value)
+  const handleKeyWordChange = (event) => {
+    setKeyWord(event.target.value);
+  }
 
-    // try {
-    //   const response = await axios.get(
-    //     `${API_URL}/search/comics?keySearch=${keyWord}`
-    //   );
-    //   setSearchingList(response.data.data);
-    //   setData(searchingList.map((item) => ({
-    //     key: item.id,
-    //     value: item.name
-    //   })))
-    //   console.log(searchingList);
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  };
+  // try {
+  //   const response = await axios.get(
+  //     `${API_URL}/search/comics?keySearch=${keyWord}`
+  //   );
+  //   setSearchingList(response.data.data);
+  //   setData(searchingList.map((item) => ({
+  //     key: item.id,
+  //     value: item.name
+  //   })))
+  //   console.log(searchingList);
+  // } catch (error) {
+  //   console.log(error);
+  // }
+  // };
   const searchComic = async (keyS) => {
 
     try {
@@ -43,11 +50,8 @@ const Header = () => {
         `${API_URL}/search/comics?keySearch=${keyS}`
       );
       setSearchingList(response.data.data);
-      setData(searchingList.map((item) => ({
-        key: item.id,
-        value: item.name
-      })))
-      console.log(searchingList);
+
+
     } catch (error) {
       console.log(error);
     }
@@ -68,8 +72,6 @@ const Header = () => {
       top: 0,
     });
   };
-
-  const handleSearchSubmit = () => { };
 
   useEffect(() => {
     // const fetchData = async () => {
@@ -142,7 +144,7 @@ const Header = () => {
                     </NavLink>
                   </li>
                   <li>
-                    <ReactSearchBox
+                    {/* <ReactSearchBox
                       leftIcon={<>🔎</>}
                       iconBoxSize="28px"
                       placeholder="Search Here..."
@@ -150,7 +152,20 @@ const Header = () => {
                         transformedArray
                       }
                       onChange={handleKeyWordChange}
-                    /></li>
+                    /> */}
+
+                    <input class="searchTerm" type="text" placeholder="Search Here..." onChange={handleKeyWordChange}></input>
+                    {(keyWord != "" && searchingList != []) && (
+
+                      <ul className="dropdown-search">
+                        <li>
+                          {searchingList.map((item) => (
+                            <SearchResutlItem searchItem={item}></SearchResutlItem>
+                          ))}
+                        </li>
+                      </ul>
+                    )}
+                  </li>
                 </ul>
               </nav>
             </div>
@@ -161,15 +176,7 @@ const Header = () => {
 
 
 
-              {(keyWord != "" && searchingList != []) && (
-                <ul className="dropdown">
-                  <li>
-                    {searchingList.map((item) => (
-                      <Link to={{ pathname: `./comic-detail/${item.id}` }} key={item.id}>{item.name}</Link>
-                    ))}
-                  </li>
-                </ul>
-              )}
+
               {checkAuth() ? (
                 <a>
                   <Link to="./profile">
@@ -179,7 +186,7 @@ const Header = () => {
                     <span
                       title="Đăng xuất"
                       onClick={handleLogout}
-                      className="icon_close_alt"
+                      className="fa fa-sign-out"
                     ></span>
                   </Link>
                 </a>
