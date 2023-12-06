@@ -1,17 +1,15 @@
 import ComicDetail from "../ComicDetail";
-<<<<<<< HEAD
-import Breadcrumb from "../Breadcrumb";
-import Review from "../Review";
-=======
 import Breadcrumb from "../breadcrumb";
->>>>>>> e833aff08990548a7b4605313abe36c143c8434a
+import Review from "../Review";
 import ComicList from "../ComicList";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../../config/config";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Review from "../Review";
+import Cookies from "js-cookie";
+import { checkAuth } from "../../security/Authentication";
+
 
 const ComicDetailPage = () => {
 
@@ -74,9 +72,31 @@ const ComicDetailPage = () => {
         };
         getRatingByComic();
     }, [comicId]);
+
+
+    const insertHistoryReading = async (chapterId) => {
+        try {
+            if (checkAuth) {
+                const response = await axios.post(
+                    `${API_URL}/user/history_reading`,
+                    { chapterId: chapterId },
+                    {
+                        headers: {
+                            "Authorization": "Bearer " + Cookies.get("access_token"),
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        }
+                    }
+
+                );
+            }
+            // setRatingList(response.data.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
     return (
         <>
-            <Breadcrumb currentGenre={comic}/>
+            <Breadcrumb currentGenre={comic} />
             <section className="anime-details spad">
                 <div className="container">
                     <ComicDetail comic={comic} />
@@ -85,13 +105,13 @@ const ComicDetailPage = () => {
                             <h5>Danh sách Chapter</h5>
                         </div>
                         {chapterList && chapterList.map((item, index) => (
-                            <Link to={`/chapter/${item.id}`} key={index}> Chapter {item.ordinalNumber} </Link>
+                            <span onClick={()=>insertHistoryReading(item.id)}><Link to={`/chapter/${item.id}`} key={index}> Chapter {item.ordinalNumber} </Link></span>
                         ))}
 
                     </div>
                     <div className="row">
                         <div className="col-lg-8 col-md-8">
-                            <Review comicId={comicId} ratingList={ratingList}/>
+                            <Review comicId={comicId} ratingList={ratingList} />
                         </div>
                         {/* <div className="col-lg-4 col-md-4">
                             <ComicList />

@@ -1,6 +1,5 @@
-import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import API_URL from "../config/config";
 import Pagination from "./Pagination";
@@ -9,6 +8,7 @@ const ComicPage = (props) => {
     const {listBy, indexPage} = useParams();
     const [listComic, setListComic] = useState([])
     const [totalPage, setTotalPage] = useState({});
+    
  
     useEffect(() => {
         const getListComic = async () => {

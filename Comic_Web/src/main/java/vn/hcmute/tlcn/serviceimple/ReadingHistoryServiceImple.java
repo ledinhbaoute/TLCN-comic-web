@@ -39,5 +39,10 @@ public class ReadingHistoryServiceImple {
         List<ReadingHistory>historyList=readingHistoryRepo.findByUser_UserNameOrderByReadingTimeDesc(username);
         return historyList;
     }
+    public void deleteHistory(String username,String chapterId){
+        User user=userRepository.findOneByUserName(username).orElse(null);
+        ReadingHistoryKey readingHistoryKey=new ReadingHistoryKey(user.getId(),chapterId);
+        readingHistoryRepo.deleteById(readingHistoryKey);
+    }
 
 }

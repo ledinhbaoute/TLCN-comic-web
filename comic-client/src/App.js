@@ -16,6 +16,8 @@ import { checkAuth } from './security/Authentication';
 
 import ComicReadingPage from './components/pages/comic-reading.page';
 import ComicPage from './components/ComicPage';
+import FavoriteComicPage from './components/FavoriteComicPage';
+import HistoryReadingPage from './components/HistoryReading';
 
 
 function App() {
@@ -37,6 +39,8 @@ function App() {
             <Route path='/forgetpass' Component={ForgetPassword} />
             <Route path='/chapter/:chapterId' Component={ComicReadingPage} />
             <Route path='/comic/:listBy/:indexPage' Component={ComicPage} />
+            <Route path='/favorite-comic' Component={FavoriteComicPage} />
+            <Route path='/history-reading' Component={HistoryReadingPage} />
           </Route>
           <Route path="*" Component={NotFound} />
         </Routes>
