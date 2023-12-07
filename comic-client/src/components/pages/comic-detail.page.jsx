@@ -1,5 +1,5 @@
 import ComicDetail from "../ComicDetail";
-import Breadcrumb from "../breadcrumb";
+import Breadcrumb from "../Breadcrumb";
 import Review from "../Review";
 import ComicList from "../ComicList";
 import { useParams } from "react-router-dom";

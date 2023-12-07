@@ -1,0 +1,41 @@
+.layout {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 200px;
+    background-color: #f0f0f0;
+    transition: transform 0.3s ease-in-out;
+    overflow-y: auto;
+  }
+  
+  .toggle-button {
+    display: block;
+    margin: 10px;
+  }
+  
+  .sidebar-menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar-menu li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .sidebar-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .sidebar-link.selected {
+    background-color: #ccc;
+  }
+  
+  .content {
+    flex: 1;
+    padding: 20px;
+  }

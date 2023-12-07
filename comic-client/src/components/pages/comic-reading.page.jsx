@@ -1,4 +1,4 @@
-import Breadcrumb from "../breadcrumb";
+import Breadcrumb from "../Breadcrumb";
 import Comment from "../Comment"
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";

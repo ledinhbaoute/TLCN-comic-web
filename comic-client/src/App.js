@@ -19,6 +19,8 @@ import ComicPage from './components/ComicPage';
 import FavoriteComicPage from './components/FavoriteComicPage';
 import HistoryReadingPage from './components/HistoryReading';
 import SearchResutlItem from './components/SearchResultItem';
+import ProfileSidebar from './components/ProfileSidebar';
+import Profile from './components/Profile';
 
 
 function App() {
@@ -42,8 +44,11 @@ function App() {
             <Route path='/comic/:listBy/:indexPage' Component={ComicPage} />
             <Route path='/favorite-comic' Component={FavoriteComicPage} />
             <Route path='/history-reading' Component={HistoryReadingPage} />
+            <Route element={<ProfileSidebar/>}>
+              <Route path='/profile' Component={Profile} />
+            </Route>
           </Route>
-          <Route path="*" Component={NotFound} />
+          <Route path="*" Component={NotFound}/>
         </Routes>
       </BrowserRouter>
   

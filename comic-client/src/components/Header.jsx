@@ -154,7 +154,7 @@ const Header = () => {
                       onChange={handleKeyWordChange}
                     /> */}
 
-                    <input class="searchTerm" type="text" placeholder="Search Here..." onChange={handleKeyWordChange}></input>
+                    <input className="searchTerm" type="text" placeholder="Search Here..." onChange={handleKeyWordChange}></input>
                     {(keyWord != "" && searchingList != []) && (
 
                       <ul className="dropdown-search">
