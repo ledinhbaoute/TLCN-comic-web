@@ -74,11 +74,20 @@ public class ComicBookController {
     @PutMapping("/user/comicbooks")
     ResponseEntity<?> updateComic(@RequestParam("comicId")String id,
                                   @RequestParam("newName")String newName,
-                                  @RequestParam("newStatus")int status, Authentication authentication) {
+                                  @RequestParam("newStatus")int status,@RequestParam("newDescription")String description, Authentication authentication) {
         if (authentication != null) {
             UserDetails userDetails= (UserDetails) authentication.getPrincipal();
-            ResponseObject responseObject = service.updateComic(userDetails.getUsername(), id,newName,status);
+            ResponseObject responseObject = service.updateComic(userDetails.getUsername(), id,newName,status,description);
             return ResponseEntity.status(HttpStatus.OK).body(responseObject);
+        }
+        return ResponseEntity.status(401).body("Unauthorized!");
+    }
+    @PostMapping("user/comic/update_coverImg")
+    ResponseEntity<?> updateCoverImg(Authentication authentication,@RequestParam String comicId,
+                                     @RequestParam("file") MultipartFile file){
+        if(authentication!=null){
+            UserDetails userDetails= (UserDetails) authentication.getPrincipal();
+            return ResponseEntity.ok(service.updateCoverImage(userDetails.getUsername(), comicId,file));
         }
         return ResponseEntity.status(401).body("Unauthorized!");
     }

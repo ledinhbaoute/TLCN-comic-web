@@ -270,6 +270,13 @@ public class UserServiceImple implements IUserService {
         }
     }
 
+    public void updateProfile(String username,String newName,String newPhoneNumber){
+        User user=userRepository.findOneByUserName(username).orElse(null);
+        user.setName(newName);
+        user.setPhoneNumber(newPhoneNumber);
+        userRepository.save(user);
+    }
+
     public void deleteExpiredPremiumPackage(String username) {
         UserPremium userPremium = userPremiumRepo.findOneByUser_UserName(username).orElse(null);
         if (userPremium != null) {

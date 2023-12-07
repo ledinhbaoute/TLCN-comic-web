@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 import vn.hcmute.tlcn.service.IStorageService;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
@@ -109,9 +111,12 @@ public class ImageStorageService implements IStorageService {
     }
     @Override
     public void deleteFile(String fileName) {
-        Path filePath=this.storageFolder.resolve(fileName);
+         String filePath= this.storageFolder.resolve(fileName).toString();
+         String path=filePath.replace("\\","/");
+         System.out.println(path);
         try{
-            Files.delete(filePath);
+            FileUtils.forceDelete(new File(path));
+            System.out.println("File deleted successfully.");
         } catch (IOException e) {
             throw new RuntimeException("Cannot delete file",e);
         }

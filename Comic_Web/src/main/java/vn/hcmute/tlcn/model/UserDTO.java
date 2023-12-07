@@ -7,7 +7,7 @@ public class UserDTO {
     private String name;
     private String avatar;
     private String email;
-    @JsonIgnore
+
     private String phoneNumber;
 
     private String userName;

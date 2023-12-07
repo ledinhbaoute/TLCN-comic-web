@@ -1,6 +1,6 @@
 import ComicDetail from "../ComicDetail";
-import Breadcrumb from "../Breadcrumb";
-import Review from "../Review";
+import Breadcrumb from "../breadcrumb";
+import Review from "../review";
 import ComicList from "../ComicList";
 import { useParams } from "react-router-dom";
 import axios from "axios";

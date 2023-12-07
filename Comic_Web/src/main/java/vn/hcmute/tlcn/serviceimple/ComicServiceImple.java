@@ -140,7 +140,7 @@ public class ComicServiceImple implements IComicBookService {
     }
 
     @Override
-    public ResponseObject updateComic(String username, String comicId, String newName, int newStatus) {
+    public ResponseObject updateComic(String username, String comicId, String newName, int newStatus,String newDescription) {
         Optional<User> optionalUser = userRepository.findOneByUserName(username);
         Optional<ComicBook> optionalComicBook = comicBookRepository.findById(comicId);
         if (!optionalComicBook.isPresent())
@@ -151,6 +151,7 @@ public class ComicServiceImple implements IComicBookService {
             return new ResponseObject(false, "This comic book is not owned by this user", "");
         comicBook.setName(newName);
         comicBook.setStatus(newStatus);
+        comicBook.setDiscription(newDescription);
         return new ResponseObject(true, "Update Success!", converter.convertEntityToDto(comicBookRepository.save(comicBook)));
     }
 
@@ -194,7 +195,26 @@ public class ComicServiceImple implements IComicBookService {
         }
         return new ResponseObject(false, "You need upgrade to Premium Account!", "");
     }
+    @Override
+    public ResponseObject updateCoverImage(String username,String comicId,MultipartFile file){
+        User user=userRepository.findOneByUserName(username).get();
+        ComicBook comicBook=comicBookRepository.findById(comicId).orElse(null);
+        if(comicBook==null){
+            return new ResponseObject(false,"Comic not exist!","");
+        }
+        if(!comicBook.getActorId().getId().equals(user.getId()))
+            return new ResponseObject(false,"This comic book is not owned by this user","");
+        String currentImg = comicBook.getImage();
+        try {
+            String newImg=imageStorageService.storeFile(file);
+            comicBook.setImage(newImg);
+            imageStorageService.deleteFile(currentImg);
+            return new ResponseObject(true,"Success",comicBookRepository.save(comicBook));
+        }catch (Exception e){
+            return new ResponseObject(false,e.getMessage(),"");
+        }
 
+    }
     @Override
     @Transactional
     public void increaseView(String comicId) {

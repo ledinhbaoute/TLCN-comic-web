@@ -141,5 +141,14 @@ public class UserController {
         }
         return ResponseEntity.status(401).body("Unauthorized!");
     }
+    @PostMapping("user/update_profile")
+    ResponseEntity<?>updateProfile(Authentication authentication,@RequestParam String newName,@RequestParam String newPhoneNumber){
+        if(authentication!=null){
+            UserDetails userDetails= (UserDetails) authentication.getPrincipal();
+            userServiceImple.updateProfile(userDetails.getUsername(),newName,newPhoneNumber);
+            return ResponseEntity.ok("Success");
+        }
+        return ResponseEntity.status(401).body("Unauthorized!");
+    }
 
 }

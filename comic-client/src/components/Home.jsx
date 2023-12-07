@@ -52,7 +52,7 @@ const Home = () => {
       try {
 
         const response = await axios.get(
-          `${API_URL}/comic/latest_update?indexPage=1`
+          `${API_URL}/comic/latest_update?indexPage=0`
         );
         setListLatestUpdate(response.data.content);
       } catch (error) {

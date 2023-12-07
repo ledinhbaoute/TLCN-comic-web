@@ -39,6 +39,12 @@ public class ComicBook {
     private List<Chapter>chapters;
     @OneToMany(mappedBy = "comicBook",cascade = CascadeType.ALL)
     private List<ComicReport>comicReports;
+    @OneToMany(mappedBy = "comicBook",cascade = CascadeType.ALL)
+    private List<Rating>ratings;
+    @OneToMany(mappedBy = "comicBook",cascade = CascadeType.ALL)
+    private List<HistoryIncreaseView>historyIncreaseViews;
+    @OneToMany(mappedBy = "comicBook",cascade = CascadeType.ALL)
+    private List<FavoriteComic>favoriteComics;
     public List<Genre> getGenres() {
         return genres;
     }

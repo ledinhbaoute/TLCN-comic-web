@@ -23,32 +23,62 @@ const Profile = () => {
   const [user, setUser] = useState({});
 
   const defaultAvatarUrl = `${process.env.PUBLIC_URL}/images/default-avatar.png`;
-  const [avatarUrl, setAvatarUrl] = useState(defaultAvatarUrl);
-  const [selectedFile, setSelectedFile] = useState();
 
+  const [name, setName] = useState("");
+  const [phoneNumber,setPhoneNumber]=useState("")
   const uploadAvatar = async (formData) => {
     try {
       const response = await axios.post(`${API_URL}/user/avt-upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: "Bearer " + Cookies.get("access_token"),
+          "Authorization": "Bearer " + Cookies.get("access_token"),
         },
       });
-      window.alert("Cập nhật thành công");
+      console.log(response)
+
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleAvatarUpload = (event) => {
-    setSelectedFile(event.target.files[0]);
     const formData = new FormData();
-    formData.append("file", selectedFile);
-    console.log(formData);
+
+    formData.append("file", event.target.files[0]);
+
     console.log(formData.get("file"));
     uploadAvatar(formData);
-    navigate("../profile");    
+    //window.alert("Cập nhật thành công");
+    navigate("../profile");
   };
+  const handleNameChange=(event)=>{
+    setName(event.target.value)
+
+  }
+  const handlePhoneNumberChange=(event)=>{
+    setPhoneNumber(event.target.value)
+  }
+
+  const handleUpdateProfile=
+    async (event) => {
+      event.preventDefault()
+      try {
+        const response = await axios.post(`${API_URL}/user/update_profile` ,
+        {newName:name,newPhoneNumber:phoneNumber},
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Bearer " + Cookies.get("access_token"),
+          },
+        });
+    
+        navigate("../profile");
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
 
   useEffect(() => {
     const getUser = async () => {
@@ -59,15 +89,14 @@ const Profile = () => {
           },
         });
         setUser(response.data);
+        setName(response.data.name)
+        setPhoneNumber(response.data.phoneNumber)
+        console.log(user.avatar)
       } catch (error) {
         console.log(error);
       }
     };
     getUser();
-    console.log(user.avatar);
-    if (user.avatar !== "") {
-      setAvatarUrl(`${API_URL}/files/${user.avatar}`);
-    }
   }, []);
 
   return (
@@ -81,30 +110,36 @@ const Profile = () => {
               </Card.Header>
               <Card.Body>
                 <div className="author">
-                  <a onClick={(e) => e.preventDefault()}>
-                    <img
-                      style={{
-                        width: "124px",
-                        height: "124px",
-                        border: "5px solid #FFFFFF",
-                        position: "relative",
-                      }}
-                      alt="avatar"
-                      className="avatar border-gray"
-                      src={avatarUrl}
-                    ></img>
-                  </a>
-                  <label htmlFor="file-upload" className="custom-file-upload">
-                    Chọn ảnh
-                  </label>
-                  <input
-                    id="file-upload"
-                    type="file"
-                    onChange={handleAvatarUpload}
-                    style={{ display: "none" }}
-                  />
+                  {/* <a onClick={(e) => e.preventDefault()}> */}
+                  <img
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      borderRadius: 50,
+                      position: "relative",
+                      
+                    }}
+                    alt="avatar"
+                    className="avatar border-gray"
+                    src={user.avatar !== "" ? `${API_URL}/files/${user.avatar}` : defaultAvatarUrl
+                    }
+                  ></img>
+                  {/* </a> */}
+
                   {/* <p className="description">michael24</p> */}
+                 
                 </div>
+                <label htmlFor="file-upload" className="custom-file-upload" style={{
+                  marginLeft: 15
+                }}>
+                  Chọn ảnh
+                </label>
+                <input
+                  id="file-upload"
+                  type="file"
+                  onChange={handleAvatarUpload}
+                  style={{ display: "none" }}
+                />
                 <br></br>
                 <Form>
                   <Row>
@@ -123,25 +158,27 @@ const Profile = () => {
                       <Form.Group>
                         <label>Họ tên</label>
                         <Form.Control
-                          defaultValue={user.name}
+                          defaultValue={ name}
                           placeholder="Họ và tên"
                           type="text"
+                          onChange={handleNameChange}
                         ></Form.Control>
                       </Form.Group>
                     </Col>
-                    {/* <Col className="pl-1" md="4">
+                    <Col className="pl-1" md="4">
                       <Form.Group>
-                        <label htmlFor="exampleInputEmail1">
-                          Email address
+                        <label >
+                          SĐT
                         </label>
                         <Form.Control
-                          value={user.email}
-                          placeholder="Email"
-                          type="email"
+                          defaultValue={user.phoneNumber}
+                          placeholder="SĐT"
+                          type="text"
+                          onChange={handlePhoneNumberChange}
                         ></Form.Control>
                       </Form.Group>
                     </Col>
-                  </Row>
+                    {/*  </Row>
                   <Row>
                     <Col className="pr-1" md="6">
                       <Form.Group>
@@ -226,6 +263,10 @@ const Profile = () => {
                     className="btn-fill pull-right"
                     type="submit"
                     variant="info"
+                    style={{
+                      marginTop:10
+                    }}
+                    onClick={handleUpdateProfile}
                   >
                     Update Profile
                   </Button>

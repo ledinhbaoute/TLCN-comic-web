@@ -13,9 +13,10 @@ public interface IComicBookService {
     List<ComicBookDTO> getComicByGenre(String genreId);
     ComicBookDTO getDetailComic(String comicId);
     List<ComicBookDTO> getComicByActor(String actorId);
+    ResponseObject updateCoverImage(String username,String comicId,MultipartFile file);
 
     ComicBookDTO addComic(String name,String username,List<String> genres,String discription, MultipartFile file);
-    ResponseObject updateComic(String username,String comicId,String newName,int newStatus);
+    ResponseObject updateComic(String username,String comicId,String newName,int newStatus,String newDescription);
     int deleteComic(String username,String comicId);
     List<ComicBookDTO>searchComicByInput(String input);
     ResponseObject upgradePremium(String username,String comicId);

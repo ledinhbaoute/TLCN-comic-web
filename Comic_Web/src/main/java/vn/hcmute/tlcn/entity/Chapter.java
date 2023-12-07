@@ -21,6 +21,8 @@ public class Chapter {
 
     @OneToMany(mappedBy = "chapter",cascade = CascadeType.ALL)
     private List<Comment>comments;
+    @OneToMany(mappedBy = "chapter",cascade = CascadeType.ALL)
+    private List<ReadingHistory>readingHistories;
     @Column(name = "publish_date")
     private Date publishDate;
     @Column(name = "ordinal_number")

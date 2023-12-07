@@ -7,7 +7,6 @@ import vn.hcmute.tlcn.primarykey.FavoriteComicKey;
 @Table(name = "favorite_comic")
 @IdClass(FavoriteComicKey.class)
 public class FavoriteComic {
-
     @Id
     @ManyToOne
     @JoinColumn(name = "user_id")

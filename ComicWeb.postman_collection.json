@@ -381,7 +381,7 @@
 								},
 								{
 									"key": "password",
-									"value": "Lvq0612@",
+									"value": "Lvq0612@a",
 									"type": "text"
 								}
 							]
@@ -472,6 +472,33 @@
 								"api",
 								"v1",
 								"verify_registration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUser",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKd3QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJRdXluZSIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwMTg2MjY0NiwiaWF0IjoxNzAxODQ4MjQ2fQ.n8FImM1ZK4SslR-YdckdTMRJ4WV38mYGSB-eIVAlpJ8ltElurALLs0PQ3Zmx-_fqN4sI73XvDlqctbOtUNZRDQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8081/api/v1/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"user"
 							]
 						}
 					},
@@ -601,7 +628,7 @@
 					"response": []
 				},
 				{
-					"name": "getAllComic",
+					"name": "getRandom5Comic",
 					"event": [
 						{
 							"listen": "test",
@@ -615,14 +642,7 @@
 					],
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJ0eXAiOiJKd3QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjZ2NmY2d5Iiwicm9sZSI6WyJST0xFX1VTRVIiXSwiZXhwIjoxNzAwMzg2NDc5LCJpYXQiOjE3MDAzODYxNzl9.m510MDYZyH3Fei84a14WrDVJ5K5CUzAIVUcLxMms9Ima7qnLyTyY5ga_raBo59OyaRuvrU1mAhTR2luPhRHxUQ",
-								"type": "text",
-								"disabled": true
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://localhost:8081/api/v1/comicbooks",
 							"protocol": "http",
@@ -766,18 +786,40 @@
 					"name": "update Comic",
 					"request": {
 						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"username\":\"Quyne\",\r\n    \"password\":\"Lvq0612@\",\r\n    \"object\":{\r\n            \"id\": \"B_001\",\r\n        \"name\": \"One Piece Luffy\",\r\n        \"view\": 0,\r\n        \"rate\": 0.0,\r\n        \"publishDate\": \"2023-11-09T17:00:00.000+00:00\",\r\n        \"updateDate\": \"2023-11-09T17:00:00.000+00:00\",\r\n        \"status\": 1,\r\n        \"genres\": [\r\n            {\r\n                \"id\": \"GR_02\",\r\n                \"name\": \"Fantasy\"\r\n            },\r\n            {\r\n                \"id\": \"GR_03\",\r\n                \"name\": \"Action\"\r\n            }, {\r\n            \"id\": \"7a13e2ff-aa19-4\",\r\n            \"name\": \"18+\"\r\n        }\r\n        ],\r\n        \"actorId\": {\r\n            \"id\": \"US_001\",\r\n            \"name\": \"Lai Van Quy\",\r\n            \"avatar\": \"https://:/\",\r\n            \"email\": \"quylang012@gmail.com\",\r\n            \"phoneNumber\": \"0221234343\",\r\n            \"userName\": \"Quyne\",\r\n            \"password\": \"Lvq0612@\",\r\n            \"balance\": 0,\r\n            \"bankAccount\": \"1232343434\",\r\n            \"bankName\": \"Vietcombank\",\r\n            \"status\": 1,\r\n            \"premium\": false\r\n        },\r\n        \"premium\": false\r\n        }\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKd3QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJCYW9uZSIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwMTk2OTcyMywiaWF0IjoxNzAxOTU1MzIzfQ.nDuP3uRUTcC2yLmJX58EYdl_qlyQ1QjfvL06muMlL11ZsQKzJXVj1Iho4UXLROXhVU6IkNYU0BZ8mRR9hFLRdQ",
+								"type": "text"
 							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "comicId",
+									"value": "B_024",
+									"type": "text"
+								},
+								{
+									"key": "newName",
+									"value": "aaa",
+									"type": "text"
+								},
+								{
+									"key": "newStatus",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "newDescription",
+									"value": "Lazada",
+									"type": "text"
+								}
+							]
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/v1/comicbooks",
+							"raw": "http://localhost:8081/api/v1/user/comicbooks",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -786,6 +828,7 @@
 							"path": [
 								"api",
 								"v1",
+								"user",
 								"comicbooks"
 							]
 						}
@@ -890,7 +933,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v1/comic_trending",
+							"raw": "http://localhost:8081/api/v1/comic_trending?indexPage=0",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -900,6 +943,12 @@
 								"api",
 								"v1",
 								"comic_trending"
+							],
+							"query": [
+								{
+									"key": "indexPage",
+									"value": "0"
+								}
 							]
 						}
 					},
@@ -945,7 +994,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v1/comic/genre/pagination?indexPage=0&genreId=GR_01",
+							"raw": "http://localhost:8081/api/v1/comic/genre/pagination?indexPage=0&sortBy=name&genreId=GR_02",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -965,13 +1014,84 @@
 								},
 								{
 									"key": "sortBy",
-									"value": "view",
-									"disabled": true
+									"value": "name"
 								},
 								{
 									"key": "genreId",
-									"value": "GR_01"
+									"value": "GR_02"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getComicLatestUpdate",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v1/comic/latest_update?indexPage=0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"comic",
+								"latest_update"
+							],
+							"query": [
+								{
+									"key": "indexPage",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateCoverImage",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKd3QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJCYW9uZSIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwMTk2OTcyMywiaWF0IjoxNzAxOTU1MzIzfQ.nDuP3uRUTcC2yLmJX58EYdl_qlyQ1QjfvL06muMlL11ZsQKzJXVj1Iho4UXLROXhVU6IkNYU0BZ8mRR9hFLRdQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "comicId",
+									"value": "B_024",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/LENOVO/OneDrive/Pictures/h2.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v1/user/comic/update_coverImg",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"comic",
+								"update_coverImg"
 							]
 						}
 					},
@@ -2238,6 +2358,44 @@
 							{
 								"key": "Authorization",
 								"value": "Bearer ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "chapterId",
+									"value": "CH_001",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v1/user/history_reading",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"history_reading"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteHistoryReading",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKd3QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJRdXluZSIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwMTgwODg2NCwiaWF0IjoxNzAxNzk0NDY0fQ.rSHH5IAtvWe6iY0GjDE_bWrwKeNu2tnU67nioA8ViKzxFB6BY_1Ggatin-3SNQ2DsNMLEn1CHD1PjSZKLXoJlQ",
 								"type": "text"
 							}
 						],
