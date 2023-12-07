@@ -6,6 +6,7 @@ import "./nice-select.css";
 import "./plyr.css";
 import "./slicknav.min.css";
 import "./style.css";
+import "./comic-manage.css"
 
 const AllStyles = () => {
 

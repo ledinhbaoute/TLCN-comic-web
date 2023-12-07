@@ -62,6 +62,7 @@ const Header = () => {
 
   const logout = () => {
     Cookies.remove("access_token");
+    window.sessionStorage.clear();
   };
 
   const handleLogout = () => {

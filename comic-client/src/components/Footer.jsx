@@ -24,7 +24,7 @@ const Footer = () => {
         <div className="row">
           <div className="col-lg-3">
             <div className="footer__logo">
-              <Link to="./index.html">
+              <Link to="./">
                 <img src={logoUrl} alt="" />
               </Link>
             </div>
@@ -42,7 +42,7 @@ const Footer = () => {
                   <Link to="./">Quyền riêng tư</Link>
                 </li>
                 <li>
-                  <Link to="#">Liên hệ</Link>
+                  <Link to="/">Liên hệ</Link>
                 </li>
               </ul>
             </div>

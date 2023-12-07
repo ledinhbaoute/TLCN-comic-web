@@ -1,0 +1,174 @@
+.comic-list-container {
+  background-color: #fff;
+  padding-bottom: 10px;
+}
+
+.table-row:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.table-row:hover {
+  background-color: #e6e6e6;
+}
+
+.table-row td {
+  border-bottom: 1px solid #ddd;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+  width: 100px;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+  width: 150px;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+  width: 170px;
+}
+
+th:nth-child(5),
+td:nth-child(5),
+th:nth-child(6),
+td:nth-child(6) {
+  width: 80px;
+}
+
+.add-button {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  margin-right: 25px;
+}
+
+.add {
+  background-color: #00b894;
+  color: #fff;
+  border: 2px solid #009c7a;
+  border-radius: 4px;
+}
+
+.edit {
+  background-color: #f1c40f;
+  color: #000;
+  border: 2px solid #c5a600;
+  border-radius: 20px;
+}
+
+.delete {
+  background-color: #e74c3c;
+  color: #fff;
+  border: 2px solid #c0392b;
+  border-radius: 20px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.search-bar input[type="text"] {
+  width: 500px;
+  padding: 8px;
+  border: 2px solid #ddd;
+  border-radius: 20px;
+  outline: none;
+  margin-top: 10px;
+}
+
+.search-bar button {
+  margin-left: 10px;
+  padding: 8px 16px;
+  background-color: #ddd;
+  border: none;
+  border-radius: 20px;
+  outline: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  margin: 0 4px;
+  padding: 8px 12px;
+  background-color: #ddd;
+  border: none;
+  border-radius: 20px;
+  outline: none;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #00b894;
+  color: #fff;
+}
+
+.add-dialog {
+  width: 400px;
+  padding: 20px;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+}
+
+.add-dialog h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.add-dialog input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.add-dialog div {
+  margin-bottom: 10px;
+}
+
+.add-dialog h4 {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.add-dialog label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.add-dialog button {
+  padding: 8px 16px;
+  margin-right: 10px;
+  font-size: 14px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.add-dialog button:last-child {
+  background-color: #f44336;
+}

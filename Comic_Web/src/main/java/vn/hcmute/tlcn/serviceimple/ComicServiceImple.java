@@ -208,7 +208,6 @@ public class ComicServiceImple implements IComicBookService {
         try {
             String newImg=imageStorageService.storeFile(file);
             comicBook.setImage(newImg);
-            imageStorageService.deleteFile(currentImg);
             return new ResponseObject(true,"Success",comicBookRepository.save(comicBook));
         }catch (Exception e){
             return new ResponseObject(false,e.getMessage(),"");

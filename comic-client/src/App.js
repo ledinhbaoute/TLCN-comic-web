@@ -21,6 +21,8 @@ import HistoryReadingPage from './components/HistoryReading';
 import SearchResutlItem from './components/SearchResultItem';
 import ProfileSidebar from './components/ProfileSidebar';
 import Profile from './components/Profile';
+import ComicManage from './components/ComicManage';
+import ChapterManage from './components/ChapterManage';
 
 
 function App() {
@@ -30,28 +32,31 @@ function App() {
   })
 
   return (
-   
-      <BrowserRouter>
-        <Routes>
-            <Route element={<PageLayout />}>
-            <Route exact path="/" Component={Home} />
-            <Route path="/login" Component={Login} />
-            <Route path='/register' Component={Register} />
-            <Route path='/comic-detail/:comicId' Component={ComicDetailPage} />
-            <Route path='/genres/:genreId/:indexPage' Component={GenresPage} />
-            <Route path='/forgetpass' Component={ForgetPassword} />
-            <Route path='/chapter/:chapterId' Component={ComicReadingPage} />
-            <Route path='/comic/:listBy/:indexPage' Component={ComicPage} />
-            <Route path='/favorite-comic' Component={FavoriteComicPage} />
-            <Route path='/history-reading' Component={HistoryReadingPage} />
-            <Route element={<ProfileSidebar/>}>
-              <Route path='/profile' Component={Profile} />
-            </Route>
-          </Route>
-          <Route path="*" Component={NotFound}/>
-        </Routes>
-      </BrowserRouter>
-  
+
+    <BrowserRouter>
+      <Routes>
+        <Route element={<PageLayout />}>
+          <Route exact path="/" Component={Home} />
+          <Route path="/login" Component={Login} />
+          <Route path='/register' Component={Register} />
+          <Route path='/comic-detail/:comicId' Component={ComicDetailPage} />
+          <Route path='/genres/:genreId/:indexPage' Component={GenresPage} />
+          <Route path='/forgetpass' Component={ForgetPassword} />
+          <Route path='/chapter/:chapterId' Component={ComicReadingPage} />
+          <Route path='/comic/:listBy/:indexPage' Component={ComicPage} />
+          <Route path='/favorite-comic' Component={FavoriteComicPage} />
+          <Route path='/history-reading' Component={HistoryReadingPage} />
+
+        </Route>
+        <Route element={<ProfileSidebar />}>
+          <Route path='/profile' Component={Profile} />
+          <Route path='/comic-manage' Component={ComicManage} />
+          <Route path='/chapter-manage/:comicId' Component={ChapterManage}/>
+        </Route>
+        <Route path="*" Component={NotFound} />
+      </Routes>
+    </BrowserRouter>
+
   );
 }
 

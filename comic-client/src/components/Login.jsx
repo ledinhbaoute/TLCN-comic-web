@@ -23,6 +23,19 @@ const Login = () => {
     setPassword(event.target.value);
   };
 
+  const getUser = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/user`, {
+        headers: {
+          Authorization: "Bearer " + Cookies.get("access_token"),
+        },
+      });
+      window.sessionStorage.setItem("userid", response.data.id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const login = async () => {
     try {
       const response = await axios.post(
@@ -35,6 +48,7 @@ const Login = () => {
         }
       );
         Cookies.set("access_token", response.data.accessToken);
+        getUser();
         navigate("/");
     } catch (error) {
       window.alert("Đăng nhập thất bại. Sai tên đăng nhập hoặc mật khẩu");
