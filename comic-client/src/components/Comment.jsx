@@ -94,7 +94,7 @@ const Comment = (props) => {
                     <h5>Bình luận tại đây</h5>
                 </div>
                 <form onSubmit={handleSubmit}>
-                    <textarea value={commentContent} onChange={handleTextareaChange} placeholder="Your Comment"></textarea>
+                    <textarea className="inputText" value={commentContent} onChange={handleTextareaChange} placeholder="Your Comment"></textarea>
 
                     <button type="submit"><i className="fa fa-location-arrow"></i> Bình luận</button>
                 </form>

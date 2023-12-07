@@ -16,6 +16,7 @@ import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.entity.User;
 import vn.hcmute.tlcn.jwt.JwtService;
 import vn.hcmute.tlcn.model.Token;
+import vn.hcmute.tlcn.model.UserDTO;
 import vn.hcmute.tlcn.repository.UserRepository;
 import vn.hcmute.tlcn.securiry.CustomUserDetailsService;
 import vn.hcmute.tlcn.serviceimple.ChapterImageServiceImple;
@@ -45,10 +46,15 @@ public class UserController {
     @Autowired
     ChapterImageServiceImple chapterImageServiceImple;
 
-    @GetMapping("/users")
-    List<User> getAllUser() throws IOException {
-        return userRepository.findAll();
+    @GetMapping("/user")
+    ResponseEntity<?> getUser(Authentication authentication) {
+        if (authentication != null) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return ResponseEntity.ok(userServiceImple.getUser(userDetails.getUsername()));
+        }
+        return ResponseEntity.status(401).body("Unauthorized!");
     }
+
     @PostMapping("/register")
     ResponseEntity<ResponseObject> registerUser(@RequestParam("name") String name, @RequestParam("email") String email,
                                                 @RequestParam("username") String username, @RequestParam("password") String pass,
