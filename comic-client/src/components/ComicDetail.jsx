@@ -118,9 +118,9 @@ return (
             <button onClick={handleBtnFavoriteSubmit} className="follow-btn">
               <i className="fa fa-heart-o"></i> Ưa thích
             </button>
-            <a href="#" className="watch-btn">
+            {/* <a href="#" className="watch-btn">
               <span> Đánh Giá</span> <i className="fa fa-angle-right"></i>
-            </a>
+            </a> */}
           </div>
         </div>
       </div>

@@ -109,7 +109,7 @@ const ComicItem = ({ item,chapter }) => {
   return (
     <div className="col-lg-4 col-md-6 col-sm-6">
       <div className="product__item">
-        <div className="product__item__pic set-bg" style={{ backgroundImage: `url('http://localhost:8081/api/v1/files/${item.image}')` }}>
+        <div className="product__item__pic set-bg" style={{ backgroundImage: `url('${API_URL}/files/${item.image}')` }}>
           {item.premium && (
             <div className="ep">PREMIUM</div>
           )}

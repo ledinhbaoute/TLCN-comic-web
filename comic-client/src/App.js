@@ -23,14 +23,12 @@ import ProfileSidebar from './components/ProfileSidebar';
 import Profile from './components/Profile';
 import ComicManage from './components/ComicManage';
 import ChapterManage from './components/ChapterManage';
+import PrivateRoute from './security/PrivateRoute';
+import Loading from './components/Loading';
+import OtpDialogInput from './components/OTPDialogInput';
 
 
 function App() {
-
-  useEffect(() => {
-    checkAuth();
-  })
-
   return (
 
     <BrowserRouter>
@@ -46,12 +44,15 @@ function App() {
           <Route path='/comic/:listBy/:indexPage' Component={ComicPage} />
           <Route path='/favorite-comic' Component={FavoriteComicPage} />
           <Route path='/history-reading' Component={HistoryReadingPage} />
+          <Route path='/testing' Component={OtpDialogInput}/>
 
         </Route>
-        <Route element={<ProfileSidebar />}>
-          <Route path='/profile' Component={Profile} />
-          <Route path='/comic-manage' Component={ComicManage} />
-          <Route path='/chapter-manage/:comicId' Component={ChapterManage}/>
+        <Route element={<PrivateRoute/>}>
+          <Route element={<ProfileSidebar />}>
+            <Route path='/profile' Component={Profile} />
+            <Route path='/comic-manage' Component={ComicManage} />
+            <Route path='/chapter-manage/:comicId' Component={ChapterManage} />
+          </Route>
         </Route>
         <Route path="*" Component={NotFound} />
       </Routes>

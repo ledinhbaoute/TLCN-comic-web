@@ -1,7 +1,8 @@
 import React, { Component, useState } from "react";
-import { useLocation, NavLink, Link, Outlet } from "react-router-dom";
+import { useLocation, NavLink, Link, Outlet, Navigate } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
+import { checkAuth } from "../security/Authentication";
 
 import "../css/sidebar.css";
 
@@ -59,8 +60,7 @@ function ProfileSidebar() {
         </div>
       </div>
       <Footer />
-    </>
-  );
+    </>)
 }
 
 export default ProfileSidebar;

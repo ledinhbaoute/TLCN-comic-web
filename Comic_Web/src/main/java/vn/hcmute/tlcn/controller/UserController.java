@@ -75,7 +75,7 @@ public class UserController {
     }
 
     @PostMapping("/verify_resetPassword")
-    ResponseEntity<?> verifyResetPassword(@RequestParam String otpCode, @RequestParam String email) {
+    ResponseEntity<?> verifyResetPassword(@RequestParam("otp") String otpCode, @RequestParam String email) {
         return ResponseEntity.ok(userServiceImple.verifyResetPassword(otpCode, email));
     }
 

@@ -12,6 +12,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Loading from "./Loading";
 
 const Register = () => {
   const imgBgUrl = `${process.env.PUBLIC_URL}images/normal-breadcrumb.jpg`;
@@ -21,18 +22,25 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [otp, setOtp] = useState("");
   const [otpDialogOpen, setOtpDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const registerFailReasons = {
-    "Password must be 8 or more characters in length." : "Mật khẩu phải từ 8 ký tự trở lên",
-    "Password must contain 1 or more lowercase characters." : "Mật khẩu phải có tối thiểu 1 ký tự viết thường",
-    "Password must contain 1 or more uppercase characters." : "Mật khẩu phải có tối thiểu 1 ký tự viết hoa",
-    "Password must contain 1 or more digit characters." : "Mật khẩu phải có tối thiểu 1 ký tự số",
-    "Password must contain 1 or more special characters." : "Mật khẩu phải có tối thiểu 1 ký tự đặc biệt",
-    "User name or Email already exist!" : "Tên đăng nhập hoặc email đã được đăng ký",
-    "Password and confirm password doesn't match!" : "Mật khẩu nhập lại không khớp"
-  }
+    "Password must be 8 or more characters in length.":
+      "Mật khẩu phải từ 8 ký tự trở lên",
+    "Password must contain 1 or more lowercase characters.":
+      "Mật khẩu phải có tối thiểu 1 ký tự viết thường",
+    "Password must contain 1 or more uppercase characters.":
+      "Mật khẩu phải có tối thiểu 1 ký tự viết hoa",
+    "Password must contain 1 or more digit characters.":
+      "Mật khẩu phải có tối thiểu 1 ký tự số",
+    "Password must contain 1 or more special characters.":
+      "Mật khẩu phải có tối thiểu 1 ký tự đặc biệt",
+    "User name or Email already exist!":
+      "Tên đăng nhập hoặc email đã được đăng ký",
+    "Password and confirm password doesn't match!":
+      "Mật khẩu nhập lại không khớp",
+  };
 
   const navigate = useNavigateTo();
 
@@ -42,10 +50,6 @@ const Register = () => {
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
-  };
-
-  const handleOtpChange = (event) => {
-    setOtp(event.target.value);
   };
 
   const handleUsernameChange = (event) => {
@@ -64,14 +68,10 @@ const Register = () => {
     setOtpDialogOpen(true);
   };
 
-  const handleCloseDialog = () => {
-    setOtpDialogOpen(false);
-  };
-
-  
   const register = async () => {
     try {
-      const response = axios.post(
+      setIsLoading(true);
+      const response = await axios.post(
         `${API_URL}/register`,
         {
           name: fullname,
@@ -89,25 +89,27 @@ const Register = () => {
       return response;
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const verifyOtp = async () => {
-    try {
-      const response = await axios.post(
-        `${API_URL}/verify_registration`,
-        { otp: otp, email: email },
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
-      );
-      return response;
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const verifyOtp = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       `${API_URL}/verify_registration`,
+  //       { otp: otp, email: email },
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/x-www-form-urlencoded",
+  //         },
+  //       }
+  //     );
+  //     return response;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const handleRegisterFormSubmit = async (event) => {
     event.preventDefault();
@@ -122,21 +124,21 @@ const Register = () => {
     }
   };
 
-  const handleOtpSubmit = async () => {
-    // Xử lý logic khi người dùng gửi mã OTP
-    console.log("OTP:", otp);
-    const verifyResponse = await verifyOtp();
-    if(!verifyResponse.data.status)
-      window.alert(verifyResponse.data.message);
-    else{
-      window.alert("Tạo tài khoản thành công")
-      navigate("/login");
-    }
-    handleCloseDialog();
-  };
+  // const handleOtpSubmit = async () => {
+  //   Xử lý logic khi người dùng gửi mã OTP
+  //   console.log("OTP:", otp);
+  //   const verifyResponse = await verifyOtp();
+  //   if (!verifyResponse.data.status) window.alert(verifyResponse.data.message);
+  //   else {
+  //     window.alert("Tạo tài khoản thành công");
+  //     navigate("/login");
+  //   }
+  //   handleCloseDialog();
+  // };
 
   return (
     <div>
+      {isLoading && <Loading />}
       {/* <!-- Normal Breadcrumb Begin --> */}
       <section
         className="normal-breadcrumb set-bg"
@@ -165,7 +167,7 @@ const Register = () => {
                 <form onSubmit={handleRegisterFormSubmit}>
                   <div className="input__item">
                     <input
-                    className="inputText"
+                      className="inputText"
                       type="text"
                       id="username"
                       placeholder="Tên đăng nhập"
@@ -176,7 +178,7 @@ const Register = () => {
                   </div>
                   <div className="input__item">
                     <input
-                    className="inputText"
+                      className="inputText"
                       type="email"
                       id="email"
                       placeholder="Email"
@@ -187,7 +189,7 @@ const Register = () => {
                   </div>
                   <div className="input__item">
                     <input
-                    className="inputText"
+                      className="inputText"
                       type="text"
                       id="fullname"
                       placeholder="Họ và tên"
@@ -198,7 +200,7 @@ const Register = () => {
                   </div>
                   <div className="input__item">
                     <input
-                    className="inputText"
+                      className="inputText"
                       type="password"
                       id="password"
                       placeholder="Mật khẩu"
@@ -209,7 +211,7 @@ const Register = () => {
                   </div>
                   <div className="input__item">
                     <input
-                    className="inputText"
+                      className="inputText"
                       type="password"
                       id="confirmPassword"
                       placeholder="Nhập lại mật khẩu"
@@ -222,7 +224,7 @@ const Register = () => {
                     Đăng ký
                   </button>
                 </form>
-                <Dialog open={otpDialogOpen}>
+                {/* <Dialog open={otpDialogOpen}>
                   <DialogTitle>Nhập OTP</DialogTitle>
                   <DialogContent>
                     <a>Nhập mã OTP được gửi tới email của bạn</a>
@@ -239,7 +241,8 @@ const Register = () => {
                       Xác nhận
                     </Button>
                   </DialogContent>
-                </Dialog>
+                </Dialog> */}
+                <OtpDialogInput open={otpDialogOpen} onClose={()=>setOtpDialogOpen(false)} otpType={"register"} email={email}/>
                 {/* <h5>
                   Đã có tài khoản?{" "}
                   <Link to="../login">

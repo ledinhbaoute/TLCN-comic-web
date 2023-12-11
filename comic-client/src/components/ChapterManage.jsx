@@ -102,14 +102,54 @@ const ChapterManage = () => {
     // console.log(newChapterName);
     // console.log(selectedFiles);
     const newChapterId = await addChapter();
-    console.log("Chapter id", newChapterId);
-    for (let index = 0; index < selectedFiles.length; index++) {
-      const formData = new FormData();
-      formData.append("chapterId", newChapterId);
-      formData.append("file", selectedFiles[index]);
-      //   console.log(formData);
-      uploadChapterImg(formData);
-    }
+    // console.log("Chapter id", newChapterId);
+    const sortedFiles = selectedFiles.sort((a, b) => {
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+
+      if (nameA < nameB) {
+        return -1;
+      }
+
+      if (nameA > nameB) {
+        return 1;
+      }
+
+      return 0;
+    });
+    console.log(sortedFiles);
+    // Khai báo một hàm bọc để chờ đợi việc uploadChapterImg hoàn thành
+    const uploadFilesSequentially = async () => {
+      for (let index = 0; index < sortedFiles.length; index++) {
+        const formData = new FormData();
+        formData.append("chapterId", newChapterId);
+        formData.append("file", sortedFiles[index]);
+
+        // Gọi uploadChapterImg trong Promise để chờ đợi kết quả
+        await new Promise((resolve, reject) => {
+          uploadChapterImg(formData)
+            .then(() => {
+              resolve(); // Đánh dấu Promise thành công
+            })
+            .catch((error) => {
+              reject(error); // Đánh dấu Promise thất bại và truyền lỗi (nếu có)
+            });
+        });
+      }
+    };
+
+    // Gọi hàm uploadFilesSequentially để bắt đầu quá trình upload
+    uploadFilesSequentially()
+      .then(() => {
+        // Khi tất cả các file đã được upload thành công
+        window.alert("Upload thành công!");
+        // Thực hiện vòng lặp kế tiếp hoặc các công việc tiếp theo ở đây
+      })
+      .catch((error) => {
+        // Xử lý lỗi nếu có
+        window.alert("Upload thất bại");
+        console.error("Đã xảy ra lỗi trong quá trình upload:", error);
+      });
     setShowAddDialog(false);
     // window.location.reload();
   };
@@ -124,17 +164,14 @@ const ChapterManage = () => {
 
   const deleteChapter = async (chapterId) => {
     try {
-      const response = await axios.delete(
-        `${API_URL}/user/chapters`,
-        {
-            headers: {
-                "Authorization": "Bearer " + Cookies.get("access_token"),
-                "Content-Type": "application/x-www-form-urlencoded"
-    
-              }, data: { chapterId: chapterId },
-        }
-      );
-      console.log(response.data);
+      const response = await axios.delete(`${API_URL}/user/chapters`, {
+        headers: {
+          Authorization: "Bearer " + Cookies.get("access_token"),
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        data: { chapterId: chapterId },
+      });
+      // console.log(response.data);
     } catch (error) {
       console.log(error);
     }

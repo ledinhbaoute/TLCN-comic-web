@@ -108,10 +108,10 @@ public class UserServiceImple implements IUserService {
             }
         }
         if (otp == null) {
-            return new ResponseObject(false, "Otp Not Valid!", "");
+            return new ResponseObject(false, "OTP Invalid!", "");
         }
         if (otp.getExpireTime() < Instant.now().getEpochSecond())
-            return new ResponseObject(false, "Otp Expired!", "");
+            return new ResponseObject(false, "OTP Expired!", "");
         User user = OTPManager.userTemporary.get(otp);
         OTPManager.userTemporary.remove(otp);
         System.out.println("User Tempo Size:"+OTPManager.userTemporary.size());
