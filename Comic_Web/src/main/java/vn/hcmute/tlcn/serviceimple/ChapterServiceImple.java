@@ -91,10 +91,10 @@ public class ChapterServiceImple implements IChapterService {
             return 1;
         List<String>imageList=chapterImageServiceImple.getAllImageByChapter(chapterId);
         chapterRepository.deleteById(chapterId);
-        for (String imageName:imageList
-             ) {
-            imageStorageService.deleteFile(imageName);
-        }
+//        for (String imageName:imageList
+//             ) {
+//            imageStorageService.deleteFile(imageName);
+//        }
 
         return 2;
     }

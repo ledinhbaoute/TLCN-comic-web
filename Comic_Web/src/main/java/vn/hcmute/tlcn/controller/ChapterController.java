@@ -68,10 +68,8 @@ public class ChapterController {
             try {
                 int check = chapterServiceImple.deleteChapter(chapterId, userDetails.getUsername());
                 if (check == 0)
-                    return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, "User not exist!", ""));
-                if (check == 1)
                     return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, "Chapter not exist!", ""));
-                if (check == 2)
+                if (check == 1)
                     return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, "You can't delete chapter in someone else's comic!", ""));
                 return ResponseEntity.ok().body(new ResponseObject(true, "Delete Success!", ""));
             } catch (Exception e) {

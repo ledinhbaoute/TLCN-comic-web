@@ -140,7 +140,7 @@ public class ComicServiceImple implements IComicBookService {
     }
 
     @Override
-    public ResponseObject updateComic(String username, String comicId, String newName, int newStatus,String newDescription) {
+    public ResponseObject updateComic(String username, String comicId, String newName, List<String> genres, int newStatus,String newDescription) {
         Optional<User> optionalUser = userRepository.findOneByUserName(username);
         Optional<ComicBook> optionalComicBook = comicBookRepository.findById(comicId);
         if (!optionalComicBook.isPresent())
@@ -149,9 +149,17 @@ public class ComicServiceImple implements IComicBookService {
         ComicBook comicBook = optionalComicBook.get();
         if (!comicBook.getActorId().getId().equals(user.getId()))
             return new ResponseObject(false, "This comic book is not owned by this user", "");
+        List<Genre> genreList = new ArrayList<>();
+        for (String id : genres
+                ) {
+                    Optional<Genre> genre = genreRepository.findById(id);
+                    if (genre.isPresent())
+                        genreList.add(genre.get());
+                }
         comicBook.setName(newName);
         comicBook.setStatus(newStatus);
         comicBook.setDiscription(newDescription);
+        comicBook.setGenres(genreList);
         return new ResponseObject(true, "Update Success!", converter.convertEntityToDto(comicBookRepository.save(comicBook)));
     }
 
@@ -167,12 +175,12 @@ public class ComicServiceImple implements IComicBookService {
         try {
             List<String> imageList = chapterImageServiceImple.getAllImageByComic(comicId);
             comicBookRepository.deleteById(comicId);
-            imageStorageService.deleteFile(comicBook.getImage());
+//            imageStorageService.deleteFile(comicBook.getImage());
 
-            for (String imageName : imageList
-            ) {
-                imageStorageService.deleteFile(imageName);
-            }
+//            for (String imageName : imageList
+//            ) {
+//                imageStorageService.deleteFile(imageName);
+//            }
             return 2;
         } catch (Exception e) {
             throw new RuntimeException(e);

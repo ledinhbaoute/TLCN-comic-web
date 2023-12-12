@@ -4,10 +4,15 @@ import { Link, useParams } from "react-router-dom";
 import API_URL from "../config/config";
 import Cookies from "js-cookie";
 import AppContext from "../context/AppContext";
+import ConfirmDialog from "./dialogs/ConfirmDialog";
+import { Dialog } from "@mui/material";
+import AlertDialog from "./dialogs/AlertDialog";
 
 const ChapterManage = () => {
   const { comicId } = useParams();
   const [chaptersList, setChapterList] = useState([]);
+  const [alertDialogOpen, setAlertDialogOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
   const getChapters = async () => {
     try {
@@ -75,10 +80,15 @@ const ChapterManage = () => {
           },
         }
       );
-      //   console.log(response.data);
+      // console.log(response.data);
+      setAlertMessage("Tạo chương thành công, đang upload ảnh.");
+      setAlertDialogOpen(true);
       return response.data.data.id;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      setAlertMessage("Tạo chương thất bại.");
+      setAlertDialogOpen(true);
+      return -1;
     }
   };
 
@@ -102,6 +112,7 @@ const ChapterManage = () => {
     // console.log(newChapterName);
     // console.log(selectedFiles);
     const newChapterId = await addChapter();
+    // console.log("new chapter id:", newChapterId);
     // console.log("Chapter id", newChapterId);
     const sortedFiles = selectedFiles.sort((a, b) => {
       const nameA = a.name.toLowerCase();
@@ -139,17 +150,23 @@ const ChapterManage = () => {
     };
 
     // Gọi hàm uploadFilesSequentially để bắt đầu quá trình upload
-    uploadFilesSequentially()
-      .then(() => {
-        // Khi tất cả các file đã được upload thành công
-        window.alert("Upload thành công!");
-        // Thực hiện vòng lặp kế tiếp hoặc các công việc tiếp theo ở đây
-      })
-      .catch((error) => {
-        // Xử lý lỗi nếu có
-        window.alert("Upload thất bại");
-        console.error("Đã xảy ra lỗi trong quá trình upload:", error);
-      });
+    if (newChapterId !== -1) {
+      uploadFilesSequentially()
+        .then(() => {
+          // Khi tất cả các file đã được upload thành công
+          setAlertMessage("Upload ảnh thành công.");
+          setAlertDialogOpen(true);
+          // Thực hiện vòng lặp kế tiếp hoặc các công việc tiếp theo ở đây
+        })
+        .catch((error) => {
+          // Xử lý lỗi nếu có
+          setAlertMessage(
+            "Upload ảnh thất bại. Đảm bảo rằng tất cả các ảnh được chọn có dung lượng dưới 1Mb."
+          );
+          setAlertDialogOpen(true);
+          console.error("Đã xảy ra lỗi trong quá trình upload:", error);
+        });
+    }
     setShowAddDialog(false);
     // window.location.reload();
   };
@@ -161,6 +178,12 @@ const ChapterManage = () => {
   //
   //Xóa chương
   //
+  const [confirmDeleteDialogOpen, setConfirmDeleteDialogOpen] = useState(false);
+  const [chapterToDelete, setChapterToDelete] = useState({
+    id: "",
+    name: "",
+    ordinalNumber: "",
+  });
 
   const deleteChapter = async (chapterId) => {
     try {
@@ -172,21 +195,83 @@ const ChapterManage = () => {
         data: { chapterId: chapterId },
       });
       // console.log(response.data);
+      setAlertMessage("Xóa chương thành công.");
+      setAlertDialogOpen(true);
     } catch (error) {
       console.log(error);
+      setAlertMessage("Xóa chương thất bại.");
+      setAlertDialogOpen(true);
     }
   };
 
-  const handleDeleteClick = (chapterId) => {
-    const shouldDelete = window.confirm(
-      "Bạn có chắc chắn muốn xóa chương này?"
-    );
+  const handleDeleteClick = (chapterId, chapterName, ordinalNumber) => {
+    // const shouldDelete = window.confirm(
+    //   "Bạn có chắc chắn muốn xóa chương này?"
+    // );
 
-    if (shouldDelete) {
-      console.log(chapterId);
-      deleteChapter(chapterId);
-      //   window.location.reload();
+    // if (shouldDelete) {
+    //   console.log(chapterId);
+    //   deleteChapter(chapterId);
+    //   //   window.location.reload();
+    // }
+
+    setChapterToDelete({
+      id: chapterId,
+      name: chapterName,
+      ordinalNumber: ordinalNumber,
+    });
+    setConfirmDeleteDialogOpen(true);
+  };
+
+  //
+  //
+  // Sửa chương
+
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [selectedChapter, setSelectedChapter] = useState({
+    id: "",
+    name: "",
+    ordinalNumber: "",
+  });
+
+  const handleEditClick = (id, name, ordinalNumber) => {
+    setSelectedChapter({
+      id: id,
+      name: name,
+      ordinalNumber: ordinalNumber,
+    });
+    setShowEditDialog(true);
+  };
+
+  const editChapter = async () => {
+    try {
+      const response = await axios.put(
+        `${API_URL}/user/chapters`,
+        {
+          chapterId: selectedChapter.id,
+          newChapterName: selectedChapter.name,
+          newOrdinalNumber: selectedChapter.ordinalNumber,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + Cookies.get("access_token"),
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+      // console.log(response.data);
+      setAlertMessage("Cập nhật thông tin chương thành công.");
+      setAlertDialogOpen(true);
+    } catch (error) {
+      // console.log(error);
+      setAlertMessage("Cập nhật thông tin chương thất bại.");
+      setAlertDialogOpen(true);
     }
+  };
+
+  const handleEditChapter = () => {
+    editChapter();
+    setShowEditDialog(false);
   };
 
   return (
@@ -202,7 +287,25 @@ const ChapterManage = () => {
         </button>
       </div>
 
-      {showAddDialog && (
+      <ConfirmDialog
+        open={confirmDeleteDialogOpen}
+        onClose={() => setConfirmDeleteDialogOpen(false)}
+        onAccept={() => deleteChapter(chapterToDelete.id)}
+        message={
+          "Bạn thật sự muốn xóa chương " +
+          String(chapterToDelete.ordinalNumber) +
+          ": " +
+          chapterToDelete.name
+        }
+        title="Xóa chương"
+      />
+      <AlertDialog
+        open={alertDialogOpen}
+        onClose={() => setAlertDialogOpen(false)}
+        message={alertMessage}
+      />
+
+      <Dialog open={showAddDialog}>
         <div className="add-dialog">
           <h3>Thêm chương mới</h3>
           <input
@@ -228,7 +331,43 @@ const ChapterManage = () => {
             <button onClick={handleCancelAdd}>Hủy</button>
           </div>
         </div>
-      )}
+      </Dialog>
+
+      <Dialog open={showEditDialog}>
+        <div className="add-dialog">
+          <h3>Chỉnh sửa truyện</h3>
+          <h4> Số chương</h4>
+          <input
+            type="number"
+            name="ordinalNumber"
+            placeholder="Số chương"
+            defaultValue={selectedChapter.ordinalNumber}
+            value={selectedChapter.ordinalNumber}
+            min={1}
+            onChange={(e) =>
+              setSelectedChapter({
+                ...selectedChapter,
+                ordinalNumber: e.target.value,
+              })
+            }
+          />
+          <h4 style={{ marginTop: "10px" }}> Tên chương</h4>
+          <input
+            type="text"
+            name="name"
+            placeholder="Tên truyện"
+            defaultValue={selectedChapter.name}
+            value={selectedChapter.name}
+            onChange={(e) =>
+              setSelectedChapter({ ...selectedChapter, name: e.target.value })
+            }
+          />
+          <div>
+            <button onClick={handleEditChapter}>Xác nhận</button>
+            <button onClick={() => setShowEditDialog(false)}>Hủy</button>
+          </div>
+        </div>
+      </Dialog>
 
       <table>
         <thead>
@@ -251,13 +390,32 @@ const ChapterManage = () => {
               <td></td>
               <td>
                 <button
+                  className="edit"
+                  onClick={() =>
+                    handleEditClick(
+                      chapter.id,
+                      chapter.chapterName,
+                      chapter.ordinalNumber
+                    )
+                  }
+                >
+                  Sửa
+                </button>
+              </td>
+              <td>
+                <button
                   className="delete"
-                  onClick={() => handleDeleteClick(chapter.id)}
+                  onClick={() =>
+                    handleDeleteClick(
+                      chapter.id,
+                      chapter.chapterName,
+                      chapter.ordinalNumber
+                    )
+                  }
                 >
                   Xóa
                 </button>
               </td>
-              <td></td>
             </tr>
           </tbody>
         ))}

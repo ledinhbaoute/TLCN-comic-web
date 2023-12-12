@@ -193,7 +193,7 @@ const Header = () => {
                 </a>
               ) : (
                 <Link to="./login">
-                  <span className="icon_profile"></span>
+                  <span className="fa fa-sign-in"></span>
                 </Link>
               )}
             </div>

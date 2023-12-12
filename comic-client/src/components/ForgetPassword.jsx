@@ -10,7 +10,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import OtpDialogInput from "./OTPDialogInput";
+import OtpDialogInput from "./dialogs/OTPDialogInput";
 import Loading from "./Loading";
 
 const ForgetPassword = () => {

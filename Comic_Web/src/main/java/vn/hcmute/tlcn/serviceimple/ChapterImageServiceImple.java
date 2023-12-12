@@ -112,7 +112,7 @@ public class ChapterImageServiceImple implements IChapterImageService {
         if (!user.getId().equals(chapterImage.getChapter().getComicBook_Id().getActorId().getId()))
             return 1;
         chapterImageRepository.delete(optionalChapterImage.get());
-        imageStorageService.deleteFile(fileName);
+//        imageStorageService.deleteFile(fileName);
         return 2;
     }
 

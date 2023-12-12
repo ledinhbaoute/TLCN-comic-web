@@ -6,7 +6,7 @@ import { useState } from "react";
 import axios from "axios";
 import API_URL from "../config/config";
 import { useNavigateTo } from "../service/navigation";
-import OtpDialogInput from "./OTPDialogInput";
+import OtpDialogInput from "./dialogs/OTPDialogInput";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";

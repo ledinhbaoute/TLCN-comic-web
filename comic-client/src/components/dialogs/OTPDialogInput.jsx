@@ -6,9 +6,9 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { DialogContentText, DialogActions } from "@mui/material";
 import { MuiOtpInput } from "mui-one-time-password-input";
-import API_URL from "../config/config";
+import API_URL from "../../config/config";
 import axios from "axios";
-import { useNavigateTo } from "../service/navigation";
+import { useNavigateTo } from "../../service/navigation";
 
 const OtpDialogInput = ({ open, onClose, otpType, email , ...props}) => {
   const otpURL = {

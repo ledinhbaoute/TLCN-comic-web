@@ -25,7 +25,7 @@ import ComicManage from './components/ComicManage';
 import ChapterManage from './components/ChapterManage';
 import PrivateRoute from './security/PrivateRoute';
 import Loading from './components/Loading';
-import OtpDialogInput from './components/OTPDialogInput';
+import OtpDialogInput from './components/dialogs/OTPDialogInput';
 
 
 function App() {

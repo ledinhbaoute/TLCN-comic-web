@@ -1,12 +1,17 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, Component } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import API_URL from "../config/config";
 import Cookies from "js-cookie";
 import AppContext from "../context/AppContext";
+import { Dialog } from "@mui/material";
+import AlertDialog from "./dialogs/AlertDialog";
+import ConfirmDialog from "./dialogs/ConfirmDialog";
 
 const ComicManage = () => {
   const genresList = useContext(AppContext);
+  const [alertDialogOpen, setAlertDialogOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
   const [comics, setComics] = useState([]);
 
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -61,6 +66,10 @@ const ComicManage = () => {
   //
   //Xử lý xóa comic
   //
+  const [confirmDeleteDialogOpen, setConfirmDeleteDialogOpen] = useState(false);
+  const [comicIdtoDelete, setComicIdtoDelete] = useState("");
+  const [comicNametoDelete, setComicNametoDelete] = useState("");
+
   const deleteComic = async (comicId) => {
     try {
       const response = await axios.delete(
@@ -74,20 +83,26 @@ const ComicManage = () => {
           data: { comicId: comicId },
         }
       );
-    //   console.log(response.data);
+      //   console.log(response.data);
+      setAlertMessage("Xóa truyện thành công");
+      setAlertDialogOpen(true);
     } catch (error) {
       console.log(error);
+      setAlertMessage("Xóa truyện thất bại, đã có lỗi xảy ra");
+      setAlertDialogOpen(true);
     }
   };
 
-  const handleDeleteClick = (comicId) => {
-    const shouldDelete = window.confirm("Bạn có chắc chắn muốn xóa comic này?");
-
-    if (shouldDelete) {
-      console.log(comicId);
-      deleteComic(comicId);
-      //   window.location.reload();
-    }
+  const handleDeleteClick = (comicId, comicName) => {
+    // const shouldDelete = window.confirm("Bạn có chắc chắn muốn xóa comic này?");
+    // if (shouldDelete) {
+    //   console.log(comicId);
+    //   deleteComic(comicId);
+    //   //   window.location.reload();
+    // }
+    setComicIdtoDelete(comicId);
+    setComicNametoDelete(comicName);
+    setConfirmDeleteDialogOpen(true);
   };
 
   //
@@ -106,8 +121,15 @@ const ComicManage = () => {
           },
         }
       );
+      setAlertMessage("Thêm truyện mới thành công");
+      setAlertDialogOpen(true);
       //   console.log(response.data);
-    } catch (error) {}
+    } catch (error) {
+      setAlertMessage(
+        "Thêm truyện mới thất bại. Đảm bảo bạn đã điền đủ các mục và file ảnh không vượt quá 1Mb"
+      );
+      setAlertDialogOpen(true);
+    }
   };
 
   const handleAddClick = () => {
@@ -133,6 +155,7 @@ const ComicManage = () => {
       formData.append("image", newComicImage);
       addComic(formData);
       setShowAddDialog(false);
+
       // window.location.reload();
     }
   };
@@ -164,7 +187,9 @@ const ComicManage = () => {
   //Xử lý sửa comic
   //
 
-  const [selectedComic, setSelectedComic] = useState([]);
+  const [selectedComic, setSelectedComic] = useState({
+    genres: [],
+  });
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [selectedComicImg, setSelectedComicImg] = useState(null);
 
@@ -172,6 +197,7 @@ const ComicManage = () => {
     try {
       const response = await axios.get(`${API_URL}/comicbooks/${comicId}`);
       setSelectedComic(response.data.data);
+      console.log(selectedComic);
     } catch (error) {
       console.log(error);
     }
@@ -185,8 +211,23 @@ const ComicManage = () => {
     }
   };
 
+  const handleSelectedComicGenreChange = (genre, name) => {
+    const updatedGenres = selectedComic.genres.some((item) => item.id === genre)
+      ? selectedComic.genres.filter((g) => g.id !== genre)
+      : [...selectedComic.genres, { id: genre, name: name }];
+
+    setSelectedComic((prevComic) => ({
+      ...prevComic,
+      genres: updatedGenres,
+    }));
+    // console.log(selectedComic);
+    // const updateGenreIds = selectedComic.genres.map(genre => genre.id);
+    // console.log(updateGenreIds);
+  };
+
   const updateComic = async () => {
     try {
+      const updateGenreIds = selectedComic.genres.map((genre) => genre.id);
       const response = await axios.put(
         `${API_URL}/user/comicbooks`,
         {
@@ -194,6 +235,7 @@ const ComicManage = () => {
           newName: selectedComic.name,
           newDescription: selectedComic.discription,
           newStatus: selectedComic.status,
+          genreIds: updateGenreIds.join(","),
         },
         {
           headers: {
@@ -203,8 +245,12 @@ const ComicManage = () => {
         }
       );
       //   console.log(response.data);
+      setAlertMessage("Cập nhật thông tin truyện thành công.");
+      setAlertDialogOpen(true);
     } catch (error) {
       console.log(error);
+      setAlertMessage("Cập nhật thông tin truyện thất bại.");
+      setAlertDialogOpen(true);
     }
   };
 
@@ -221,8 +267,10 @@ const ComicManage = () => {
         }
       );
       //   console.log(response.data);
+      setAlertMessage(" Cập nhật hình ảnh thành công.");
     } catch (error) {
       console.log(error);
+      setAlertMessage(" Cập nhật hình ảnh thất bại.");
     }
   };
 
@@ -243,19 +291,25 @@ const ComicManage = () => {
   };
 
   const handleEditComic = () => {
-    if (selectedComic.name === "" || selectedComic.discription === "") {
+    if (
+      selectedComic.name === "" ||
+      selectedComic.discription === "" ||
+      selectedComic.genres.length === 0
+    ) {
       window.alert("Vui lòng nhập đầy đủ thông tin");
     } else {
+
+      if (!(selectedComicImg === null)) {
+        const formData = new FormData();
+        formData.append("comicId", selectedComic.id);
+        formData.append("file", selectedComicImg);
+        updateCoverImg(formData);
+      }
       updateComic();
+      // window.location.reload();
+      setShowEditDialog(false);
     }
-    if (!(selectedComicImg === null)) {
-      const formData = new FormData();
-      formData.append("comicId", selectedComic.id);
-      formData.append("file", selectedComicImg);
-      updateCoverImg(formData);
-    }
-    window.location.reload();
-    setShowEditDialog(false);
+    
   };
 
   return (
@@ -271,7 +325,20 @@ const ComicManage = () => {
         </button>
       </div>
 
-      {showAddDialog && (
+      <ConfirmDialog
+        open={confirmDeleteDialogOpen}
+        onClose={() => setConfirmDeleteDialogOpen(false)}
+        onAccept={() => deleteComic(comicIdtoDelete)}
+        message={"Bạn thật sự muốn xóa truyện " + comicNametoDelete}
+        title="Xóa truyện"
+      />
+      <AlertDialog
+        open={alertDialogOpen}
+        onClose={() => setAlertDialogOpen(false)}
+        message={alertMessage}
+      />
+
+      <Dialog open={showAddDialog}>
         <div className="add-dialog">
           <h3>Thêm truyện mới</h3>
           <input
@@ -318,9 +385,9 @@ const ComicManage = () => {
             <button onClick={handleCancelAdd}>Hủy</button>
           </div>
         </div>
-      )}
+      </Dialog>
 
-      {showEditDialog && (
+      <Dialog open={showEditDialog}>
         <div className="add-dialog">
           <h3>Chỉnh sửa truyện</h3>
           <input
@@ -385,13 +452,30 @@ const ComicManage = () => {
               Tạm ngưng
             </label>
           </div>
+          <div>
+            <h4>Thể loại</h4>
+            {genresList.map((genre) => (
+              <label key={genre}>
+                <input
+                  type="checkbox"
+                  checked={selectedComic.genres.some(
+                    (item) => item.id === genre.id
+                  )}
+                  onChange={() =>
+                    handleSelectedComicGenreChange(genre.id, genre.name)
+                  }
+                />
+                {genre.name}
+              </label>
+            ))}
+          </div>
 
           <div>
             <button onClick={handleEditComic}>Xác nhận</button>
             <button onClick={handleCancelEdit}>Hủy</button>
           </div>
         </div>
-      )}
+      </Dialog>
 
       <table>
         <thead>
@@ -434,7 +518,7 @@ const ComicManage = () => {
               <td>
                 <button
                   className="delete"
-                  onClick={() => handleDeleteClick(comic.id)}
+                  onClick={() => handleDeleteClick(comic.id, comic.name)}
                 >
                   Xóa
                 </button>
