@@ -32,4 +32,17 @@ public class CommentController {
         List<CommentDTO> commentDTOS = iCommentService.getCommentByChapter(chapterId);
         return ResponseEntity.ok(new ResponseObject(true, "Query Success", commentDTOS));
     }
+    @DeleteMapping("user/comments")
+    ResponseEntity<?>deleteComment(@RequestParam("commentId")int id,Authentication authentication){
+    	 if (authentication != null) {
+             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+             int check=iCommentService.deleteComment(userDetails.getUsername(), id);
+             if(check==0)
+            	 return ResponseEntity.ok(new ResponseObject(false,"Comment not exist",""));
+             else if(check==1)
+            	 return ResponseEntity.ok(new ResponseObject(false,"Cannot delete someone else's comment",""));
+             return ResponseEntity.ok(new ResponseObject(true,"Success",""));
+         }
+         return ResponseEntity.status(401).body("Unauthorized!");
+    }
 }

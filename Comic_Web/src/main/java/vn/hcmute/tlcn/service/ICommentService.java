@@ -9,4 +9,5 @@ import java.util.List;
 public interface ICommentService {
     ResponseEntity<ResponseObject> addComment(String username,  String chapterId, String content);
     List<CommentDTO> getCommentByChapter(String chapterId);
+    int deleteComment(String username, int commentId);
 }

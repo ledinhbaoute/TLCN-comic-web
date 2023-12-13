@@ -55,4 +55,19 @@ public class CommentServiceImple implements ICommentService {
         }
         return commentDTOS;
     }
+    
+    @Override
+    public int deleteComment(String username, int commentId) {
+    	Optional<User>optionalUser=userRepository.findOneByUserName(username);
+    	User user=optionalUser.get();
+    	Comment comment=commentRepository.findById(commentId).orElse(null);
+    	if(comment==null) {
+    		return 0;
+    	}
+    	if(!comment.getUser().getId().equals(user.getId())){
+    		return 1;
+    	}
+    	commentRepository.deleteById(commentId);
+    	return 2;
+    }
 }

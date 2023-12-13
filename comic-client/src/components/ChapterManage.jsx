@@ -7,6 +7,7 @@ import AppContext from "../context/AppContext";
 import ConfirmDialog from "./dialogs/ConfirmDialog";
 import { Dialog } from "@mui/material";
 import AlertDialog from "./dialogs/AlertDialog";
+import { isImage, isSizeExceeded } from "../security/CheckingFile";
 
 const ChapterManage = () => {
   const { comicId } = useParams();
@@ -109,65 +110,84 @@ const ChapterManage = () => {
   };
 
   const handleAddChapter = async () => {
-    // console.log(newChapterName);
-    // console.log(selectedFiles);
-    const newChapterId = await addChapter();
-    // console.log("new chapter id:", newChapterId);
-    // console.log("Chapter id", newChapterId);
-    const sortedFiles = selectedFiles.sort((a, b) => {
-      const nameA = a.name.toLowerCase();
-      const nameB = b.name.toLowerCase();
-
-      if (nameA < nameB) {
-        return -1;
+    if (newChapterName !== "" && selectedFiles.length > 0) {
+      // console.log(newChapterName);
+      // console.log(selectedFiles);
+      var checkfile = 1;
+      for (let i = 0; i < selectedFiles.length; i++) {
+        if (
+          isImage(selectedFiles[i]) === 0 ||
+          isSizeExceeded(selectedFiles[i]) === 1
+        ) {
+          checkfile = 0;
+          break;
+        }
       }
+      if (checkfile === 1) {
+        const newChapterId = await addChapter();
 
-      if (nameA > nameB) {
-        return 1;
-      }
+        // console.log("new chapter id:", newChapterId);
+        // console.log("Chapter id", newChapterId);
+        const sortedFiles = selectedFiles.sort((a, b) => {
+          const nameA = a.name.toLowerCase();
+          const nameB = b.name.toLowerCase();
 
-      return 0;
-    });
-    console.log(sortedFiles);
-    // Khai báo một hàm bọc để chờ đợi việc uploadChapterImg hoàn thành
-    const uploadFilesSequentially = async () => {
-      for (let index = 0; index < sortedFiles.length; index++) {
-        const formData = new FormData();
-        formData.append("chapterId", newChapterId);
-        formData.append("file", sortedFiles[index]);
+          if (nameA < nameB) {
+            return -1;
+          }
 
-        // Gọi uploadChapterImg trong Promise để chờ đợi kết quả
-        await new Promise((resolve, reject) => {
-          uploadChapterImg(formData)
+          if (nameA > nameB) {
+            return 1;
+          }
+
+          return 0;
+        });
+        console.log(sortedFiles);
+        // Khai báo một hàm bọc để chờ đợi việc uploadChapterImg hoàn thành
+        const uploadFilesSequentially = async () => {
+          for (let index = 0; index < sortedFiles.length; index++) {
+            const formData = new FormData();
+            formData.append("chapterId", newChapterId);
+            formData.append("file", sortedFiles[index]);
+
+            // Gọi uploadChapterImg trong Promise để chờ đợi kết quả
+            await new Promise((resolve, reject) => {
+              uploadChapterImg(formData)
+                .then(() => {
+                  resolve(); // Đánh dấu Promise thành công
+                })
+                .catch((error) => {
+                  reject(error); // Đánh dấu Promise thất bại và truyền lỗi (nếu có)
+                });
+            });
+          }
+        };
+
+        // Gọi hàm uploadFilesSequentially để bắt đầu quá trình upload
+        if (newChapterId !== -1) {
+          uploadFilesSequentially()
             .then(() => {
-              resolve(); // Đánh dấu Promise thành công
+              // Khi tất cả các file đã được upload thành công
+              setAlertMessage("Upload ảnh thành công.");
+              setAlertDialogOpen(true);
+              // Thực hiện vòng lặp kế tiếp hoặc các công việc tiếp theo ở đây
             })
             .catch((error) => {
-              reject(error); // Đánh dấu Promise thất bại và truyền lỗi (nếu có)
+              // Xử lý lỗi nếu có
+              setAlertMessage(
+                "Upload ảnh thất bại. Đảm bảo rằng tất cả các ảnh được chọn có dung lượng dưới 1Mb."
+              );
+              setAlertDialogOpen(true);
+              console.error("Đã xảy ra lỗi trong quá trình upload:", error);
             });
-        });
+        }
+        setShowAddDialog(false);
+      } else {
+        window.alert("Có file không phải ảnh hoặc vượt quá 1Mb");
       }
-    };
-
-    // Gọi hàm uploadFilesSequentially để bắt đầu quá trình upload
-    if (newChapterId !== -1) {
-      uploadFilesSequentially()
-        .then(() => {
-          // Khi tất cả các file đã được upload thành công
-          setAlertMessage("Upload ảnh thành công.");
-          setAlertDialogOpen(true);
-          // Thực hiện vòng lặp kế tiếp hoặc các công việc tiếp theo ở đây
-        })
-        .catch((error) => {
-          // Xử lý lỗi nếu có
-          setAlertMessage(
-            "Upload ảnh thất bại. Đảm bảo rằng tất cả các ảnh được chọn có dung lượng dưới 1Mb."
-          );
-          setAlertDialogOpen(true);
-          console.error("Đã xảy ra lỗi trong quá trình upload:", error);
-        });
+    } else {
+      window.alert("Vui lòng nhập đầy đủ các mục");
     }
-    setShowAddDialog(false);
     // window.location.reload();
   };
 
@@ -229,7 +249,7 @@ const ChapterManage = () => {
 
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [selectedChapter, setSelectedChapter] = useState({
-    id: "",
+    id: null,
     name: "",
     ordinalNumber: "",
   });
@@ -270,8 +290,16 @@ const ChapterManage = () => {
   };
 
   const handleEditChapter = () => {
-    editChapter();
-    setShowEditDialog(false);
+    if (selectedChapter.ordinalNumber === "" || selectedChapter.name === "") {
+      window.alert("Vui lòng nhập đầy đủ các mục");
+    } else {
+      if (selectedChapter.ordinalNumber < 0) {
+        window.alert("Số chương không được nhỏ hơn 0");
+      } else{
+        editChapter();
+        setShowEditDialog(false);
+      }
+    }
   };
 
   return (
