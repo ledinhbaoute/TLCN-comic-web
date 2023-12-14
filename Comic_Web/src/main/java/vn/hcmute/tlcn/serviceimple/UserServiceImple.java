@@ -10,6 +10,7 @@ import vn.hcmute.tlcn.entity.*;
 import vn.hcmute.tlcn.model.OTP;
 import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.model.UserDTO;
+import vn.hcmute.tlcn.model.UsePremiumDTO;
 import vn.hcmute.tlcn.repository.*;
 import vn.hcmute.tlcn.service.IUserService;
 import vn.hcmute.tlcn.utils.Converter;
@@ -233,6 +234,15 @@ public class UserServiceImple implements IUserService {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, e.getMessage(), ""));
         }
+    }
+    
+    @Override
+    public UserPremium getUserPremium(String username) {
+    	Optional<UserPremium> user = userPremiumRepo.findOneByUser_UserName(username);
+    	if(user.isPresent()) {
+    		return user.get();
+    	}
+    	return null;
     }
 
     public List<UserDTO> searchUser(String input) {

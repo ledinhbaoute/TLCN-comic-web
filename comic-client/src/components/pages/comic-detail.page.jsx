@@ -17,6 +17,7 @@ const ComicDetailPage = () => {
     const [comic, setComic] = useState({})
     const [chapterList, setChapterList] = useState([])
     const [ratingList, setRatingList] = useState([])
+
     useEffect(() => {
         const getComicDetail = async () => {
             try {
@@ -31,6 +32,8 @@ const ComicDetailPage = () => {
             }
         };
         getComicDetail();
+
+        
 
     }, [comicId]);
 
@@ -73,6 +76,8 @@ const ComicDetailPage = () => {
         getRatingByComic();
     }, [comicId]);
 
+    
+
 
     const insertHistoryReading = async (chapterId) => {
         try {
@@ -99,7 +104,7 @@ const ComicDetailPage = () => {
             <Breadcrumb currentGenre={comic} />
             <section className="anime-details spad">
                 <div className="container">
-                    <ComicDetail comic={comic} />
+                    <ComicDetail comic={comic}/>
                     <div className="anime__details__episodes">
                         <div className="section-title">
                             <h5>Danh sách Chapter</h5>

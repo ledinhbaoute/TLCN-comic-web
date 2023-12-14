@@ -41,6 +41,7 @@ function ProfileSidebar() {
                 Truyện của tôi
               </Link>
             </li>
+            <li>Ví của tôi</li>
             {/* <li>
               <Link
                 to="/menu-item-3"

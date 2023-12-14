@@ -295,7 +295,7 @@ const ChapterManage = () => {
     } else {
       if (selectedChapter.ordinalNumber < 0) {
         window.alert("Số chương không được nhỏ hơn 0");
-      } else{
+      } else {
         editChapter();
         setShowEditDialog(false);
       }

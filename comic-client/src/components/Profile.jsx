@@ -16,6 +16,19 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
+import {
+  Dialog,
+  DialogTitle,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
+  IconButton,
+  DialogActions,
+} from "@mui/material";
+
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const Profile = () => {
   const navigate = useNavigateTo();
@@ -23,19 +36,23 @@ const Profile = () => {
   const [user, setUser] = useState({});
 
   const defaultAvatarUrl = `${process.env.PUBLIC_URL}/images/default-avatar.png`;
+  const [isPremium, setIspremium] = useState(false);
 
   const [name, setName] = useState("");
-  const [phoneNumber,setPhoneNumber]=useState("")
+  const [phoneNumber, setPhoneNumber] = useState("");
   const uploadAvatar = async (formData) => {
     try {
-      const response = await axios.post(`${API_URL}/user/avt-upload`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          "Authorization": "Bearer " + Cookies.get("access_token"),
-        },
-      });
-      console.log(response)
-
+      const response = await axios.post(
+        `${API_URL}/user/avt-upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: "Bearer " + Cookies.get("access_token"),
+          },
+        }
+      );
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -51,34 +68,32 @@ const Profile = () => {
     //window.alert("Cập nhật thành công");
     navigate("../profile");
   };
-  const handleNameChange=(event)=>{
-    setName(event.target.value)
+  const handleNameChange = (event) => {
+    setName(event.target.value);
+  };
+  const handlePhoneNumberChange = (event) => {
+    setPhoneNumber(event.target.value);
+  };
 
-  }
-  const handlePhoneNumberChange=(event)=>{
-    setPhoneNumber(event.target.value)
-  }
-
-  const handleUpdateProfile=
-    async (event) => {
-      event.preventDefault()
-      try {
-        const response = await axios.post(`${API_URL}/user/update_profile` ,
-        {newName:name,newPhoneNumber:phoneNumber},
+  const handleUpdateProfile = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post(
+        `${API_URL}/user/update_profile`,
+        { newName: name, newPhoneNumber: phoneNumber },
         {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            "Authorization": "Bearer " + Cookies.get("access_token"),
+            Authorization: "Bearer " + Cookies.get("access_token"),
           },
-        });
-    
-        navigate("../profile");
+        }
+      );
 
-      } catch (error) {
-        console.log(error);
-      }
-    };
-  
+      navigate("../profile");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     const getUser = async () => {
@@ -89,9 +104,9 @@ const Profile = () => {
           },
         });
         setUser(response.data);
-        setName(response.data.name)
-        setPhoneNumber(response.data.phoneNumber)
-        console.log(user.avatar)
+        setName(response.data.name);
+        setPhoneNumber(response.data.phoneNumber);
+        console.log(user.avatar);
       } catch (error) {
         console.log(error);
       }
@@ -99,9 +114,163 @@ const Profile = () => {
     getUser();
   }, []);
 
+  //
+  //
+  //Đổi mật khẩu
+
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [openChangePassDialog, setOpenChangePassDialog] = useState(false);
+  const [oldPass, setOldPass] = useState("");
+  const [newPass, setNewPass] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
+
+  const handleOldPassChange = (e) => {
+    setOldPass(e.target.value);
+  };
+
+  const handleNewPassChange = (e) => {
+    setNewPass(e.target.value);
+  };
+
+  const handleConfirmPassChange = (e) => {
+    setConfirmPass(e.target.value);
+  };
+
+  const handleClickShowOldPassword = () => setShowOldPassword((show) => !show);
+  const handleClickShowNewPassword = () => setShowNewPassword((show) => !show);
+  const handleClickShowConfirmPassword = () =>
+    setShowConfirmPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const changePassword = async () => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/user/change-password`,
+        {
+          password: oldPass,
+          newPass: newPass,
+          confirmPass: confirmPass,
+        },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: "Bearer " + Cookies.get("access_token"),
+          },
+        }
+      );
+      // console.log(response.data);
+      window.alert("Đổi mật khẩu thành công");
+      setOpenChangePassDialog(false);
+      setNewPass("");
+      setOldPass("");
+      setConfirmPass("");
+    } catch (error) {
+      console.log(error);
+      if (error.message === "Request failed with status code 401") {
+        window.alert("Mật khẩu cũ không đúng");
+      } else if (error.message === "Request failed with status code 501") {
+        window.alert(
+          "Mật khẩu không đủ mạnh. Đảm bảo mật khẩu trên 8 ký tự, có ít nhất 1 ký tự hoa, 1 ký tự thường, 1 chữ số và một ký tự đặc biệt"
+        );
+      } else {
+        window.alert("Đổi mật khẩu thất bại. Đã có lỗi xảy ra");
+      }
+    }
+  };
+
+  const handleSubmitChangePassword = () => {
+    if (oldPass === newPass) {
+      window.alert("Mật khẩu cũ giống với mật khẩu mới");
+    } else if (newPass !== confirmPass) {
+      window.alert("Xác nhận mật khẩu không khớp");
+    } else {
+      changePassword();
+    }
+  };
+
   return (
     <>
       <Container fluid>
+        <Dialog
+          open={openChangePassDialog}
+          onClose={() => setOpenChangePassDialog(false)}
+        >
+          <DialogTitle>Đổi mật khẩu</DialogTitle>
+          <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+            <InputLabel htmlFor="oldPass">Mật khẩu cũ</InputLabel>
+            <OutlinedInput
+              id="oldPass"
+              type={showOldPassword ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowOldPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showOldPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="oldPassword"
+              value={oldPass}
+              onChange={handleOldPassChange}
+            />
+          </FormControl>
+          <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+            <InputLabel htmlFor="newPass">Mật khẩu mới</InputLabel>
+            <OutlinedInput
+              id="newPass"
+              type={showNewPassword ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowNewPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="newPassword"
+              value={newPass}
+              onChange={handleNewPassChange}
+            />
+          </FormControl>
+          <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+            <InputLabel htmlFor="confirmPass">Nhập lại mật khẩu</InputLabel>
+            <OutlinedInput
+              id="confirmPass"
+              type={showConfirmPassword ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowConfirmPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="confirmPassword"
+              value={confirmPass}
+              onChange={handleConfirmPassChange}
+            />
+          </FormControl>
+          <DialogActions>
+            <Button onClick={handleSubmitChangePassword}> Xác nhận</Button>
+          </DialogActions>
+        </Dialog>
         <Row>
           <Col md="8">
             <Card>
@@ -117,21 +286,53 @@ const Profile = () => {
                       height: "100px",
                       borderRadius: 50,
                       position: "relative",
-                      
                     }}
                     alt="avatar"
                     className="avatar border-gray"
-                    src={user.avatar !== "" ? `${API_URL}/files/${user.avatar}` : defaultAvatarUrl
+                    src={
+                      user.avatar !== ""
+                        ? `${API_URL}/files/${user.avatar}`
+                        : defaultAvatarUrl
                     }
                   ></img>
+                  <a
+                    style={{
+                      position: "relative",
+                      justifyContent: "right",
+                      marginLeft: "302px",
+                      backgroundColor: "white",
+                      border: "1px solid yellow",
+                      padding: "20px",
+                      minWidth: "200px",
+                    }}
+                  >
+                    <i
+                      className="fa fa-star"
+                      style={{ marginRight: "5px" }}
+                    ></i>
+                    Premium:
+                    {/* <a style={{backgroundColor: "white"}}>Còn hạn đến ngày dd:mm:yyyy</a> */}
+                    <Button
+                      style={{
+                        marginLeft: "10px",
+                        backgroundColor: "gold",
+                        borderColor: "yellow",
+                      }}
+                    >
+                      Đăng ký ngay
+                    </Button>
+                  </a>
                   {/* </a> */}
 
                   {/* <p className="description">michael24</p> */}
-                 
                 </div>
-                <label htmlFor="file-upload" className="custom-file-upload" style={{
-                  marginLeft: 15
-                }}>
+                <label
+                  htmlFor="file-upload"
+                  className="custom-file-upload"
+                  style={{
+                    marginLeft: 15,
+                  }}
+                >
                   Chọn ảnh
                 </label>
                 <input
@@ -140,7 +341,9 @@ const Profile = () => {
                   onChange={handleAvatarUpload}
                   style={{ display: "none" }}
                 />
+
                 <br></br>
+
                 <Form>
                   <Row>
                     <Col className="pr-1" md="5">
@@ -158,7 +361,7 @@ const Profile = () => {
                       <Form.Group>
                         <label>Họ tên</label>
                         <Form.Control
-                          defaultValue={ name}
+                          defaultValue={name}
                           placeholder="Họ và tên"
                           type="text"
                           onChange={handleNameChange}
@@ -167,9 +370,7 @@ const Profile = () => {
                     </Col>
                     <Col className="pl-1" md="4">
                       <Form.Group>
-                        <label >
-                          SĐT
-                        </label>
+                        <label>SĐT</label>
                         <Form.Control
                           defaultValue={user.phoneNumber}
                           placeholder="SĐT"
@@ -264,14 +465,19 @@ const Profile = () => {
                     type="submit"
                     variant="info"
                     style={{
-                      marginTop:10
+                      marginTop: 10,
                     }}
                     onClick={handleUpdateProfile}
                   >
                     Update Profile
                   </Button>
+
                   <div className="clearfix"></div>
                 </Form>
+                <Button onClick={() => setOpenChangePassDialog(true)}>
+                  {" "}
+                  Đổi mật khẩu
+                </Button>
               </Card.Body>
             </Card>
           </Col>

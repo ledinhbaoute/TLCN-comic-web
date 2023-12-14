@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import vn.hcmute.tlcn.model.OTP;
 import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.entity.User;
+import vn.hcmute.tlcn.entity.UserPremium;
 import vn.hcmute.tlcn.jwt.JwtService;
 import vn.hcmute.tlcn.model.Token;
 import vn.hcmute.tlcn.model.UserDTO;
@@ -141,6 +142,20 @@ public class UserController {
         }
         return ResponseEntity.status(401).body("Unauthorized!");
     }
+    
+    @GetMapping("/user/user_premium")
+    ResponseEntity<?> getUserPremium(Authentication authentication){
+    	if (authentication != null) {
+    		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    		UserPremium userPremium = userServiceImple.getUserPremium(userDetails.getUsername());
+    		if(userPremium != null) {
+    			return ResponseEntity.ok(userPremium);
+    		}
+    		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(false, "Not register premium", ""));
+    	}
+    	return ResponseEntity.status(401).body("Unauthorized!");
+    }
+    
     @PostMapping("user/update_profile")
     ResponseEntity<?>updateProfile(Authentication authentication,@RequestParam String newName,@RequestParam String newPhoneNumber){
         if(authentication!=null){

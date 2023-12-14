@@ -65,8 +65,8 @@ const Header = () => {
     window.sessionStorage.clear();
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate("/");
     window.location.reload();
     window.scrollTo({
