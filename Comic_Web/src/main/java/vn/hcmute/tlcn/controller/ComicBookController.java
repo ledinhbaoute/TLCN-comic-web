@@ -11,7 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 import vn.hcmute.tlcn.entity.ComicBook;
 import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.model.ComicBookDTO;
+import vn.hcmute.tlcn.repository.ComicBookRepository;
 import vn.hcmute.tlcn.service.IComicBookService;
+import vn.hcmute.tlcn.utils.Converter;
 
 import java.util.List;
 
@@ -21,11 +23,20 @@ import java.util.List;
 public class ComicBookController {
     @Autowired
     private IComicBookService service;
+    @Autowired
+    ComicBookRepository comicBookRepository;
+    @Autowired
+    Converter converter;
 
     @GetMapping("/comicbooks")
     ResponseEntity<ResponseObject> getAllComicBooks() {
         List<ComicBookDTO> comicBookList = service.getAllComic();
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query Successfully!", comicBookList));
+    }
+
+    @GetMapping("/comic")
+    List<ComicBookDTO> getAllComic() {
+        return comicBookRepository.findAll().stream().map(converter::convertEntityToDto).toList();
     }
 
     @GetMapping("/comicbooks/{comicbookId}")
@@ -54,12 +65,12 @@ public class ComicBookController {
 
     @PostMapping("user/comicbooks")
     ResponseEntity<?> addComic(@RequestParam("comicName") String comicName,
-                               @RequestParam("genreIds") List<String> genresId, @RequestParam("discription")String discription,
+                               @RequestParam("genreIds") List<String> genresId, @RequestParam("discription") String discription,
                                @RequestParam("image") MultipartFile image, Authentication authentication) {
         if (authentication != null) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
-            ComicBookDTO comicBookDTO = service.addComic(comicName, username, genresId,discription,image);
+            ComicBookDTO comicBookDTO = service.addComic(comicName, username, genresId, discription, image);
             if (comicBookDTO == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseObject(false, "Don't have user with username=" + username, ""));
             } else
@@ -72,32 +83,32 @@ public class ComicBookController {
 
 
     @PutMapping("/user/comicbooks")
-    ResponseEntity<?> updateComic(@RequestParam("comicId")String id,
-                                  @RequestParam("newName")String newName,
-                                  @RequestParam("genreIds") List<String> genresId,
-                                  @RequestParam("newStatus")int status,@RequestParam("newDescription")String description, Authentication authentication) {
+    ResponseEntity<?> updateComic(@RequestParam("comicId") String id,
+                                  @RequestParam("newName") String newName,
+                                  @RequestParam("newStatus") int status, @RequestParam("newDescription") String description, Authentication authentication) {
         if (authentication != null) {
-            UserDetails userDetails= (UserDetails) authentication.getPrincipal();
-            ResponseObject responseObject = service.updateComic(userDetails.getUsername(), id,newName,genresId,status,description);
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            ResponseObject responseObject = service.updateComic(userDetails.getUsername(), id, newName, status, description);
             return ResponseEntity.status(HttpStatus.OK).body(responseObject);
         }
         return ResponseEntity.status(401).body("Unauthorized!");
     }
+
     @PostMapping("user/comic/update_coverImg")
-    ResponseEntity<?> updateCoverImg(Authentication authentication,@RequestParam String comicId,
-                                     @RequestParam("file") MultipartFile file){
-        if(authentication!=null){
-            UserDetails userDetails= (UserDetails) authentication.getPrincipal();
-            return ResponseEntity.ok(service.updateCoverImage(userDetails.getUsername(), comicId,file));
+    ResponseEntity<?> updateCoverImg(Authentication authentication, @RequestParam String comicId,
+                                     @RequestParam("file") MultipartFile file) {
+        if (authentication != null) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return ResponseEntity.ok(service.updateCoverImage(userDetails.getUsername(), comicId, file));
         }
         return ResponseEntity.status(401).body("Unauthorized!");
     }
+
     @PutMapping("/user/comic/upgrade_premium")
-    ResponseEntity<?>upgradeComic(Authentication authentication,@RequestParam("comicId")String comicId){
-        if(authentication!=null)
-        {
-            UserDetails userDetails= (UserDetails) authentication.getPrincipal();
-            return ResponseEntity.ok(service.upgradePremium(userDetails.getUsername(),comicId));
+    ResponseEntity<?> upgradeComic(Authentication authentication, @RequestParam("comicId") String comicId) {
+        if (authentication != null) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return ResponseEntity.ok(service.upgradePremium(userDetails.getUsername(), comicId));
         }
         return ResponseEntity.status(401).body("Unauthorized!");
     }
@@ -106,12 +117,12 @@ public class ComicBookController {
     @DeleteMapping("/user/comicbooks")
     ResponseEntity<?> deleteComic(@RequestParam("comicId") String comicId, Authentication authentication) {
         if (authentication != null) {
-            UserDetails userDetails= (UserDetails) authentication.getPrincipal();
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             try {
                 int check = service.deleteComic(userDetails.getUsername(), comicId);
                 if (check == 2)
                     return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Delete Success!", ""));
-                else if(check==1)
+                else if (check == 1)
                     return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, "Cannot delete someone else's Comic!", ""));
 
                 return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, "Comic not exist!", ""));
@@ -122,29 +133,46 @@ public class ComicBookController {
         }
         return ResponseEntity.status(401).body("Unauthorized!");
     }
+
+    @DeleteMapping("/admin/comic")
+    ResponseEntity<?> adminDeleteComic(@RequestParam("comicId") String comicId, Authentication authentication) {
+        if (authentication != null) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            boolean isAdmin = authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+            if (isAdmin) {
+                return ResponseEntity.ok(service.adminDeleteComic(comicId));
+            }
+        }
+        return ResponseEntity.status(401).body("Unauthorized!");
+    }
+
     @PostMapping("comic/view")
-    public void increaseView(@RequestParam String comicId){
+    public void increaseView(@RequestParam String comicId) {
         service.increaseView(comicId);
     }
 
     @GetMapping("/comic_trending")
-    Page<ComicBookDTO>getComicTrending(@RequestParam int indexPage){
+    Page<ComicBookDTO> getComicTrending(@RequestParam int indexPage) {
         return service.getComicTrendingByWeek(indexPage);
     }
+
     @GetMapping("comic_topview")
-    List<ComicBookDTO>getComicTopView(){
+    List<ComicBookDTO> getComicTopView() {
         return service.getComicTopView();
     }
+
     @GetMapping("comic/all/pagination")
-    Page<ComicBookDTO> getAllComicPagination(@RequestParam int indexPage,@RequestParam(required = false) String sortBy){
-        return service.getAllComicPagination(indexPage,sortBy);
+    Page<ComicBookDTO> getAllComicPagination(@RequestParam int indexPage, @RequestParam(required = false) String sortBy) {
+        return service.getAllComicPagination(indexPage, sortBy);
     }
+
     @GetMapping("comic/genre/pagination")
-    Page<ComicBookDTO> getComicGenrePagination(@RequestParam int indexPage,@RequestParam String genreId,@RequestParam(required = false)String sortBy){
-        return service.getComicByGenrePagination(genreId,indexPage,sortBy);
+    Page<ComicBookDTO> getComicGenrePagination(@RequestParam int indexPage, @RequestParam String genreId, @RequestParam(required = false) String sortBy) {
+        return service.getComicByGenrePagination(genreId, indexPage, sortBy);
     }
+
     @GetMapping("comic/latest_update")
-    Page<ComicBookDTO>getComicLatestUpdate(@RequestParam int indexPage){
+    Page<ComicBookDTO> getComicLatestUpdate(@RequestParam int indexPage) {
         return service.getBookOrderByUpdateDate(indexPage);
     }
 }

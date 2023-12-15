@@ -55,4 +55,7 @@ public class TransactionServiceImple {
     public List<TransactionDTO>getAllTransactionByUser(String username){
         return transactionRepository.findAllByWallet_User_UserNameOrderByCreatedAtDesc(username).stream().map(t->converter.convertEntityToDto(t)).toList();
     }
+    public List<TransactionDTO>getAllTransactionRegisterPremium(){
+        return transactionRepository.findAllByTypeOrderByCreatedAtDesc(2).stream().map(converter::convertEntityToDto).toList();
+    }
 }

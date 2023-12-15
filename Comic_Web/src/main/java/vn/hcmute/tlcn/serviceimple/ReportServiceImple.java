@@ -89,5 +89,29 @@ public class ReportServiceImple implements IReportService {
     public List<CommentReportDTO> getAllCommentReport() {
         return commentReportRepository.findAll().stream().map(r->converter.convertEntityToDto(r)).toList();
     }
+    public void deleteReportComic(int id){
+        ComicReport comicReport=comicReportRepository.findById(id).orElse(null);
+        if(comicReport==null)
+            return;
+        try {
+            comicReportRepository.deleteById(id);
+        }
+        catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+
+    }
+    public void deleteReportComment(int id){
+        CommentReport commentReport=commentReportRepository.findById(id).orElse(null);
+        if(commentReport==null)
+            return;
+        try {
+            commentReportRepository.deleteById(id);
+        }
+        catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+
+    }
 
 }

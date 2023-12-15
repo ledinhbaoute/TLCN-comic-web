@@ -25,7 +25,8 @@ public class ComicServiceImple implements IComicBookService {
     private ComicBookRepository comicBookRepository;
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private AdminRepository adminRepository;
     @Autowired
     private Converter converter;
     @Autowired
@@ -140,7 +141,7 @@ public class ComicServiceImple implements IComicBookService {
     }
 
     @Override
-    public ResponseObject updateComic(String username, String comicId, String newName, List<String> genres, int newStatus,String newDescription) {
+    public ResponseObject updateComic(String username, String comicId, String newName, int newStatus,String newDescription) {
         Optional<User> optionalUser = userRepository.findOneByUserName(username);
         Optional<ComicBook> optionalComicBook = comicBookRepository.findById(comicId);
         if (!optionalComicBook.isPresent())
@@ -149,17 +150,9 @@ public class ComicServiceImple implements IComicBookService {
         ComicBook comicBook = optionalComicBook.get();
         if (!comicBook.getActorId().getId().equals(user.getId()))
             return new ResponseObject(false, "This comic book is not owned by this user", "");
-        List<Genre> genreList = new ArrayList<>();
-        for (String id : genres
-                ) {
-                    Optional<Genre> genre = genreRepository.findById(id);
-                    if (genre.isPresent())
-                        genreList.add(genre.get());
-                }
         comicBook.setName(newName);
         comicBook.setStatus(newStatus);
         comicBook.setDiscription(newDescription);
-        comicBook.setGenres(genreList);
         return new ResponseObject(true, "Update Success!", converter.convertEntityToDto(comicBookRepository.save(comicBook)));
     }
 
@@ -175,15 +168,28 @@ public class ComicServiceImple implements IComicBookService {
         try {
             List<String> imageList = chapterImageServiceImple.getAllImageByComic(comicId);
             comicBookRepository.deleteById(comicId);
-//            imageStorageService.deleteFile(comicBook.getImage());
+            imageStorageService.deleteFile(comicBook.getImage());
 
-//            for (String imageName : imageList
-//            ) {
-//                imageStorageService.deleteFile(imageName);
-//            }
+            for (String imageName : imageList
+            ) {
+                imageStorageService.deleteFile(imageName);
+            }
             return 2;
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+    @Override
+    public ResponseObject adminDeleteComic(String comicId){
+        ComicBook comicBook=comicBookRepository.findById(comicId).orElse(null);
+        if(comicBook==null)
+            return new ResponseObject(false,"Comic not exist!","");
+        try {
+            comicBookRepository.deleteById(comicId);
+            return new ResponseObject(true,"Success!","");
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -216,6 +222,7 @@ public class ComicServiceImple implements IComicBookService {
         try {
             String newImg=imageStorageService.storeFile(file);
             comicBook.setImage(newImg);
+            imageStorageService.deleteFile(currentImg);
             return new ResponseObject(true,"Success",comicBookRepository.save(comicBook));
         }catch (Exception e){
             return new ResponseObject(false,e.getMessage(),"");

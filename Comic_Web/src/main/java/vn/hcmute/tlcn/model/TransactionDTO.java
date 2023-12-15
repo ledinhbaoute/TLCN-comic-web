@@ -1,5 +1,6 @@
 package vn.hcmute.tlcn.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TransactionDTO {
@@ -27,6 +28,10 @@ public class TransactionDTO {
         this.id=id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getType() {
         return type;
     }
@@ -35,8 +40,9 @@ public class TransactionDTO {
         this.type = type;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public String getCreatedAt() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        return formatter.format(createdAt);
     }
 
     public void setCreatedAt(Date createdAt) {

@@ -2,6 +2,7 @@ package vn.hcmute.tlcn.model;
 
 import vn.hcmute.tlcn.entity.ReportReason;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,8 +48,9 @@ public class ComicReportDTO {
         this.comicBook = comicBook;
     }
 
-    public Date getReportDate() {
-        return reportDate;
+    public String getReportDate() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+        return formatter.format(reportDate);
     }
 
     public void setReportDate(Date reportDate) {

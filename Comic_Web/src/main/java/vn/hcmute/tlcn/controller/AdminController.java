@@ -8,11 +8,9 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vn.hcmute.tlcn.jwt.JwtService;
+import vn.hcmute.tlcn.model.AdminDTO;
 import vn.hcmute.tlcn.model.Token;
 import vn.hcmute.tlcn.securiry.CustomAdminDetailService;
 import vn.hcmute.tlcn.service.IAdminService;
@@ -32,6 +30,14 @@ public class AdminController {
     @Autowired
     private AdminServiceImplement adminServiceImplement;
 
+    @GetMapping("/admin")
+    public ResponseEntity<?> getAdminInfo(Authentication authentication){
+        if(authentication!=null){
+            UserDetails userDetails= (UserDetails) authentication.getPrincipal();
+            return ResponseEntity.ok( adminServiceImplement.getInfoAdmin(userDetails.getUsername()));
+        }
+        return ResponseEntity.status(401).body("Unauthorized!");
+    }
     @PostMapping("a/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestParam("username") String username,@RequestParam("password")String pass) throws Exception {
 

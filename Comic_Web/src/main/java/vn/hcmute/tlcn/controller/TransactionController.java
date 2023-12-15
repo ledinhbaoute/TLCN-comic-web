@@ -31,5 +31,16 @@ public class TransactionController {
         }
         return ResponseEntity.status(401).body("Unauthorized!");
     }
+    @GetMapping("/admin/transaction")
+    ResponseEntity<?>getAllTransactionRegisterPremium(Authentication authentication){
+        if(authentication!=null){
+            UserDetails userDetails= (UserDetails) authentication.getPrincipal();
+            boolean isAdmin=userDetails.getAuthorities().stream().anyMatch(authority->authority.getAuthority().equals("ROLE_ADMIN"));
+            if(isAdmin)
+                return ResponseEntity.ok(transactionServiceImple.getAllTransactionRegisterPremium());
+
+        }
+        return ResponseEntity.status(401).body("Unauthorized!");
+    }
 
 }

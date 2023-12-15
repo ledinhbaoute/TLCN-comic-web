@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction,String> {
     List<Transaction>findAllByWallet_User_UserNameOrderByCreatedAtDesc(String userName);
+    List<Transaction>findAllByTypeOrderByCreatedAtDesc(int type);
 }

@@ -4,6 +4,7 @@ import vn.hcmute.tlcn.entity.Comment;
 import vn.hcmute.tlcn.entity.ReportReason;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +28,10 @@ public class CommentReportDTO {
         this.status = status;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public List<ReportReason> getReportReasons() {
         return reportReason;
     }
@@ -47,8 +52,9 @@ public class CommentReportDTO {
         this.comment = comment;
     }
 
-    public Date getReportDate() {
-        return reportDate;
+    public String getReportDate() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+        return formatter.format(reportDate);
     }
 
     public void setReportDate(Date reportDate) {
