@@ -70,4 +70,16 @@ public class CommentServiceImple implements ICommentService {
     	commentRepository.deleteById(commentId);
     	return 2;
     }
+    @Override
+    public void adminDeleteComment(int commentId){
+        Comment comment=commentRepository.findById(commentId).orElse(null);
+        if(comment==null)
+            return;
+        try {
+            commentRepository.deleteById(commentId);
+        }
+        catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 }

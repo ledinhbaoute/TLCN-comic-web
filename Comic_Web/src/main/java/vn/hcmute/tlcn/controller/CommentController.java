@@ -45,4 +45,8 @@ public class CommentController {
          }
          return ResponseEntity.status(401).body("Unauthorized!");
     }
+    @DeleteMapping("/admin/comment")
+    void adminDeleteComment(@RequestParam int commentId){
+        iCommentService.adminDeleteComment(commentId);
+    }
 }

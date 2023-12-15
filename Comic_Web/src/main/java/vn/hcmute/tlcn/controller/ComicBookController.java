@@ -83,12 +83,13 @@ public class ComicBookController {
 
 
     @PutMapping("/user/comicbooks")
-    ResponseEntity<?> updateComic(@RequestParam("comicId") String id,
-                                  @RequestParam("newName") String newName,
-                                  @RequestParam("newStatus") int status, @RequestParam("newDescription") String description, Authentication authentication) {
+    ResponseEntity<?> updateComic(@RequestParam("comicId")String id,
+                                  @RequestParam("newName")String newName,
+                                  @RequestParam("genreIds") List<String> genresId,
+                                  @RequestParam("newStatus")int status,@RequestParam("newDescription")String description, Authentication authentication) {
         if (authentication != null) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            ResponseObject responseObject = service.updateComic(userDetails.getUsername(), id, newName, status, description);
+            UserDetails userDetails= (UserDetails) authentication.getPrincipal();
+            ResponseObject responseObject = service.updateComic(userDetails.getUsername(), id,newName,genresId,status,description);
             return ResponseEntity.status(HttpStatus.OK).body(responseObject);
         }
         return ResponseEntity.status(401).body("Unauthorized!");

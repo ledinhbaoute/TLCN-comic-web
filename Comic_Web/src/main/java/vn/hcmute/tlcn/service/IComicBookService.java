@@ -26,4 +26,5 @@ public interface IComicBookService {
     Page<ComicBookDTO> getAllComicPagination(int indexPage,String sortBy);
     Page<ComicBookDTO> getComicByGenrePagination(String genreId,int indexPage,String sortBy);
     Page<ComicBookDTO>getBookOrderByUpdateDate(int indexPage);
+    ResponseObject adminDeleteComic(String comicId);
 }

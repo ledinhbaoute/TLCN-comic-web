@@ -24,6 +24,7 @@ import vn.hcmute.tlcn.serviceimple.ChapterImageServiceImple;
 import vn.hcmute.tlcn.serviceimple.EmailService;
 import vn.hcmute.tlcn.serviceimple.ImageStorageService;
 import vn.hcmute.tlcn.serviceimple.UserServiceImple;
+import vn.hcmute.tlcn.utils.Converter;
 import vn.hcmute.tlcn.utils.ValidatePassword;
 
 import java.io.IOException;
@@ -46,7 +47,8 @@ public class UserController {
     private ValidatePassword validatePassword;
     @Autowired
     ChapterImageServiceImple chapterImageServiceImple;
-
+    @Autowired
+    Converter converter;
     @GetMapping("/user")
     ResponseEntity<?> getUser(Authentication authentication) {
         if (authentication != null) {
@@ -54,6 +56,10 @@ public class UserController {
             return ResponseEntity.ok(userServiceImple.getUser(userDetails.getUsername()));
         }
         return ResponseEntity.status(401).body("Unauthorized!");
+    }
+    @GetMapping("all-user")
+    List<UserDTO>getAllUser(){
+        return userRepository.findAll().stream().map(converter::convertEntityToDto).toList();
     }
 
     @PostMapping("/register")
