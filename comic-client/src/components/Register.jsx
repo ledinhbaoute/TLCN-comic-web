@@ -53,7 +53,9 @@ const Register = () => {
   };
 
   const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
+    const inputValue = event.target.value;
+    const filteredValue = inputValue.replace(/[^a-z0-9]/g, '');
+    setUsername(filteredValue);
   };
 
   const handlePasswordChange = (event) => {

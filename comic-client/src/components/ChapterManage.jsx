@@ -373,10 +373,12 @@ const ChapterManage = () => {
             value={selectedChapter.ordinalNumber}
             min={1}
             onChange={(e) =>
-              setSelectedChapter({
-                ...selectedChapter,
-                ordinalNumber: e.target.value,
-              })
+              ["e", "E", "+", "-"].includes(e.key)
+                ? e.preventDefault()
+                : setSelectedChapter({
+                    ...selectedChapter,
+                    ordinalNumber: e.target.value,
+                  })
             }
           />
           <h4 style={{ marginTop: "10px" }}> Tên chương</h4>

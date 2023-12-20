@@ -176,12 +176,12 @@ public class ComicServiceImple implements IComicBookService {
         try {
             List<String> imageList = chapterImageServiceImple.getAllImageByComic(comicId);
             comicBookRepository.deleteById(comicId);
-            imageStorageService.deleteFile(comicBook.getImage());
-
-            for (String imageName : imageList
-            ) {
-                imageStorageService.deleteFile(imageName);
-            }
+//            imageStorageService.deleteFile(comicBook.getImage());
+//
+//            for (String imageName : imageList
+//            ) {
+//                imageStorageService.deleteFile(imageName);
+//            }
             return 2;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -230,7 +230,7 @@ public class ComicServiceImple implements IComicBookService {
         try {
             String newImg=imageStorageService.storeFile(file);
             comicBook.setImage(newImg);
-            imageStorageService.deleteFile(currentImg);
+//            imageStorageService.deleteFile(currentImg);
             return new ResponseObject(true,"Success",comicBookRepository.save(comicBook));
         }catch (Exception e){
             return new ResponseObject(false,e.getMessage(),"");

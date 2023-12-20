@@ -246,11 +246,11 @@ const ComicManage = () => {
       );
       //   console.log(response.data);
       setAlertMessage("Cập nhật thông tin truyện thành công.");
-      setAlertDialogOpen(true);
+
     } catch (error) {
       console.log(error);
       setAlertMessage("Cập nhật thông tin truyện thất bại.");
-      setAlertDialogOpen(true);
+      // setAlertDialogOpen(true);
     }
   };
 
@@ -290,7 +290,7 @@ const ComicManage = () => {
     setShowEditDialog(true);
   };
 
-  const handleEditComic = () => {
+  const handleEditComic = async () => {
     if (
       selectedComic.name === "" ||
       selectedComic.discription === "" ||
@@ -303,9 +303,10 @@ const ComicManage = () => {
         const formData = new FormData();
         formData.append("comicId", selectedComic.id);
         formData.append("file", selectedComicImg);
-        updateCoverImg(formData);
+        await updateCoverImg(formData);
       }
-      updateComic();
+      await updateComic();
+      setAlertDialogOpen(true);
       // window.location.reload();
       setShowEditDialog(false);
     }

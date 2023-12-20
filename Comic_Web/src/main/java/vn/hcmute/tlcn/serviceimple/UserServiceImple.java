@@ -228,7 +228,7 @@ public class UserServiceImple implements IUserService {
                 String newAvt = imageStorageService.storeFile(file);
                 user.setAvatar(newAvt);
                 user = userRepository.save(user);
-                imageStorageService.deleteFile(currentAvt);
+//                imageStorageService.deleteFile(currentAvt);
                 return ResponseEntity.ok(new ResponseObject(true, "Update Avatar Success!", user));
             }
         } catch (Exception e) {

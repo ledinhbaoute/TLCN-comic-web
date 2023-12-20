@@ -3,6 +3,7 @@ import axios from "axios";
 import API_URL from "../config/config";
 import Cookies from "js-cookie";
 import { useNavigateTo } from "../service/navigation";
+import AlertDialog from "./dialogs/AlertDialog";
 
 // react-bootstrap components
 import {
@@ -36,7 +37,14 @@ const Profile = () => {
   const [user, setUser] = useState({});
 
   const defaultAvatarUrl = `${process.env.PUBLIC_URL}/images/default-avatar.png`;
-  const [isPremium, setIspremium] = useState(false);
+  const [premium, setPremium] = useState({
+    status: false,
+    packagePremium: {},
+    startDate: "",
+  });
+
+  const [openAlertDialog, setOpenAlertDialog] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -52,9 +60,13 @@ const Profile = () => {
           },
         }
       );
-      console.log(response);
+      // console.log(response);
+      setAlertMessage("Cập nhật ảnh đại diện thành công");
+      setOpenAlertDialog(true);
     } catch (error) {
       console.log(error);
+      setAlertMessage("Cập nhật ảnh đại diện thất bại");
+      setOpenAlertDialog(true);
     }
   };
 
@@ -66,7 +78,7 @@ const Profile = () => {
     console.log(formData.get("file"));
     uploadAvatar(formData);
     //window.alert("Cập nhật thành công");
-    navigate("../profile");
+    // navigate("../profile");
   };
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -77,21 +89,28 @@ const Profile = () => {
 
   const handleUpdateProfile = async (event) => {
     event.preventDefault();
-    try {
-      const response = await axios.post(
-        `${API_URL}/user/update_profile`,
-        { newName: name, newPhoneNumber: phoneNumber },
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: "Bearer " + Cookies.get("access_token"),
-          },
-        }
-      );
-
-      navigate("../profile");
-    } catch (error) {
-      console.log(error);
+    if (!/^\d{10}$/.test(phoneNumber)) {
+      window.alert("Vui lòng nhập đúng định dạng số điện thoại 10 chữ số");
+    } else {
+      try {
+        const response = await axios.post(
+          `${API_URL}/user/update_profile`,
+          { newName: name, newPhoneNumber: phoneNumber },
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Authorization: "Bearer " + Cookies.get("access_token"),
+            },
+          }
+        );
+        setAlertMessage("Cập nhật thông tin thành công");
+        setOpenAlertDialog(true);
+        // navigate("../profile");
+      } catch (error) {
+        console.log(error);
+        setAlertMessage("Cập nhật ảnh đại diện thất bại");
+        setOpenAlertDialog(true);
+      }
     }
   };
 
@@ -112,6 +131,32 @@ const Profile = () => {
       }
     };
     getUser();
+  }, []);
+
+  useEffect(() => {
+    const getPremiumStatus = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/user/user_premium`, {
+          headers: {
+            Authorization: "Bearer " + Cookies.get("access_token"),
+          },
+        });
+        if (response.data.message === "Not register premium") {
+          setPremium({ ...premium, status: false });
+        } else {
+          setPremium({
+            status: true,
+            packagePremium: response.data.packagePremium,
+            startDate: response.data.startDate,
+          });
+        }
+        console.log(premium);
+        // console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getPremiumStatus();
   }, []);
 
   //
@@ -193,9 +238,109 @@ const Profile = () => {
     }
   };
 
+  //
+  //
+  //Đăng ký premium
+  const [openPremiumPackage, setOpenPremiumPackage] = useState(false);
+  const [premiumPackages, setPremiumPackages] = useState([]);
+
+  const premiumCardStyle = {
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    padding: "20px",
+    marginBottom: "20px",
+    marginRight: "20px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)", // Thêm hiệu ứng bóng đổ
+    transition: "transform 0.3s ease-in-out", // Thêm hiệu ứng hover
+    cursor: "pointer", // Thêm con trỏ chuột khi hover
+  };
+
+
+  const buttonStyle = {
+    marginTop: "10px",
+    backgroundColor: "#4CAF50", // Màu nền
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    padding: "10px 20px",
+    textDecoration: "none",
+    textTransform: "uppercase",
+    fontWeight: "bold",
+    transition: "background-color 0.3s ease-in-out", // Thêm hiệu ứng hover
+  };
+
+  const buttonHoverStyle = {
+    backgroundColor: "#45a049", // Màu nền thay đổi khi hover
+  };
+
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  const cardStyle = {
+    ...premiumCardStyle,
+  };
+
+  const buttonDynamicStyle = {
+    ...buttonStyle,
+    ...(isHovered && buttonHoverStyle),
+  };
+
+  const getAllPackage = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/package_premium`);
+      setPremiumPackages(response.data);
+      // console.log(premiumPackages);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleOpenPackages = (e) => {
+    e.preventDefault();
+
+    getAllPackage();
+    setOpenPremiumPackage(true);
+  };
+
   return (
     <>
       <Container fluid>
+        <Dialog
+          open={openPremiumPackage}
+          onClose={() => setOpenPremiumPackage(false)}
+        >
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            {premiumPackages.map((packageData, index) => (
+              <div
+                className="premium-card"
+                style={cardStyle}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <h2>Gói {packageData.duration} ngày</h2>
+                <p>Giá: {packageData.cost}VNĐ</p>
+                <p>Thời hạn: {packageData.duration} ngày</p>
+                <button style={buttonDynamicStyle}>Đăng ký</button>
+              </div>
+            ))}
+          </div>
+        </Dialog>
+
+        <AlertDialog
+          open={openAlertDialog}
+          onClose={() => setOpenAlertDialog(false)}
+          message={alertMessage}
+        />
         <Dialog
           open={openChangePassDialog}
           onClose={() => setOpenChangePassDialog(false)}
@@ -299,7 +444,7 @@ const Profile = () => {
                     style={{
                       position: "relative",
                       justifyContent: "right",
-                      marginLeft: "302px",
+                      marginLeft: "250px",
                       backgroundColor: "white",
                       border: "1px solid yellow",
                       padding: "20px",
@@ -312,15 +457,28 @@ const Profile = () => {
                     ></i>
                     Premium:
                     {/* <a style={{backgroundColor: "white"}}>Còn hạn đến ngày dd:mm:yyyy</a> */}
-                    <Button
-                      style={{
-                        marginLeft: "10px",
-                        backgroundColor: "gold",
-                        borderColor: "yellow",
-                      }}
-                    >
-                      Đăng ký ngay
-                    </Button>
+                    {premium.status == true ? (
+                      <a>
+                        còn hạn đến{" "}
+                        {new Date(
+                          new Date().setDate(
+                            new Date(premium.startDate).getDate() +
+                              premium.packagePremium.duration
+                          )
+                        ).toLocaleDateString()}
+                      </a>
+                    ) : (
+                      <Button
+                        style={{
+                          marginLeft: "10px",
+                          backgroundColor: "gold",
+                          borderColor: "yellow",
+                        }}
+                        onClick={handleOpenPackages}
+                      >
+                        Đăng ký ngay
+                      </Button>
+                    )}
                   </a>
                   {/* </a> */}
 
@@ -374,7 +532,8 @@ const Profile = () => {
                         <Form.Control
                           defaultValue={user.phoneNumber}
                           placeholder="SĐT"
-                          type="text"
+                          type="tel"
+                          pattern="[0-9]{10}"
                           onChange={handlePhoneNumberChange}
                         ></Form.Control>
                       </Form.Group>
