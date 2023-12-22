@@ -7,7 +7,6 @@ import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Popover from '@mui/material/Popover';
 import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
@@ -19,6 +18,8 @@ import API_URL from 'src/config/config';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
+
+import ConfirmDialog from '../dialog/confirm-dialog';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +35,7 @@ export default function UserTableRow({
   handleClick,
 }) {
   const [open, setOpen] = useState(null);
+  const [openConfirmDialog,setOpenConfirmDialog]=useState(false)
   const router = useRouter();
 
   const handleOpenMenu = (event) => {
@@ -42,6 +44,12 @@ export default function UserTableRow({
 
   const handleCloseMenu = () => {
     setOpen(null);
+  };
+  const handleOpenConfirmDialog = (event) => {
+    setOpenConfirmDialog(true);
+  };
+  const handleCloseConfirmDialog = () => {
+    setOpenConfirmDialog(false);
   };
   const lockOrUnlockAccount = async () => {
     try {
@@ -65,9 +73,9 @@ export default function UserTableRow({
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
-        <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
-        </TableCell>
+        </TableCell> */}
 
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
@@ -106,12 +114,12 @@ export default function UserTableRow({
         }}
       >
         {status==="Active"?(
-          <MenuItem onClick={lockOrUnlockAccount}>
+          <MenuItem onClick={handleOpenConfirmDialog}>
           <Iconify icon="eva:lock-fill" sx={{ mr: 2 }} />
           Lock
         </MenuItem>
         ):
-        (<MenuItem onClick={lockOrUnlockAccount}>
+        (<MenuItem onClick={handleOpenConfirmDialog}>
           <Iconify icon="eva:lock-fill" sx={{ mr: 2 }} />
           Unlock
         </MenuItem>)}
@@ -122,6 +130,7 @@ export default function UserTableRow({
           Delete
         </MenuItem> */}
       </Popover>
+      <ConfirmDialog content="Are you sure to change this user status?" open={openConfirmDialog} handleClose={handleCloseConfirmDialog} handleConfirm={lockOrUnlockAccount}/>
     </>
   );
 }

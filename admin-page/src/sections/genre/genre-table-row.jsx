@@ -4,10 +4,8 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Stack from '@mui/material/Stack';
-// import Avatar from '@mui/material/Avatar';
 import Popover from '@mui/material/Popover';
 import TableRow from '@mui/material/TableRow';
-// import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
@@ -20,6 +18,7 @@ import API_URL from 'src/config/config';
 import Iconify from 'src/components/iconify';
 
 import EditDialog from './edit-genre-dialog';
+import ConfirmDialog from '../dialog/confirm-dialog';
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +31,13 @@ export default function GenreTableRow({
   const [open, setOpen] = useState(null);
   const router = useRouter();
   const [openEdit, setOpenEdit] = useState(false);
-
+  const [openConfirmDialog,setOpenConfirmDialog]=useState(false)
+  const handleOpenConfirmDialog = (event) => {
+    setOpenConfirmDialog(true);
+  };
+  const handleCloseConfirmDialog = () => {
+    setOpenConfirmDialog(false);
+  };
   const handleClickOpen = () => {
     setOpenEdit(true);
   };
@@ -112,11 +117,12 @@ export default function GenreTableRow({
         <EditDialog open={openEdit} handleClose={handleClickClose} genre={{'id':id,'name':name}}/>
         
 
-        <MenuItem onClick={handleDeleteGenre} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={handleOpenConfirmDialog} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Delete
         </MenuItem>
       </Popover>
+      <ConfirmDialog content='Are you sure to delete this genre?' open={openConfirmDialog} handleClose={handleCloseConfirmDialog} handleConfirm={handleDeleteGenre}/>
     </>
   );
 }

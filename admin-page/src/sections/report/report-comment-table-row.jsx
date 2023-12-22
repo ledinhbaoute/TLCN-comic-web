@@ -18,6 +18,8 @@ import API_URL from 'src/config/config';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
+
+import ConfirmDialog from '../dialog/confirm-dialog';
 // ----------------------------------------------------------------------
 
 export default function ReportCommentTableRow({
@@ -30,7 +32,14 @@ export default function ReportCommentTableRow({
 
 }) {
     const [open, setOpen] = useState(null);
+    const [openConfirmDialog,setOpenConfirmDialog]=useState(false)
     const router = useRouter();
+    const handleOpenConfirmDialog = (event) => {
+        setOpenConfirmDialog(true);
+      };
+      const handleCloseConfirmDialog = () => {
+        setOpenConfirmDialog(false);
+      };
 
     const handleOpenMenu = (event) => {
         setOpen(event.currentTarget);
@@ -129,13 +138,14 @@ export default function ReportCommentTableRow({
                 }}
             >
 
-                <MenuItem onClick={handleDeleteComment}>
+                <MenuItem onClick={handleOpenConfirmDialog}>
                     Delete Comment
                 </MenuItem>
                 <MenuItem onClick={handleDeleteReportComment}>
                     Skip
                 </MenuItem>
             </Popover>
+            <ConfirmDialog content='Are you sure to delete this comment?' open={openConfirmDialog} handleClose={handleCloseConfirmDialog} handleConfirm={handleDeleteComment}/>
         </>
     );
 }

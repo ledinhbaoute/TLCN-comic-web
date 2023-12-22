@@ -21,6 +21,8 @@ import API_URL from 'src/config/config';
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 
+import ConfirmDialog from '../dialog/confirm-dialog';
+
 
 // ----------------------------------------------------------------------
 
@@ -36,8 +38,14 @@ export default function ReportTableRow({
 
 }) {
   const [open, setOpen] = useState(null);
+  const [openConfirmDialog,setOpenConfirmDialog]=useState(false)
   const router = useRouter();
-
+  const handleOpenConfirmDialog = (event) => {
+    setOpenConfirmDialog(true);
+  };
+  const handleCloseConfirmDialog = () => {
+    setOpenConfirmDialog(false);
+  };
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
   };
@@ -135,13 +143,14 @@ export default function ReportTableRow({
         }}
       >
         
-          <MenuItem onClick={handleDeleteComic}>
+          <MenuItem onClick={handleOpenConfirmDialog}>
           Delete Comic
         </MenuItem>
         <MenuItem onClick={handleDeleteReportComic}>
           Skip
         </MenuItem>
       </Popover>
+      <ConfirmDialog content="Are you sure to delete this comic?" open={openConfirmDialog} handleClose={handleCloseConfirmDialog} handleConfirm={handleDeleteComic}/>
     </>
   );
 }

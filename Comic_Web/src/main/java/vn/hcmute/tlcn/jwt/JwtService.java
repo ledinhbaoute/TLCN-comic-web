@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 @Service
 public class JwtService {
     private String JWT_SECRET="quy123";
+//    private int JWT_EXPIRE=60*1000;
     private int JWT_EXPIRE=24*60*60*1000/6;
     public String generateToken(UserDetails userDetails){
         List<String> roles=userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());

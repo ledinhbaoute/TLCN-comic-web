@@ -32,7 +32,7 @@ export default function UserPage() {
 
   const [order, setOrder] = useState('asc');
 
-  const [selected, setSelected] = useState([]);
+  // const [selected, setSelected] = useState([]);
 
   const [orderBy, setOrderBy] = useState('name');
 
@@ -63,32 +63,32 @@ const handleSort = (event, id) => {
   }
 };
 
-const handleSelectAllClick = (event) => {
-  if (event.target.checked) {
-    const newSelecteds = users.map((n) => n.name);
-    setSelected(newSelecteds);
-    return;
-  }
-  setSelected([]);
-};
+// const handleSelectAllClick = (event) => {
+//   if (event.target.checked) {
+//     const newSelecteds = users.map((n) => n.name);
+//     setSelected(newSelecteds);
+//     return;
+//   }
+//   setSelected([]);
+// };
 
-const handleClick = (event, name) => {
-  const selectedIndex = selected.indexOf(name);
-  let newSelected = [];
-  if (selectedIndex === -1) {
-    newSelected = newSelected.concat(selected, name);
-  } else if (selectedIndex === 0) {
-    newSelected = newSelected.concat(selected.slice(1));
-  } else if (selectedIndex === selected.length - 1) {
-    newSelected = newSelected.concat(selected.slice(0, -1));
-  } else if (selectedIndex > 0) {
-    newSelected = newSelected.concat(
-      selected.slice(0, selectedIndex),
-      selected.slice(selectedIndex + 1)
-    );
-  }
-  setSelected(newSelected);
-};
+// const handleClick = (event, name) => {
+//   const selectedIndex = selected.indexOf(name);
+//   let newSelected = [];
+//   if (selectedIndex === -1) {
+//     newSelected = newSelected.concat(selected, name);
+//   } else if (selectedIndex === 0) {
+//     newSelected = newSelected.concat(selected.slice(1));
+//   } else if (selectedIndex === selected.length - 1) {
+//     newSelected = newSelected.concat(selected.slice(0, -1));
+//   } else if (selectedIndex > 0) {
+//     newSelected = newSelected.concat(
+//       selected.slice(0, selectedIndex),
+//       selected.slice(selectedIndex + 1)
+//     );
+//   }
+//   setSelected(newSelected);
+// };
 
 const handleChangePage = (event, newPage) => {
   setPage(newPage);
@@ -124,7 +124,7 @@ return (
 
     <Card>
       <UserTableToolbar
-        numSelected={selected.length}
+        
         filterName={filterName}
         onFilterName={handleFilterByName}
       />
@@ -137,9 +137,8 @@ return (
               order={order}
               orderBy={orderBy}
               rowCount={users.length}
-              numSelected={selected.length}
+          
               onRequestSort={handleSort}
-              onSelectAllClick={handleSelectAllClick}
               headLabel={[
                 { id: 'name', label: 'Name' },
                 { id: 'email', label: 'Email' },
@@ -162,8 +161,8 @@ return (
                     email={row.email}
                     avatarUrl={`${API_URL}/files/${row.avatar}`}
                     isVerified={row.isVerified}
-                    selected={selected.indexOf(row.name) !== -1}
-                    handleClick={(event) => handleClick(event, row.name)}
+                   
+                   
                   />
                 ))}
 
