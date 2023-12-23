@@ -13,14 +13,11 @@ public class UserDTO {
     private String userName;
     @JsonIgnore
     private String password;
-    private String bankAccount;
-
-    private String bankName;
     private boolean isLocked;
     public UserDTO() {
     }
 
-    public UserDTO(String id, String name, String avatar,  String email, String phoneNumber, String userName, String password, String bankAccount, String bankName, boolean isLocked) {
+    public UserDTO(String id, String name, String avatar,  String email, String phoneNumber, String userName, String password, boolean isLocked) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;
@@ -29,8 +26,7 @@ public class UserDTO {
         this.phoneNumber = phoneNumber;
         this.userName = userName;
         this.password = password;
-        this.bankAccount = bankAccount;
-        this.bankName = bankName;
+
         this.isLocked=isLocked;
     }
 
@@ -90,23 +86,6 @@ public class UserDTO {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-
-    public String getBankAccount() {
-        return bankAccount;
-    }
-
-    public void setBankAccount(String bankAccount) {
-        this.bankAccount = bankAccount;
-    }
-
-    public String getBankName() {
-        return bankName;
-    }
-
-    public void setBankName(String bankName) {
-        this.bankName = bankName;
     }
 
     public boolean isLocked() {

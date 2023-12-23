@@ -7,23 +7,23 @@ import Cookies from "js-cookie";
 const PaymentInfoPage = () => {
   const [paymentInfo, setPaymentInfo] = useState({});
 
-  const topUpMoney = async () => {
-    try {
-      const response = await axios.post(
-        `${API_URL}/user/top_up`,
-        { amount: paymentInfo.vnp_Amount / 100 },
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: "Bearer " + Cookies.get("access_token"),
-          },
-        }
-      );
-      // console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const topUpMoney = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       `${API_URL}/user/top_up`,
+  //       { amount: paymentInfo.vnp_Amount / 100 },
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/x-www-form-urlencoded",
+  //           Authorization: "Bearer " + Cookies.get("access_token"),
+  //         },
+  //       }
+  //     );
+  //     // console.log(response.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
     // Lấy thông tin thanh toán từ URL hoặc Local Storage/Cookies
@@ -45,11 +45,11 @@ const PaymentInfoPage = () => {
     
   }, []);
 
-  useEffect(()=> {
-    console.log(paymentInfo);
-    if(paymentInfo.vnp_ResponseCode==="00" && paymentInfo.vnp_TransactionStatus==="00")
-      topUpMoney();
-  }, [paymentInfo]);
+  // useEffect(()=> {
+  //   console.log(paymentInfo);
+  //   if(paymentInfo.vnp_ResponseCode==="00" && paymentInfo.vnp_TransactionStatus==="00")
+  //     topUpMoney();
+  // }, [paymentInfo]);
 
   
 

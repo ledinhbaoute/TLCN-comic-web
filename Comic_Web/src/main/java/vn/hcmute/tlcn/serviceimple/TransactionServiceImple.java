@@ -33,21 +33,21 @@ public class TransactionServiceImple {
 	Converter converter;
 
 	@Transactional
-	public ResponseObject topUpMoneyToWallet(String username, int amount) {
+	public void topUpMoneyToWallet(String username, int amount) {
 		User user = userRepository.findOneByUserName(username).get();
 		Optional<Wallet> optionalWallet = walletRepository.findOneByUser_UserName(username);
 		if (!optionalWallet.isPresent())
-			return new ResponseObject(false, "You don't have Wallet to Top up", "");
+			return;
 		Wallet wallet = optionalWallet.get();
 		Transaction transaction = new Transaction(wallet, "Deposit " + amount + " to the wallet ", "", amount,
 				new Date(), 1);
 		try {
 			transactionRepository.save(transaction);
 			wallet.setBalance(wallet.getBalance() + amount);
-			return new ResponseObject(true, "Success!", converter.convertEntityToDto(transaction));
+
 
 		} catch (Exception e) {
-			return new ResponseObject(false, e.getMessage(), "");
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
@@ -60,4 +60,7 @@ public class TransactionServiceImple {
 		return transactionRepository.findAllByTypeOrderByCreatedAtDesc(2).stream().map(converter::convertEntityToDto)
 				.toList();
 	}
+
+
+
 }

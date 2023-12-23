@@ -15,7 +15,10 @@ public class Wallet {
     private int balance;
     @Column(name = "created_at")
     private Date createdAt ;
-
+    @Column(name = "bank_account")
+    private String bankAccount;
+    @Column(name = "bank_name")
+    private String bankName;
     public Wallet() {
     }
 
@@ -23,6 +26,24 @@ public class Wallet {
         this.user = user;
         this.balance = balance;
         this.createdAt=createdAt;
+        this.bankAccount=null;
+        this.bankName=null;
+    }
+
+    public String getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(String bankAccount) {
+        this.bankAccount = bankAccount;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 
     public int getId() {

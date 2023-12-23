@@ -22,8 +22,6 @@ create table `users`(
     `phone_number` varchar(20) not null,
     `user_name` varchar(128) unique not null,
     `password` text not null,
-    `bank_account` varchar(20) default null,
-	`bank_name` varchar(20) default null,
     `isLocked` tinyint(1) default 0,
     primary key (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -296,6 +294,8 @@ create table `wallets`(
     `user_id` varchar(20) not null unique,
     `balance` int default 0,
     `created_at` timestamp(6) not null default current_timestamp(6),
+     `bank_account` varchar(20) default null,
+	`bank_name` varchar(20) default null,
     primary key(`id`),
     constraint `fk_user_wallet` foreign key(`user_id`) references `users`(`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -360,6 +360,7 @@ create table `history_increase_view`(
 	`id`int auto_increment,
     `comic_id` varchar(20) not null,
     `date_increase` date not null,
+    
     primary key(`id`),
     foreign key(`comic_id`) references comicbooks(`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

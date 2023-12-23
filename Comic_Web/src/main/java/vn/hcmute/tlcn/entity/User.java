@@ -24,16 +24,13 @@ public class User implements Serializable {
     private String userName;
     @JsonIgnore
     private String password;
-    @Column(name = "bank_account")
-    private String bankAccount;
-    @Column(name="bank_name")
-    private String bankName;
+
     private boolean isLocked;
 
     public User() {
     }
 
-    public User(String id, String name, String avatar, String email, String phoneNumber, String userName, String password, String bankAccount, String bankName, boolean isLocked) {
+    public User(String id, String name, String avatar, String email, String phoneNumber, String userName, String password, boolean isLocked) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;
@@ -41,8 +38,6 @@ public class User implements Serializable {
         this.phoneNumber = phoneNumber;
         this.userName = userName;
         this.password = password;
-        this.bankAccount = bankAccount;
-        this.bankName = bankName;
         this.isLocked = isLocked;
     }
 
@@ -102,24 +97,6 @@ public class User implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-
-
-    public String getBankAccount() {
-        return bankAccount;
-    }
-
-    public void setBankAccount(String bankAccount) {
-        this.bankAccount = bankAccount;
-    }
-
-    public String getBankName() {
-        return bankName;
-    }
-
-    public void setBankName(String bankName) {
-        this.bankName = bankName;
-    }
-
     public boolean isLocked() {
         return isLocked;
     }

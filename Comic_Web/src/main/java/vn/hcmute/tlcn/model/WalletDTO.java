@@ -10,16 +10,35 @@ public class WalletDTO {
 
     private UserDTO user;
     private int balance;
-
     private Date createdAt ;
+    private String bankAccount;
+    private String bankName;
 
     public WalletDTO() {
     }
 
-    public WalletDTO(UserDTO user, int balance,Date createdAt) {
+    public WalletDTO(UserDTO user, int balance,Date createdAt,String bankAccount,String bankName) {
         this.user = user;
         this.balance = balance;
         this.createdAt=createdAt;
+        this.bankAccount=bankAccount;
+        this.bankName=bankName;
+    }
+
+    public String getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(String bankAccount) {
+        this.bankAccount = bankAccount;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 
     public void setId(int id) {

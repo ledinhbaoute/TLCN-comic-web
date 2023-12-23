@@ -80,7 +80,7 @@ public class UserServiceImple implements IUserService {
         if (check == 0) {
             String passwordEncode = passwordEncoder.encode(pass);
             user = new User(generateId.generateId(), name, "", email, "+84xxx",
-                    username, passwordEncode, null, null, false);
+                    username, passwordEncode,false);
 //            userDTO = converter.convertEntityToDto(userRepository.saveAndFlush(user));
             OTP otp = emailService.generateOtp();
             emailService.sendOtpEmail(email, "Verification OTP!", otp);
