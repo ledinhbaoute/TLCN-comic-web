@@ -28,7 +28,11 @@ public class WalletController {
     ResponseEntity<?>getPersonalWallet(Authentication authentication){
         if(authentication!=null){
             UserDetails userDetails= (UserDetails) authentication.getPrincipal();
-            return ResponseEntity.ok(walletServiceImple.getWalletByUser(userDetails.getUsername()));
+            WalletDTO walletDTO = walletServiceImple.getWalletByUser(userDetails.getUsername());
+            if(walletDTO == null) {
+            	return ResponseEntity.ok("Not registered yet");
+            }
+            return ResponseEntity.ok(walletDTO);
         }
         return ResponseEntity.status(401).body("Unauthorized!");
     }

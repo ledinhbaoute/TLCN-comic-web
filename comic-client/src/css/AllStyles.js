@@ -8,6 +8,7 @@ import "./slicknav.min.css";
 import "./style.css";
 import "./comic-manage.css"
 
+
 const AllStyles = () => {
 
 }

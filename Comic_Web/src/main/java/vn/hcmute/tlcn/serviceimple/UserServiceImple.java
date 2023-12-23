@@ -271,7 +271,7 @@ public class UserServiceImple implements IUserService {
 
             wallet.setBalance(wallet.getBalance() - packagePremium.getCost());
             walletRepository.save(wallet);
-            Transaction transaction = new Transaction(wallet, "Register Premium " + packagePremium.getDuration() + " days", "", packagePremium.getCost(), new Date(), 2);
+            Transaction transaction = new Transaction(wallet, "Register Premium " + packagePremium.getDuration() + " days", "", (packagePremium.getCost())*(-1), new Date(), 2);
             transactionRepository.save(transaction);
             return new ResponseObject(true, "Register Premium Success!", userPremium);
         } catch (Exception e) {

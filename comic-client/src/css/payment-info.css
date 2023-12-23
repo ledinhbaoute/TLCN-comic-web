@@ -1,0 +1,15 @@
+.payment-info {
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+  }
+  
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  p {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }

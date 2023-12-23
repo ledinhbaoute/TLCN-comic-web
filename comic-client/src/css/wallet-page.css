@@ -1,0 +1,68 @@
+.wallet-page {
+  
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  background-color: #fff;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+p {
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+th {
+  background-color: #f0f0f0;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+th:first-child,
+td:first-child {
+  width: 10%;
+  /* Độ rộng cột ID */
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+  width: 50%;
+  /* Độ rộng cột nội dung */
+}
+
+.add-button {
+    position: position;
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }

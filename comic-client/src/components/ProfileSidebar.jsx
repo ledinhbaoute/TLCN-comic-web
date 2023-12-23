@@ -41,7 +41,15 @@ function ProfileSidebar() {
                 Truyện của tôi
               </Link>
             </li>
-            <li>Ví của tôi</li>
+            <li><Link
+                to="./wallet"
+                className={`sidebar-link ${
+                  selectedItem === "menu-item-3" ? "selected" : ""
+                }`}
+                onClick={() => handleItemClick("menu-item-3")}
+              >
+                Ví của tôi
+              </Link></li>
             {/* <li>
               <Link
                 to="/menu-item-3"

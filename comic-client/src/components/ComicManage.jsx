@@ -13,6 +13,8 @@ const ComicManage = () => {
   const [alertDialogOpen, setAlertDialogOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [comics, setComics] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
 
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [newComic, setNewComic] = useState({
@@ -41,12 +43,22 @@ const ComicManage = () => {
           `${API_URL}/comicbooks/filter/actor/${userId}`
         );
         setComics(response.data.data);
+        setSearchResult(response.data.data);
       } catch (error) {
         console.log(error);
       }
     };
     getComics();
   }, []);
+
+  const handleSearchClick = () => {
+    setSearchResult(
+      comics.filter((item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  };
+
   const [currentPage, setCurrentPage] = useState(1);
   const comicsPerPage = 10;
 
@@ -55,13 +67,13 @@ const ComicManage = () => {
   };
 
   const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(comics.length / comicsPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(searchResult.length / comicsPerPage); i++) {
     pageNumbers.push(i);
   }
 
   const indexOfLastComic = currentPage * comicsPerPage;
   const indexOfFirstComic = indexOfLastComic - comicsPerPage;
-  const currentcomics = comics.slice(indexOfFirstComic, indexOfLastComic);
+  const currentcomics = searchResult.slice(indexOfFirstComic, indexOfLastComic);
 
   //
   //Xử lý xóa comic
@@ -245,11 +257,10 @@ const ComicManage = () => {
         }
       );
       //   console.log(response.data);
-      setAlertMessage("Cập nhật thông tin truyện thành công.");
-
+      setAlertMessage((preMessage) => `${preMessage} Cập nhật thông tin truyện thành công.`);
     } catch (error) {
       console.log(error);
-      setAlertMessage("Cập nhật thông tin truyện thất bại.");
+      setAlertMessage((preMessage) => `${preMessage} Cập nhật thông tin truyện thất bại.`);
       // setAlertDialogOpen(true);
     }
   };
@@ -270,7 +281,7 @@ const ComicManage = () => {
       setAlertMessage(" Cập nhật hình ảnh thành công.");
     } catch (error) {
       console.log(error);
-      setAlertMessage(" Cập nhật hình ảnh thất bại.");
+      setAlertMessage(" Cập nhật hình ảnh thất bại (đảm bảo ảnh được upload dưới 1mb).");
     }
   };
 
@@ -298,7 +309,6 @@ const ComicManage = () => {
     ) {
       window.alert("Vui lòng nhập đầy đủ thông tin");
     } else {
-
       if (!(selectedComicImg === null)) {
         const formData = new FormData();
         formData.append("comicId", selectedComic.id);
@@ -310,14 +320,18 @@ const ComicManage = () => {
       // window.location.reload();
       setShowEditDialog(false);
     }
-    
   };
 
   return (
     <div className="comic-list-container">
       <div className="search-bar">
-        <input type="text" placeholder="Tìm kiếm..." />
-        <button>Tìm kiếm</button>
+        <input
+          type="text"
+          placeholder="Tìm kiếm theo tên..."
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+        />
+        <button onClick={handleSearchClick}>Tìm kiếm</button>
       </div>
 
       <div className="add-button">

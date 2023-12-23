@@ -89,7 +89,7 @@ public class PaymentController {
                                     @RequestParam(value = "vnp_TransactionNo")String transactionNo) throws ParseException {
 
         RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("http://localhost:3000");
+        redirectView.setUrl("http://localhost:3000/wallet/payment-info");
 
         redirectView.addStaticAttribute("vnp_Amount", amount);
         redirectView.addStaticAttribute("vnp_PayDate", date);

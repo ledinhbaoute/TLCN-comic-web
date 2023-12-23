@@ -26,6 +26,8 @@ import ChapterManage from './components/ChapterManage';
 import PrivateRoute from './security/PrivateRoute';
 import Loading from './components/Loading';
 import OtpDialogInput from './components/dialogs/OTPDialogInput';
+import Wallet from './components/Wallet';
+import PaymentInfoPage from './components/PaymentInfoPage';
 
 
 function App() {
@@ -52,6 +54,8 @@ function App() {
             <Route path='/profile' Component={Profile} />
             <Route path='/comic-manage' Component={ComicManage} />
             <Route path='/chapter-manage/:comicId' Component={ChapterManage} />
+            <Route path='/wallet' Component={Wallet}/>
+            <Route path='/wallet/payment-info' Component={PaymentInfoPage}/>
           </Route>
         </Route>
         <Route path="*" Component={NotFound} />

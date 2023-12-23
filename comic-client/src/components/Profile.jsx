@@ -30,6 +30,7 @@ import {
 
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import ConfirmDialog from "./dialogs/ConfirmDialog";
 
 const Profile = () => {
   const navigate = useNavigateTo();
@@ -243,6 +244,8 @@ const Profile = () => {
   //Đăng ký premium
   const [openPremiumPackage, setOpenPremiumPackage] = useState(false);
   const [premiumPackages, setPremiumPackages] = useState([]);
+  const [openConfirmBuyDialog, setConfirmBuyDialogOpen] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState({});
 
   const premiumCardStyle = {
     border: "1px solid #ccc",
@@ -257,7 +260,6 @@ const Profile = () => {
     transition: "transform 0.3s ease-in-out", // Thêm hiệu ứng hover
     cursor: "pointer", // Thêm con trỏ chuột khi hover
   };
-
 
   const buttonStyle = {
     marginTop: "10px",
@@ -312,6 +314,32 @@ const Profile = () => {
     setOpenPremiumPackage(true);
   };
 
+  const handleBuyClick = (packageData) => {
+    setSelectedPackage(packageData);
+    setConfirmBuyDialogOpen(true);
+  };
+
+  const buyPackage = async () => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/user/register_premium`,
+        { package_id: selectedPackage.id },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: "Bearer " + Cookies.get("access_token"),
+          },
+        }
+      );
+      setAlertMessage(response.data.message);
+      setOpenAlertDialog(true);
+    } catch (error) {
+      console.log(error);
+      setAlertMessage("Đăng ký thất bại, đã có lỗi xảy ra");
+      setOpenAlertDialog(true);
+    }
+  };
+
   return (
     <>
       <Container fluid>
@@ -330,11 +358,22 @@ const Profile = () => {
                 <h2>Gói {packageData.duration} ngày</h2>
                 <p>Giá: {packageData.cost}VNĐ</p>
                 <p>Thời hạn: {packageData.duration} ngày</p>
-                <button style={buttonDynamicStyle}>Đăng ký</button>
+                <button
+                  style={buttonDynamicStyle}
+                  onClick={() => handleBuyClick(packageData)}
+                >
+                  Đăng ký
+                </button>
               </div>
             ))}
           </div>
         </Dialog>
+        <ConfirmDialog
+          open={openConfirmBuyDialog}
+          onClose={() => setConfirmBuyDialogOpen(false)}
+          onAccept={buyPackage}
+          message={`Bạn muốn mua gói premium ${selectedPackage.duration} tháng có giá ${selectedPackage.cost} VNĐ? `}
+        ></ConfirmDialog>
 
         <AlertDialog
           open={openAlertDialog}

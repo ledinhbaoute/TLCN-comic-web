@@ -33,7 +33,11 @@ public class WalletServiceImple {
     }
     public WalletDTO getWalletByUser(String username){
 
-        WalletDTO walletDTO= converter.convertEntityToDto( walletRepository.findOneByUser_UserName(username).orElse(null));
-        return walletDTO;
+    	WalletDTO walletDTO = null;
+    	Wallet wallet = walletRepository.findOneByUser_UserName(username).orElse(null);
+    	if (wallet != null) {
+    	  walletDTO = converter.convertEntityToDto(wallet);
+    	}
+    	return walletDTO;
     }
 }
