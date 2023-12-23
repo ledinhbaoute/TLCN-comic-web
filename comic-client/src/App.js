@@ -28,6 +28,7 @@ import Loading from './components/Loading';
 import OtpDialogInput from './components/dialogs/OTPDialogInput';
 import Wallet from './components/Wallet';
 import PaymentInfoPage from './components/PaymentInfoPage';
+import PremiumRoute from './security/PremiumRoute';
 
 
 function App() {
@@ -39,23 +40,28 @@ function App() {
           <Route exact path="/" Component={Home} />
           <Route path="/login" Component={Login} />
           <Route path='/register' Component={Register} />
-          <Route path='/comic-detail/:comicId' Component={ComicDetailPage} />
+
           <Route path='/genres/:genreId/:indexPage' Component={GenresPage} />
           <Route path='/forgetpass' Component={ForgetPassword} />
           <Route path='/chapter/:chapterId' Component={ComicReadingPage} />
           <Route path='/comic/:listBy/:indexPage' Component={ComicPage} />
           <Route path='/favorite-comic' Component={FavoriteComicPage} />
           <Route path='/history-reading' Component={HistoryReadingPage} />
-          <Route path='/testing' Component={OtpDialogInput}/>
+          <Route path='/testing' Component={OtpDialogInput} />
 
         </Route>
-        <Route element={<PrivateRoute/>}>
+        <Route element={<PremiumRoute />}>
+          <Route element={<PageLayout />}>
+            <Route path='/comic-detail/:comicId' Component={ComicDetailPage} />
+          </Route>
+        </Route>
+        <Route element={<PrivateRoute />}>
           <Route element={<ProfileSidebar />}>
             <Route path='/profile' Component={Profile} />
             <Route path='/comic-manage' Component={ComicManage} />
             <Route path='/chapter-manage/:comicId' Component={ChapterManage} />
-            <Route path='/wallet' Component={Wallet}/>
-            <Route path='/wallet/payment-info' Component={PaymentInfoPage}/>
+            <Route path='/wallet' Component={Wallet} />
+            <Route path='/wallet/payment-info' Component={PaymentInfoPage} />
           </Route>
         </Route>
         <Route path="*" Component={NotFound} />

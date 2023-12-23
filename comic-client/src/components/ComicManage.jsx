@@ -257,10 +257,14 @@ const ComicManage = () => {
         }
       );
       //   console.log(response.data);
-      setAlertMessage((preMessage) => `${preMessage} Cập nhật thông tin truyện thành công.`);
+      setAlertMessage(
+        (preMessage) => `${preMessage} Cập nhật thông tin truyện thành công.`
+      );
     } catch (error) {
       console.log(error);
-      setAlertMessage((preMessage) => `${preMessage} Cập nhật thông tin truyện thất bại.`);
+      setAlertMessage(
+        (preMessage) => `${preMessage} Cập nhật thông tin truyện thất bại.`
+      );
       // setAlertDialogOpen(true);
     }
   };
@@ -281,7 +285,9 @@ const ComicManage = () => {
       setAlertMessage(" Cập nhật hình ảnh thành công.");
     } catch (error) {
       console.log(error);
-      setAlertMessage(" Cập nhật hình ảnh thất bại (đảm bảo ảnh được upload dưới 1mb).");
+      setAlertMessage(
+        " Cập nhật hình ảnh thất bại (đảm bảo ảnh được upload dưới 1mb)."
+      );
     }
   };
 
@@ -322,6 +328,37 @@ const ComicManage = () => {
     }
   };
 
+  //
+  //
+  //Nâng truyện lên premium
+  const [openConfirmUpgrade, setOpenConfirmUpgrade] = useState(false);
+  const [comicIdtoUpgrade, setComicIdtoUpgrade] = useState("");
+  const handleUpgradeClick = (comicId) => {
+    setComicIdtoUpgrade(comicId);
+    setOpenConfirmUpgrade(true);
+  };
+
+  const upgradePremium = async () => {
+    try {
+      const response = await axios.put(
+        `${API_URL}/user/comic/upgrade_premium`,
+        { comicId: comicIdtoUpgrade },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: "Bearer " + Cookies.get("access_token"),
+          },
+        }
+      );
+      setAlertMessage(response.data.message);
+      setAlertDialogOpen(true);
+    } catch (error) {
+      setAlertMessage("Nâng cấp thất bại. Có lỗi xảy ra");
+      setAlertDialogOpen(true);
+      console.log(error);
+    }
+  };
+
   return (
     <div className="comic-list-container">
       <div className="search-bar">
@@ -347,6 +384,15 @@ const ComicManage = () => {
         message={"Bạn thật sự muốn xóa truyện " + comicNametoDelete}
         title="Xóa truyện"
       />
+
+      <ConfirmDialog
+        open={openConfirmUpgrade}
+        onClose={() => setOpenConfirmUpgrade(false)}
+        onAccept={upgradePremium}
+        message={
+          "Bạn thật sự muốn nâng cấp truyện này lên premium (Chỉ người dùng premium được tương tác). Sau khi xác nhận sẽ không thể hoàn tác."
+        }
+      ></ConfirmDialog>
       <AlertDialog
         open={alertDialogOpen}
         onClose={() => setAlertDialogOpen(false)}
@@ -498,6 +544,7 @@ const ComicManage = () => {
             <th>Tên truyện</th>
             <th>Hình ảnh</th>
             <th>Trạng thái</th>
+            <th>Premium</th>
             <th></th>
             <th></th>
           </tr>
@@ -517,6 +564,18 @@ const ComicManage = () => {
                 />
               </td>
               <td>{comicStatus(comic.status)}</td>
+              <td>
+                {comic.premium ? (
+                  "Đã nâng cấp"
+                ) : (
+                  <button
+                    className="edit"
+                    onClick={() => handleUpgradeClick(comic.id)}
+                  >
+                    Nâng cấp
+                  </button>
+                )}
+              </td>
               <td>
                 <button className="edit">
                   <Link to={`/chapter-manage/${comic.id}`}>Quản lý chương</Link>
