@@ -7,24 +7,6 @@ import Cookies from "js-cookie";
 const PaymentInfoPage = () => {
   const [paymentInfo, setPaymentInfo] = useState({});
 
-  // const topUpMoney = async () => {
-  //   try {
-  //     const response = await axios.post(
-  //       `${API_URL}/user/top_up`,
-  //       { amount: paymentInfo.vnp_Amount / 100 },
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/x-www-form-urlencoded",
-  //           Authorization: "Bearer " + Cookies.get("access_token"),
-  //         },
-  //       }
-  //     );
-  //     // console.log(response.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   useEffect(() => {
     // Lấy thông tin thanh toán từ URL hoặc Local Storage/Cookies
     const urlParams = new URLSearchParams(window.location.search);
@@ -36,22 +18,32 @@ const PaymentInfoPage = () => {
 
     // Lưu thông tin thanh toán vào state
     setPaymentInfo({
-      vnp_Amount,
-      vnp_PayDate,
-      vnp_ResponseCode,
-      vnp_TransactionStatus,
-      vnp_TransactionNo,
+      vnp_Amount: vnp_Amount,
+      vnp_PayDate: vnp_PayDate,
+      vnp_ResponseCode: vnp_ResponseCode,
+      vnp_TransactionStatus: vnp_TransactionStatus,
+      vnp_TransactionNo: vnp_TransactionNo,
     });
-    
   }, []);
+
+  const formatDate = (dateString) => {
+    const year = dateString.slice(0, 4);
+    const month = dateString.slice(4, 6);
+    const day = dateString.slice(6, 8);
+    const hour = dateString.slice(8, 10);
+    const minute = dateString.slice(10, 12);
+    const second = dateString.slice(12, 14);
+    const formattedDate = new Date(
+      `${year}-${month}-${day}T${hour}:${minute}:${second}`
+    ).toLocaleString();
+    return formattedDate;
+  };
 
   // useEffect(()=> {
   //   console.log(paymentInfo);
   //   if(paymentInfo.vnp_ResponseCode==="00" && paymentInfo.vnp_TransactionStatus==="00")
   //     topUpMoney();
   // }, [paymentInfo]);
-
-  
 
   const errorMessages = [
     { code: "00", message: "Giao dịch thành công" },
@@ -116,7 +108,7 @@ const PaymentInfoPage = () => {
     <div className="payment-info">
       <h1>Thông tin thanh toán</h1>
       <p>Số tiền: {Number(paymentInfo.vnp_Amount / 100).toLocaleString()}VNĐ</p>
-      <p>Ngày thanh toán: {Date(paymentInfo.vnp_PayDate)}</p>
+      <p>Ngày thanh toán: {formatDate(String(paymentInfo.vnp_PayDate))}</p>
       <p>
         Kết quả giao dịch:{" "}
         {

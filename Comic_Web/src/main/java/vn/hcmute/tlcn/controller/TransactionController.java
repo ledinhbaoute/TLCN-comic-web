@@ -14,15 +14,7 @@ public class TransactionController {
     @Autowired
     TransactionServiceImple transactionServiceImple;
 
-    @PostMapping("/user/top_up")
-    ResponseEntity<?> topUpMoneyToWallet(Authentication authentication,
-                                         @RequestParam("amount") int amount) {
-        if (authentication != null) {
-            UserDetails userDetails= (UserDetails) authentication.getPrincipal();
-            return ResponseEntity.ok(transactionServiceImple.topUpMoneyToWallet(userDetails.getUsername(), amount));
-        }
-        return ResponseEntity.status(401).body("Unauthorized!");
-    }
+    
     @GetMapping("/user/transactions")
     ResponseEntity<?>getAllTransactionByUser(Authentication authentication){
         if(authentication!=null){

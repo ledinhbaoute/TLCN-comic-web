@@ -22,35 +22,75 @@
     cursor: pointer;
   }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-
-    css Copy th,
-    td {
-      padding: 10px;
-      border: 1px solid #ccc;
+  .transaction-table{
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+  
+      css Copy th,
+      td {
+        padding: 10px;
+        border: 1px solid #ccc;
+      }
+  
+      th {
+        background-color: #f0f0f0;
+      }
+  
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+  
+      th:first-child,
+      td:first-child {
+        width: 10%;
+        /* Độ rộng cột ID */
+      }
+  
+      th:nth-child(2),
+      td:nth-child(2) {
+        width: 50%;
+        /* Độ rộng cột nội dung */
+      }
     }
+  }
 
-    th {
-      background-color: #f0f0f0;
-    }
+  .donate-table {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+  
+      css Copy th,
+      td {
+        padding: 10px;
+        border: 1px solid #ccc;
+      }
+  
+      th {
+        background-color: #f0f0f0;
+      }
+  
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+  
+      th:first-child,
+      td:first-child {
+        width: 10%;
+        /* Độ rộng cột ID */
+      }
+  
+      th:nth-child(2),
+      td:nth-child(2) {
+        width: 20%;
+      }
 
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-
-    th:first-child,
-    td:first-child {
-      width: 10%;
-      /* Độ rộng cột ID */
-    }
-
-    th:nth-child(2),
-    td:nth-child(2) {
-      width: 50%;
-      /* Độ rộng cột nội dung */
+      th:nth-child(3),
+      td:nth-child(3) {
+        width: 40%;
+      }
     }
   }
 
@@ -63,5 +103,27 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+    button {
+      margin: 0 4px;
+      padding: 8px 12px;
+      background-color: #ddd;
+      border: none;
+      border-radius: 20px;
+      outline: none;
+      color: black;
+      cursor: pointer;
+
+      &.active {
+        background-color: #00b894;
+        color: #fff;
+      }
+    }
   }
 }

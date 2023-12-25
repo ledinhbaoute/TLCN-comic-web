@@ -137,7 +137,7 @@ public class PaymentController {
                transactionServiceImple.topUpMoneyToWallet(username,amount/100);
                 response.sendRedirect("http://localhost:3000/wallet/payment-info?vnp_Amount="+amount+"&vnp_TransactionStatus="
                         +requestParams.get("vnp_TransactionStatus")+"&vnp_TransactionNo="+requestParams.get("vnp_TransactionNo")+
-                        "&vnp_ResponseCode="+requestParams.get("vnp_ResponseCode"));
+                        "&vnp_ResponseCode="+requestParams.get("vnp_ResponseCode")+"&vnp_PayDate="+requestParams.get("vnp_PayDate"));
 
             } else {
 

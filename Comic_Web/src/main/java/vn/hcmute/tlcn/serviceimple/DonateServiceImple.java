@@ -40,11 +40,11 @@ public class DonateServiceImple {
         if (!optionalWallet.isPresent())
             return new ResponseObject(false, "You need Wallet to Donate", "");
 
-        Optional<User> optionalUser = userRepository.findOneByUserName(rcv_username);
+        Optional<User> optionalUser = userRepository.findById(rcv_username);
         if (!optionalUser.isPresent()) {
             return new ResponseObject(false, "Receiver not exist", "");
         }
-        Optional<Wallet> optional = walletRepository.findOneByUser_UserName(rcv_username);
+        Optional<Wallet> optional = walletRepository.findOneByUser_Id(rcv_username);
         if (!optional.isPresent())
             return new ResponseObject(false, "You cannot donate for this user because this user don't have Wallet",
                     "");

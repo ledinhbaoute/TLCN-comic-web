@@ -32,7 +32,9 @@ const ComicDetailPage = () => {
             }
         };
         getComicDetail();
-
+        window.scrollTo({
+            top: 0,
+        });
         
 
     }, [comicId]);

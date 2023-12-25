@@ -19,24 +19,41 @@ const ComicReadingPage = () => {
     const getChapterDetail = async () => {
       try {
         if (chapterId) {
-          const response = await axios.get(
-            `${API_URL}/chapter_images/${chapterId}`,
-            {
-              headers: {
-                Authorization: "Bearer " + Cookies.get("access_token"),
-              },
+          if (Cookies.get("access_token")) {
+            const response = await axios.get(
+              `${API_URL}/chapter_images/${chapterId}`,
+              {
+                headers: {
+                  Authorization: "Bearer " + Cookies.get("access_token"),
+                },
+              }
+            );
+            console.log(response);
+            if (
+              response.data.message ===
+              "You need Account Premium to read this book!"
+            ) {
+              setPremiumLimited(true);
+            } else {
+              setImageList(response.data.data);
+              setPremiumLimited(false);
+              // console.log(premiumLimited);
             }
-          );
-          console.log(response);
-          if (
-            response.data.message ===
-            "You need Account Premium to read this book!"
-          ) {
-            setPremiumLimited(true);
           } else {
-            setImageList(response.data.data);
-            setPremiumLimited(false);
-            // console.log(premiumLimited);
+            const response = await axios.get(
+              `${API_URL}/chapter_images/${chapterId}`
+            );
+            console.log(response);
+            if (
+              response.data.message ===
+              "You need Account Premium to read this book!"
+            ) {
+              setPremiumLimited(true);
+            } else {
+              setImageList(response.data.data);
+              setPremiumLimited(false);
+              // console.log(premiumLimited);
+            }
           }
 
           //   console.log(imageList);

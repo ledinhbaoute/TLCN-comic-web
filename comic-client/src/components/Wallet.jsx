@@ -20,6 +20,8 @@ const Wallet = () => {
   //   const [balance, setBalance] = useState(null); // Số dư
   //   const [creationDate, setCreationDate] = useState(null); // Ngày tạo
   const [transactionHistory, setTransactionHistory] = useState([]); // Lịch sử giao dịch
+  const [rcvDonateHistory, setrcvDonateHistory] = useState([]);
+  const [sendDonateHistory, setSendDonateHistory] = useState([]);
   const [wallet, setWallet] = useState({
     id: null,
     user: null,
@@ -44,6 +46,32 @@ const Wallet = () => {
     }
   };
 
+  const getRcvDonates = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/user/received_donate_history`, {
+        headers: {
+          Authorization: "Bearer " + Cookies.get("access_token"),
+        },
+      });
+      setrcvDonateHistory(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getSendDonates = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/user/donate_history`, {
+        headers: {
+          Authorization: "Bearer " + Cookies.get("access_token"),
+        },
+      });
+      setSendDonateHistory(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const getWallet = async () => {
       try {
@@ -60,14 +88,65 @@ const Wallet = () => {
       }
     };
     getWallet();
-    if (wallet !== "Not registered yet" && wallet !== null) {
+    if (wallet !== "Not registered yet") {
       getTransactions();
+      getRcvDonates();
+      getSendDonates();
     }
   }, []);
 
+  //
+  //Phân trang bảng transactions
+  const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
+  const transactionPageNumbers = [];
+  const transactionPerPage = 5;
+  for (let i = 1; i <= Math.ceil(transactionHistory.length / transactionPerPage); i++) {
+    transactionPageNumbers.push(i);
+  }
+
+  const indexOfLastTransaction = currentTransactionPage * transactionPerPage;
+  const indexOfFirstTransaction = indexOfLastTransaction - transactionPerPage;
+  const currentTransactions = transactionHistory.slice(indexOfFirstTransaction, indexOfLastTransaction);
+  const handleTransactionPageChange = (event) => {
+    setCurrentTransactionPage(Number(event.target.id));
+  };
+
+  //
+  //Phân trang bảng nhận donate
+  const [currentrcvDonatePage, setCurrentrcvDonatePage] = useState(1);
+  const rcvDonatePageNumbers = [];
+  const rcvDonatePerPage = 5;
+  for (let i = 1; i <= Math.ceil(rcvDonateHistory.length / rcvDonatePerPage); i++) {
+    rcvDonatePageNumbers.push(i);
+  }
+
+  const indexOfLastrcvDonate = currentrcvDonatePage * rcvDonatePerPage;
+  const indexOfFirstrcvDonate = indexOfLastrcvDonate - rcvDonatePerPage;
+  const currentrcvDonates = rcvDonateHistory.slice(indexOfFirstrcvDonate, indexOfLastrcvDonate);
+  const handlercvDonatePageChange = (event) => {
+    setCurrentrcvDonatePage(Number(event.target.id));
+  };
+
+  //
+  //Phân trang bảng gửi donate
+  const [currentSendDonatePage, setCurrentSendDonatePage] = useState(1);
+  const sendDonatePageNumbers = [];
+  const sendDonatePerPage = 5;
+  for (let i = 1; i <= Math.ceil(sendDonateHistory.length / sendDonatePerPage); i++) {
+    sendDonatePageNumbers.push(i);
+  }
+
+  const indexOfLastSendDonate = currentSendDonatePage * sendDonatePerPage;
+  const indexOfFirstSendDonate = indexOfLastSendDonate - sendDonatePerPage;
+  const currentSendDonates = sendDonateHistory.slice(indexOfFirstSendDonate, indexOfLastSendDonate);
+  const handleSendDonatePageChange = (event) => {
+    setCurrentSendDonatePage(Number(event.target.id));
+  };
+  
+
   const openWallet = async () => {
     try {
-      const response = await axios.post(`${API_URL}/user/register_wallet`, {
+      const response = await axios.post(`${API_URL}/user/register_wallet`, {}, {
         headers: {
           Authorization: "Bearer " + Cookies.get("access_token"),
         },
@@ -239,23 +318,12 @@ const Wallet = () => {
       >
         <DialogTitle>Kết quả giao dịch</DialogTitle>
         <DialogContent>
-          {!paymentInfo ? (
+          {!paymentInfo && (
             <div>Loading...</div>
-          ) : (
-            <div>
-              <h1>Payment Information</h1>
-              <p>Amount: {paymentInfo.vnp_Amount}</p>
-              <p>Pay Date: {paymentInfo.vnp_PayDate}</p>
-              <p>Response Code: {paymentInfo.vnp_ResponseCode}</p>
-              <p>Transaction Status: {paymentInfo.vnp_TransactionStatus}</p>
-              <p>Transaction No: {paymentInfo.vnp_TransactionNo}</p>
-            </div>
           )}
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setPaymentInfoDialogOpen(false)}>Thoát</Button>
-        </DialogActions>
       </Dialog>
+      <div className="transaction-table">
       <table>
         <thead>
           <tr>
@@ -266,7 +334,7 @@ const Wallet = () => {
           </tr>
         </thead>
         <tbody>
-          {transactionHistory.map((transaction) => (
+          {currentTransactions.map((transaction) => (
             <tr key={transaction.id}>
               <td>{transaction.id}</td>
               <td>{transaction.title}</td>
@@ -276,6 +344,93 @@ const Wallet = () => {
           ))}
         </tbody>
       </table>
+      </div>
+      <div className="pagination">
+        {transactionPageNumbers.map((number) => (
+          <button
+            key={number}
+            id={number}
+            onClick={handleTransactionPageChange}
+            className={currentTransactionPage === number ? "active" : ""}
+          >
+            {number}
+          </button>
+        ))}
+      </div>
+      <h3 style={{marginTop: "10px"}}>Lịch sử nhận donate</h3>
+      <div  className="donate-table">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Người gửi</th>
+            <th>Tin nhắn</th>
+            <th>Số tiền</th>
+            <th>Thời gian</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentrcvDonates.map((donate) => (
+            <tr key={donate.id}>
+              <td>{donate.id}</td>
+              <td>{donate.donateWallet.user.name}</td>
+              <td>{donate.message}</td>
+              <td>{donate.amount}</td>
+              <td>{donate.donateDate}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      </div>
+      <div className="pagination">
+        {rcvDonatePageNumbers.map((number) => (
+          <button
+            key={number}
+            id={number}
+            onClick={handlercvDonatePageChange}
+            className={currentrcvDonatePage === number ? "active" : ""}
+          >
+            {number}
+          </button>
+        ))}
+      </div>
+      <h3 style={{marginTop: "10px"}}>Lịch sử gửi donate</h3>
+      <div  className="donate-table">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Người nhận</th>
+            <th>Tin nhắn</th>
+            <th>Số tiền</th>
+            <th>Thời gian</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentSendDonates.map((donate) => (
+            <tr key={donate.id}>
+              <td>{donate.id}</td>
+              <td>{donate.receiverWallet.user.name}</td>
+              <td>{donate.message}</td>
+              <td>{donate.amount}</td>
+              <td>{donate.donateDate}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      </div>
+      <div className="pagination">
+        {sendDonatePageNumbers.map((number) => (
+          <button
+            key={number}
+            id={number}
+            onClick={handleSendDonatePageChange}
+            className={currentSendDonatePage === number ? "active" : ""}
+          >
+            {number}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
