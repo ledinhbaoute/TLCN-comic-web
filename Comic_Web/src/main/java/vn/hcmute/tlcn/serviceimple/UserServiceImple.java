@@ -59,6 +59,15 @@ public class UserServiceImple implements IUserService {
             userDTO = converter.convertEntityToDto(user.get());
         return userDTO;
     }
+    
+    @Override
+    public UserDTO getUserbyId(String userId) {
+        UserDTO userDTO = null;
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent())
+            userDTO = converter.convertEntityToDto(user.get());
+        return userDTO;
+    }
 
     @Override
     public int checkRegisterCondition(String userName, String password, String confirmPass, String email) {

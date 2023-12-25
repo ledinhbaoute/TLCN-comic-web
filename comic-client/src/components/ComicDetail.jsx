@@ -248,7 +248,7 @@ const ComicDetail = (props) => {
           <div className="anime__details__text">
             <div className="anime__details__title">
               <h3>{comic.name}</h3>
-              {comic.actorId && <span>Tác giả:{comic.actorId.name}</span>}
+              {comic.actorId && <span>Tác giả:<Link to={`/user/${comic.actorId.id}`}>{comic.actorId.name}</Link></span>}
             </div>
             {/* <div className="anime__details__rating">
                             <div className="rating">

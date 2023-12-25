@@ -29,6 +29,7 @@ import OtpDialogInput from './components/dialogs/OTPDialogInput';
 import Wallet from './components/Wallet';
 import PaymentInfoPage from './components/PaymentInfoPage';
 import PremiumRoute from './security/PremiumRoute';
+import PublicProfile from './components/PublicProfile';
 
 
 function App() {
@@ -43,18 +44,16 @@ function App() {
 
           <Route path='/genres/:genreId/:indexPage' Component={GenresPage} />
           <Route path='/forgetpass' Component={ForgetPassword} />
+          <Route path='/comic-detail/:comicId' Component={ComicDetailPage} />
           <Route path='/chapter/:chapterId' Component={ComicReadingPage} />
           <Route path='/comic/:listBy/:indexPage' Component={ComicPage} />
           <Route path='/favorite-comic' Component={FavoriteComicPage} />
           <Route path='/history-reading' Component={HistoryReadingPage} />
           <Route path='/testing' Component={OtpDialogInput} />
+          <Route path='/user/:userId' Component={PublicProfile}/>
 
         </Route>
-        <Route element={<PremiumRoute />}>
-          <Route element={<PageLayout />}>
-            <Route path='/comic-detail/:comicId' Component={ComicDetailPage} />
-          </Route>
-        </Route>
+
         <Route element={<PrivateRoute />}>
           <Route element={<ProfileSidebar />}>
             <Route path='/profile' Component={Profile} />

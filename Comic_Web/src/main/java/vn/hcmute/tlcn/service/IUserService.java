@@ -11,6 +11,7 @@ import vn.hcmute.tlcn.model.UserDTO;
 
 public interface IUserService {
     UserDTO getUser(String username);
+    UserDTO getUserbyId(String userId);
     int checkRegisterCondition(String userName,String password,String confirmPass,String email);
     ResponseObject register(String name, String email, String username, String pass, String conFirmPass);
     boolean checkUserExist(String username,String email);

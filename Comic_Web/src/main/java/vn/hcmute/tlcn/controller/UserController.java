@@ -57,6 +57,15 @@ public class UserController {
         }
         return ResponseEntity.status(401).body("Unauthorized!");
     }
+    
+    @GetMapping("/findUser/{userId}")
+    ResponseEntity<?> getUserbyId(@PathVariable String userId) {
+        if (userId != null) {
+            return ResponseEntity.ok(userServiceImple.getUserbyId(userId));
+        }
+        return ResponseEntity.status(404).body("Unauthorized!");
+    }
+    
     @GetMapping("all-user")
     List<UserDTO>getAllUser(){
         return userRepository.findAll().stream().map(converter::convertEntityToDto).toList();
