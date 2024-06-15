@@ -1,3 +1,4 @@
+import * as React from 'react'; 
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -6,11 +7,16 @@ import CardHeader from '@mui/material/CardHeader';
 
 import Chart, { useChart } from 'src/components/chart';
 
+import OptionStatistic from './option-statistic';
+import MonthYearPicker from './month-year-picker';
+
 // ----------------------------------------------------------------------
 
-export default function AppWebsiteVisits({ title, subheader, chart, ...other }) {
+export default function AppWebsiteVisits({ title, subheader, chart,onPickerChange,onOptionChange,option, ...other }) {
   const { labels, colors, series, options } = chart;
 
+  
+ 
   const chartOptions = useChart({
     colors,
     plotOptions: {
@@ -23,7 +29,7 @@ export default function AppWebsiteVisits({ title, subheader, chart, ...other }) 
     },
     labels,
     xaxis: {
-      type: 'datetime',
+      type: 'text',
     },
     tooltip: {
       shared: true,
@@ -31,7 +37,7 @@ export default function AppWebsiteVisits({ title, subheader, chart, ...other }) 
       y: {
         formatter: (value) => {
           if (typeof value !== 'undefined') {
-            return `${value.toFixed(0)} visits`;
+            return `${value.toFixed(0)} registers`;
           }
           return value;
         },
@@ -42,8 +48,17 @@ export default function AppWebsiteVisits({ title, subheader, chart, ...other }) 
 
   return (
     <Card {...other}>
-      <CardHeader title={title} subheader={subheader} />
-
+    
+    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
+        <CardHeader 
+          title={title} 
+          subheader={subheader} 
+          sx={{ padding: 0, '& .MuiCardHeader-content': { marginRight: 2 } }} 
+        />
+        <OptionStatistic onOptionChange={onOptionChange}/>
+        <MonthYearPicker flag={option} onPickerChange={onPickerChange}/>
+      </Box>
+      
       <Box sx={{ p: 3, pb: 1 }}>
         <Chart
           dir="ltr"
@@ -62,4 +77,7 @@ AppWebsiteVisits.propTypes = {
   chart: PropTypes.object,
   subheader: PropTypes.string,
   title: PropTypes.string,
+  onPickerChange:PropTypes.func,
+  onOptionChange:PropTypes.func,
+  option:PropTypes.string
 };

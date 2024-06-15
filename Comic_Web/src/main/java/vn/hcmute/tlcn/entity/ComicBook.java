@@ -1,6 +1,8 @@
 package vn.hcmute.tlcn.entity;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -21,14 +23,20 @@ public class ComicBook {
     @JoinColumn(name="actor_id")
     private User actor;
     private int view;
+    @Column(name = "pre_view")
+    private int preview;
     private float rate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
     @Column(name = "publish_date")
     private Date publishDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
     @Column(name="update_date")
     private Date updateDate;
     private int status;
     private String image;
     private String discription;
+    @Column(name = "public")
+    private boolean open;
     @ManyToMany()
     @JoinTable(name="comicbooks_genres",joinColumns = @JoinColumn(name = "comicbook_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
@@ -76,6 +84,14 @@ public class ComicBook {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
     }
 
     public String getName() {
@@ -150,6 +166,14 @@ public class ComicBook {
     }
     public String getImage() {
         return image;
+    }
+
+    public int getPreview() {
+        return preview;
+    }
+
+    public void setPreview(int preview) {
+        this.preview = preview;
     }
 
     public void setImage(String image) {

@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface FollowRepository extends JpaRepository<Follower, FollowKey> {
     List<Follower>findByUser_UserName(String userName);
+    List<Follower>findByFollower_UserName(String userName);
 
 }

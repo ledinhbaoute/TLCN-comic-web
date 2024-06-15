@@ -1,9 +1,12 @@
 package vn.hcmute.tlcn.serviceimple;
 
+import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.lang.NonNull;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +20,7 @@ import vn.hcmute.tlcn.utils.GenerateId;
 import vn.hcmute.tlcn.model.ComicBookDTO;
 import vn.hcmute.tlcn.service.IComicBookService;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -41,6 +45,12 @@ public class ComicServiceImple implements IComicBookService {
     private ChapterImageServiceImple chapterImageServiceImple;
     @Autowired
     private HistoryIncreaseViewRepo historyIncreaseViewRepo;
+    @Autowired
+    private AnnounceRepository announceRepository;
+    @Autowired
+    private FollowRepository followRepository;
+    @Autowired
+    SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
     public List<ComicBookDTO> getAllComic() {
@@ -55,7 +65,6 @@ public class ComicServiceImple implements IComicBookService {
 
         return comicBookDTOS.subList(0,5);
     }
-
     @Override
     public List<ComicBookDTO> getComicByGenre(String genreId) {
         List<ComicBookDTO> comicBookDTOS = new ArrayList<>();
@@ -100,7 +109,6 @@ public class ComicServiceImple implements IComicBookService {
         }
         return comicBookDTOS;
     }
-
     @Override
     public List<ComicBookDTO> searchComicByInput(String input) {
         List<ComicBookDTO> comicBookDTOS = new ArrayList<>();
@@ -118,7 +126,7 @@ public class ComicServiceImple implements IComicBookService {
     }
 
     @Override
-    public ComicBookDTO addComic(String name, String username, List<String> genres, String discription, MultipartFile file) {
+    public ComicBookDTO addComic(String name, String username, List<String> genres, String discription, MultipartFile file) throws IOException {
 
         Optional<User> optionalUser = userRepository.findOneByUserName(username);
         if (!optionalUser.isPresent())
@@ -133,10 +141,24 @@ public class ComicServiceImple implements IComicBookService {
                 genreList.add(genre.get());
         }
         comicBook.setGenres(genreList);
-        String image = imageStorageService.storeFile(file);
+        String image = imageStorageService.storeToCloudinary(file);
         comicBook.setImage(image);
 
         comicBookRepository.save(comicBook);
+        List<Follower>followers=followRepository.findByUser_UserName(username);
+        followers.forEach(follower -> {
+            String content=username+ "vừa tạo 1 truyện mới";
+            Announce announce=new Announce();
+            announce.setUser(follower.getFollower());
+            announce.setType("ncm");
+            announce.setRead(false);
+            announce.setCreatedAt(new Date());
+            announce.setContent(content);
+            announce.setId(generateId.generateId());
+            announce.setLinkTo("/comic-detail/"+comicBook.getId());
+            simpMessagingTemplate.convertAndSendToUser(follower.getFollower().getUserName(),"/queue/notifications",announce);
+            announceRepository.save(announce);
+        });
         return converter.convertEntityToDto(comicBook);
     }
 

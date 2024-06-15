@@ -1,4 +1,6 @@
 import axios from 'axios';
+import * as React from 'react'; 
+import Cookies from 'js-cookie';
 import { faker } from '@faker-js/faker';
 import { useState,useEffect } from 'react';
 
@@ -19,39 +21,139 @@ import AppWidgetSummary from '../app-widget-summary';
 import AppTrafficBySite from '../app-traffic-by-site';
 import AppCurrentSubject from '../app-current-subject';
 import AppConversionRates from '../app-conversion-rates';
+// import OptionStatistic from '../option-statistic';
 
 // ----------------------------------------------------------------------
 
 export default function AppView() {
   const [totalUser,setTotalUser]=useState()
   const [totalComic,setTotalComic]=useState()
-  useEffect(() => {
-    const getAllUser = async () => {
-      try {
-        const response = await axios.get(
-          `${API_URL}/all-user`);
-        // console.log(response.data)
-          setTotalUser(response.data.length)
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    getAllUser();
-  }, []);
-  useEffect(() => {
-    const getAllComic = async () => {
-      try {
-        const response = await axios.get(
-          `${API_URL}/comic`);
-          
-          setTotalComic(response.data.length)
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    getAllComic();
-  }, []);
+  const [totalUserPremium,setTotalUserPremium]=useState()
+  const [totalWallet,setTotalWallet]=useState()
+  const [dataChart,setDataChart]=useState()
+  const [userAgeDistribution,setUserAgeDistribution]=useState([])
+  const[picker,setPicker]=useState([null,2023])
+  const [comicTrendings,setComicTrendings]=useState([])
+  const [comicUpdateLastest,setComicUpdateLastest]=useState([])
+  const handlePickerChange = (newValue) => {
+    setPicker(newValue);
+  };
+  const [selectedOption, setSelectedOption] = useState('Theo nam');
+  
 
+  const handleOptionChange = (newOption) => {
+    setSelectedOption(newOption);
+  };
+  useEffect(() => {
+    const getUserAgeDistribution = async () => {
+      try {
+      
+       
+          const response = await axios.get(
+            `${API_URL}/admin/statistic/userAge`
+          ,{
+            headers:{
+            Authorization:`Bearer ${Cookies.get("access_token")}`
+          }
+        });
+            setUserAgeDistribution(response.data)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getUserAgeDistribution();
+  }, []);
+  useEffect(() => {
+    const getComicTrending = async () => {
+      try {
+      
+       
+          const response = await axios.get(
+            `${API_URL}/admin/comicTrending`
+          ,{
+            headers:{
+            Authorization:`Bearer ${Cookies.get("access_token")}`
+          }
+        });
+            setComicTrendings(response.data)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getComicTrending();
+  }, []);
+  useEffect(() => {
+    const getComicUpdateLastest = async () => {
+      try {
+      
+       
+          const response = await axios.get(
+            `${API_URL}/comic/latest_update?indexPage=0`
+          );
+            setComicUpdateLastest(response.data.content)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getComicUpdateLastest();
+  }, []);
+  useEffect(() => {
+    const getDataRegistration = async () => {
+      try {
+        if(picker[0]===null){
+        const response = await axios.get(
+          `${API_URL}/admin/statistic/byYear?year=${picker[1]}`
+        ,{
+          headers:{
+          Authorization:`Bearer ${Cookies.get("access_token")}`
+        }
+      });
+    
+          
+          setDataChart(response.data.data.data)
+          setTotalUser(response.data.data.n_user)
+          setTotalComic(response.data.data.n_comic)
+          setTotalUserPremium(response.data.data.n_userPremium)
+          setTotalWallet(response.data.data.n_wallet)
+        }
+        else{
+          const response = await axios.get(
+            `${API_URL}/admin/statistic/byMonth?year=${picker[1]}&month=${picker[0]}`
+          ,{
+            headers:{
+            Authorization:`Bearer ${Cookies.get("access_token")}`
+          }
+        });
+            
+            setDataChart(response.data.data.data)
+            setTotalUser(response.data.data.n_user)
+            setTotalComic(response.data.data.n_comic)
+            setTotalUserPremium(response.data.data.n_userPremium)
+            setTotalWallet(response.data.data.n_wallet)
+
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getDataRegistration();
+  }, [picker,selectedOption]);
+  useEffect(() => {
+    console.log(comicUpdateLastest)
+  }, [comicUpdateLastest]);
+
+  const generateLabels = () => {
+    if (picker[0] === null) {
+      return [
+        'Thang 1', 'Thang 2', 'Thang 3', 'Thang 4', 'Thang 5', 'Thang 6',
+        'Thang 7', 'Thang 8', 'Thang 9', 'Thang 10', 'Thang 11', 'Thang 12',
+      ];
+    } 
+    
+      const daysInMonth = new Date(picker[1], picker[0], 0).getDate();
+      return Array.from({ length: daysInMonth }, (_, i) => `Ngay ${i + 1}`);
+    
+  }
 
   return (
     <Container maxWidth="xl">
@@ -65,7 +167,8 @@ export default function AppView() {
             title="Total User"
             total={totalUser}
             color="success"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
+            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
+            
           />
         </Grid>
 
@@ -74,101 +177,86 @@ export default function AppView() {
             title="Total Comic"
             total={totalComic}
             color="info"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
+            icon={<img alt="icon" src="/assets/icons/glass/ic_comic.png" />}
           />
         </Grid>
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Item Orders"
-            total={1723315}
+            title="Users Premium"
+            total={totalUserPremium}
             color="warning"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
+            icon={<img alt="icon" src="/assets/icons/glass/ic_user_premium.png" />}
           />
         </Grid>
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Bug Reports"
-            total={234}
+            title="Total Wallet"
+            total={totalWallet}
             color="error"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
+            icon={<img alt="icon" src="/assets/icons/glass/ic_wallet.png" />}
           />
         </Grid>
 
         <Grid xs={12} md={6} lg={8}>
+          
           <AppWebsiteVisits
-            title="Website Visits"
-            subheader="(+43%) than last year"
+            title="Luot dang ky moi"
+            subheader="bieu do thong ke luot dang ky"
             chart={{
-              labels: [
-                '01/01/2003',
-                '02/01/2003',
-                '03/01/2003',
-                '04/01/2003',
-                '05/01/2003',
-                '06/01/2003',
-                '07/01/2003',
-                '08/01/2003',
-                '09/01/2003',
-                '10/01/2003',
-                '11/01/2003',
-              ],
+              labels: generateLabels(),
               series: [
+                // {
+                //   name: 'Team A',
+                //   type: 'column',
+                //   fill: 'solid',
+                //   data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
+                // },
+                // { 
+                //   name: 'Team B',
+                //   type: 'area',
+                //   fill: 'gradient',
+                //   data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
+                // },
                 {
-                  name: 'Team A',
-                  type: 'column',
-                  fill: 'solid',
-                  data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
-                },
-                { 
-                  name: 'Team B',
-                  type: 'area',
-                  fill: 'gradient',
-                  data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
-                },
-                {
-                  name: 'Team C',
+                  name: 'Người đăng kí',
                   type: 'line',
                   fill: 'solid',
-                  data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
+                  data: dataChart,
                 },
               ],
             }}
+            onPickerChange={handlePickerChange}
+            onOptionChange={handleOptionChange}
+            option={selectedOption}
           />
         </Grid>
+        
 
         <Grid xs={12} md={6} lg={4}>
           <AppCurrentVisits
-            title="Current Visits"
+            title="Phan bo do tuoi"
             chart={{
-              series: [
-                { label: 'America', value: 4344 },
-                { label: 'Asia', value: 5435 },
-                { label: 'Europe', value: 1443 },
-                { label: 'Africa', value: 4443 },
-              ],
+              series: userAgeDistribution.length>0? [
+                { label: '>16 tuoi', value: userAgeDistribution[0]},
+                { label: '16-24 tuoi', value: userAgeDistribution[1] },
+                { label: '24-30 tuoi', value: userAgeDistribution[2] },
+                { label: '>30 tuoi', value: userAgeDistribution[3] }
+            
+              ]:[],
             }}
           />
         </Grid>
 
         <Grid xs={12} md={6} lg={8}>
           <AppConversionRates
-            title="Conversion Rates"
-            subheader="(+43%) than last year"
+            title="Truyen doc nhieu trong tuan"
+            subheader=""
             chart={{
-              series: [
-                { label: 'Italy', value: 400 },
-                { label: 'Japan', value: 430 },
-                { label: 'China', value: 448 },
-                { label: 'Canada', value: 470 },
-                { label: 'France', value: 540 },
-                { label: 'Germany', value: 580 },
-                { label: 'South Korea', value: 690 },
-                { label: 'Netherlands', value: 1100 },
-                { label: 'United States', value: 1200 },
-                { label: 'United Kingdom', value: 1380 },
-              ],
+              series: comicTrendings.length > 0 ? 
+              comicTrendings.map(comic => ({ label: comic[0].name, value: comic[1] })) 
+              : [],
             }}
           />
         </Grid>
@@ -189,14 +277,14 @@ export default function AppView() {
 
         <Grid xs={12} md={6} lg={8}>
           <AppNewsUpdate
-            title="News Update"
-            list={[...Array(5)].map((_, index) => ({
-              id: faker.string.uuid(),
-              title: faker.person.jobTitle(),
-              description: faker.commerce.productDescription(),
-              image: `/assets/images/covers/cover_${index + 1}.jpg`,
-              postedAt: faker.date.recent(),
-            }))}
+            title="Truyen moi cap nhat"
+            list={comicUpdateLastest.length>0?comicUpdateLastest.map(comic => ({
+              id: comic.id,
+              title: comic.name,
+              description: comic.discription,
+              image: `${API_URL}/files/${comic.image}`,
+              postedAt: comic.updateDate,
+            })):[]}
           />
         </Grid>
 

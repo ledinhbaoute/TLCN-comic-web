@@ -19,17 +19,27 @@ public class Transaction {
     private int amount;
     @Column(name = "created_at")
     private Date createdAt;
+    private int balance;
 
     public Transaction() {
     }
 
-    public Transaction(Wallet wallet, String title, String content, int amount, Date createdAt, int type) {
+    public Transaction(Wallet wallet, String title, String content, int amount, Date createdAt, int type,int balance) {
         this.wallet = wallet;
         this.title = title;
         this.content = content;
         this.amount = amount;
         this.createdAt=createdAt;
         this.type=type;
+        this.balance=balance;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
 
     public int getType() {

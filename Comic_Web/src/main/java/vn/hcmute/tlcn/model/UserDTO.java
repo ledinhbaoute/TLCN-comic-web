@@ -2,6 +2,8 @@ package vn.hcmute.tlcn.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.Date;
+
 public class UserDTO {
     private String id;
     private String name;
@@ -14,10 +16,12 @@ public class UserDTO {
     @JsonIgnore
     private String password;
     private boolean isLocked;
+    private Date createdAt;
+    private Date birthDate;
     public UserDTO() {
     }
 
-    public UserDTO(String id, String name, String avatar,  String email, String phoneNumber, String userName, String password, boolean isLocked) {
+    public UserDTO(String id, String name, String avatar,  String email, String phoneNumber, String userName, String password, boolean isLocked,Date createdAt,Date birthDate) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;
@@ -28,6 +32,24 @@ public class UserDTO {
         this.password = password;
 
         this.isLocked=isLocked;
+        this.createdAt=createdAt;
+        this.birthDate=birthDate;
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getId() {

@@ -72,36 +72,24 @@ public class ChapterImageServiceImple implements IChapterImageService {
             chapterImageDTOS.add(chapterImageDTO);
         }
         return new ResponseObject(true, "Success!", chapterImageDTOS);
+}
+    @Override
+public ResponseEntity<?> changeOrderImageList(String username, String chapterId,List<MultipartFile>newOrderList){
+    User user=userRepository.findOneByUserName(username).orElse(null);
+    if(user==null)
+        return ResponseEntity.ok().body(new ResponseObject(false,"User not exist!",""));
+    Chapter chapter=chapterRepository.findById(chapterId).orElse(null);
+    if(!chapter.getComicBook_Id().getActorId().getUserName().equals(username))
+        return ResponseEntity.ok().body(new ResponseObject(false,"Cannot edit others people's chapter",""));
+    List<ChapterImage>chapterImages=chapterImageRepository.findByChapter_IdOrderByOrdinalNumberAsc(chapterId);
+    chapterImageRepository.deleteAll(chapterImages);
+    for (MultipartFile file:newOrderList
+         ) {
+        addImageChapter(username,chapterId,file);
+    }
+    return ResponseEntity.ok().body(new ResponseObject(true,"Success",""));
 
 }
-//    public Path getStorageFolder(String fileName){
-//        Optional<ChapterImage>optionalChapterImg=chapterImageRepository.findOneByLink(fileName);
-//        if(!optionalChapterImg.isPresent())
-//            return null;
-//
-//        ChapterImage chapterImg=optionalChapterImg.get();
-//        String path="uploads/"+chapterImg.getChapter().getComicBook_Id().getActorId().getUserName()+"/"
-//                +chapterImg.getChapter().getComicBook_Id().getId()+"/"+chapterImg.getChapter().getId();
-//        return Paths.get(path);
-//    }
-//    @Override
-//    public byte[] readFileContent(String fileName) {
-//
-//
-//        try {
-//            Path file = storageFolder.resolve(fileName);
-//            Resource resource = new UrlResource(file.toUri());
-//            if (resource.exists() || resource.isReadable()) {
-//                byte[] bytes = StreamUtils.copyToByteArray(resource.getInputStream());
-//                return bytes;
-//            } else {
-//                throw new RuntimeException("Could not read file:" + fileName);
-//            }
-//        } catch (IOException exception) {
-//            throw new RuntimeException("Could not read file:" + fileName, exception);
-//        }
-//    }
-
     @Override
     public int deleteChapterImg(String username, String fileName) {
         User user = userRepository.findOneByUserName(username).get();
@@ -129,6 +117,7 @@ public class ChapterImageServiceImple implements IChapterImageService {
         try {
 //            ImageStorageService imageStorageService=new ImageStorageService("uploads/"+username+"/"+chapter.getComicBook_Id().getId()+"/"+chapterId);
             String imageName = imageStorageService.storeFile(file);
+//            String imageName=imageStorageService.storeToCloudinary(file);
             int ordinalNumber = chapterImageRepository.findByChapter_IdOrderByOrdinalNumberAsc(chapterId).size() + 1;
             ChapterImage chapterImage = new ChapterImage(chapter, imageName, ordinalNumber);
 

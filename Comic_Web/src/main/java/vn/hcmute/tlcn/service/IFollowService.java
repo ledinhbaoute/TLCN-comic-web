@@ -10,4 +10,6 @@ public interface IFollowService {
     ResponseEntity<ResponseObject>addFollow(String followerUserName,String userName);
     ResponseEntity<ResponseObject> unFollow(String followerUserName,String userName);
     List<Follower> getFollwers_User(String username);
+    List<Follower> getUsers_Followers(String username);
+    boolean isFollow(String username,String followerUserName);
 }

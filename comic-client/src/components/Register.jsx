@@ -20,6 +20,7 @@ const Register = () => {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
+  const [birthdate,setBirthDate]=useState(new Date())
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [otpDialogOpen, setOtpDialogOpen] = useState(false);
@@ -51,6 +52,9 @@ const Register = () => {
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
+  const handleBirthDateChange=(event)=>{
+    setBirthDate(event.target.value)
+  }
 
   const handleUsernameChange = (event) => {
     const inputValue = event.target.value;
@@ -81,6 +85,7 @@ const Register = () => {
           username: username,
           password: password,
           confirmPass: confirmPassword,
+          birthDate: birthdate,
         },
         {
           headers: {
@@ -117,7 +122,7 @@ const Register = () => {
     event.preventDefault();
 
     const registerResponse = await register();
-    // console.log(registerResponse.data);
+    console.log(birthdate)
     if (!registerResponse.data.status)
       window.alert(registerResponse.data.message);
     else {
@@ -125,7 +130,7 @@ const Register = () => {
       // console.log(otpDialogOpen);
     }
   };
-
+  
   // const handleOtpSubmit = async () => {
   //   Xử lý logic khi người dùng gửi mã OTP
   //   console.log("OTP:", otp);
@@ -158,7 +163,7 @@ const Register = () => {
         </div>
       </section>
       {/* <!-- Normal Breadcrumb End --> */}
-
+      
       {/* <!-- Signup Section Begin --> */}
       <section className="signup spad">
         <div className="container">
@@ -166,7 +171,9 @@ const Register = () => {
             <div className="col-lg-6">
               <div className="login__form">
                 <h3>Đăng ký</h3>
+                
                 <form onSubmit={handleRegisterFormSubmit}>
+                  
                   <div className="input__item">
                     <input
                       className="inputText"
@@ -200,6 +207,21 @@ const Register = () => {
                     />
                     <span className="icon_info"></span>
                   </div>
+                  <h5 style={{marginTop:0}}>Ngày sinh</h5>
+                  <div className="input__item">
+                    
+                    <input
+                      className="inputText"
+                      type="date"
+                      id="birthdate"
+                      placeholder="Ngày Sinh"
+                      value={birthdate}
+                      onChange={handleBirthDateChange}
+                    />
+                    <span className="fa fa-calendar"></span>
+                  </div>
+                  
+                  
                   <div className="input__item">
                     <input
                       className="inputText"

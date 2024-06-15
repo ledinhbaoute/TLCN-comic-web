@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.model.ChapterImageDTO;
@@ -45,5 +46,10 @@ public class ChapterImageController {
             }
         }
         return ResponseEntity.status(401).body("Unauthenticated!");
+    }
+    @PostMapping("/user/changeOrderNumber")
+    ResponseEntity<?>changeOrderNumber(Authentication authentication,@RequestParam String chapterId, @RequestParam("newList") List<MultipartFile>newList){
+       UserDetails userDetails= (UserDetails) authentication.getPrincipal();
+        return imageService.changeOrderImageList(userDetails.getUsername(),chapterId,newList);
     }
 }

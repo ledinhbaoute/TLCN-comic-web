@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "users")
@@ -26,11 +27,16 @@ public class User implements Serializable {
     private String password;
 
     private boolean isLocked;
+    @Column(name = "created_at")
+    private Date createdAt;
+    @Column(name = "birthDate")
+    private Date birthDate;
+
 
     public User() {
     }
 
-    public User(String id, String name, String avatar, String email, String phoneNumber, String userName, String password, boolean isLocked) {
+    public User(String id, String name, String avatar, String email, String phoneNumber, String userName, String password, boolean isLocked,Date createdAt,Date birthDate) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;
@@ -39,6 +45,24 @@ public class User implements Serializable {
         this.userName = userName;
         this.password = password;
         this.isLocked = isLocked;
+        this.createdAt=createdAt;
+        this.birthDate=birthDate;
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getId() {

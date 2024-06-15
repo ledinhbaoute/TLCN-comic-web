@@ -17,50 +17,52 @@ function ProfileSidebar() {
       <Header />
       <div className="layout">
         <div className="sidebar">
-          <a className="toggle-button">Quản lý cá nhân</a>
+          <a className="toggle-button">🏡 Quản lý cá nhân</a>
           <ul className="sidebar-menu">
-            <li>
+            <li className={`sidebar-link ${
+                  selectedItem === "menu-item-1" ? "selected" : ""
+                }`}>
               <Link
                 to="./profile"
-                className={`sidebar-link ${
-                  selectedItem === "menu-item-1" ? "selected" : ""
-                }`}
+                
                 onClick={() => handleItemClick("menu-item-1")}
               >
-                Profile
+                👤 Profile
               </Link>
             </li>
-            <li>
+            <li className={`sidebar-link ${
+                  selectedItem === "menu-item-2" ? "selected" : ""
+                }`}>
               <Link
                 to="./comic-manage"
-                className={`sidebar-link ${
-                  selectedItem === "menu-item-2" ? "selected" : ""
-                }`}
+                
                 onClick={() => handleItemClick("menu-item-2")}
               >
-                Truyện của tôi
+                📓 Truyện của tôi
               </Link>
             </li>
-            <li><Link
+            <li className={`sidebar-link ${
+                  selectedItem === "menu-item-3" ? "selected" : ""
+                }`}><Link
                 to="./wallet"
-                className={`sidebar-link ${
-                  selectedItem === "menu-item-3" ? "selected" : ""
-                }`}
+                
+                
                 onClick={() => handleItemClick("menu-item-3")}
               >
-                Ví của tôi
+                🗃️ Ví của tôi
               </Link></li>
-            {/* <li>
+            <li className={`sidebar-link ${
+                  selectedItem === "menu-item-4" ? "selected" : ""
+                }`}>
               <Link
-                to="/menu-item-3"
-                className={`sidebar-link ${
-                  selectedItem === "menu-item-3" ? "selected" : ""
-                }`}
-                onClick={() => handleItemClick("menu-item-3")}
+                to="/statistic"
+                
+                
+                onClick={() => handleItemClick("menu-item-4")}
               >
-                Menu Item 3
+                📶 Thống kê
               </Link>
-            </li> */}
+            </li>
             {/* Add more menu items as needed */}
           </ul>
         </div>

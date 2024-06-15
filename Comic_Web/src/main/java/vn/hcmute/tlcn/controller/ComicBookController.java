@@ -15,6 +15,7 @@ import vn.hcmute.tlcn.repository.ComicBookRepository;
 import vn.hcmute.tlcn.service.IComicBookService;
 import vn.hcmute.tlcn.utils.Converter;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -66,7 +67,7 @@ public class ComicBookController {
     @PostMapping("user/comicbooks")
     ResponseEntity<?> addComic(@RequestParam("comicName") String comicName,
                                @RequestParam("genreIds") List<String> genresId, @RequestParam("discription") String discription,
-                               @RequestParam("image") MultipartFile image, Authentication authentication) {
+                               @RequestParam("image") MultipartFile image, Authentication authentication) throws IOException {
         if (authentication != null) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
@@ -176,4 +177,5 @@ public class ComicBookController {
     Page<ComicBookDTO> getComicLatestUpdate(@RequestParam int indexPage) {
         return service.getBookOrderByUpdateDate(indexPage);
     }
+
 }

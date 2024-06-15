@@ -3,17 +3,21 @@ package vn.hcmute.tlcn.serviceimple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import vn.hcmute.tlcn.entity.Announce;
 import vn.hcmute.tlcn.entity.Chapter;
 import vn.hcmute.tlcn.entity.Comment;
 import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.entity.User;
 import vn.hcmute.tlcn.model.CommentDTO;
+import vn.hcmute.tlcn.repository.AnnounceRepository;
 import vn.hcmute.tlcn.repository.ChapterRepository;
 import vn.hcmute.tlcn.repository.CommentRepository;
 import vn.hcmute.tlcn.repository.UserRepository;
 import vn.hcmute.tlcn.service.ICommentService;
 import vn.hcmute.tlcn.utils.Converter;
+import vn.hcmute.tlcn.utils.GenerateId;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,11 +29,17 @@ public class CommentServiceImple implements ICommentService {
     @Autowired
     private Converter converter;
     @Autowired
+    private GenerateId generateId;
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private ChapterRepository chapterRepository;
     @Autowired
     private CommentRepository commentRepository;
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+    @Autowired
+    private AnnounceRepository announceRepository;
     @Override
     public ResponseEntity<ResponseObject> addComment(String username, String chapterId, String content) {
         Optional<User>optionalUser=userRepository.findOneByUserName(username);
@@ -41,6 +51,17 @@ public class CommentServiceImple implements ICommentService {
         Chapter chapter=optionalChapter.get();
         Comment comment=new Comment(user,chapter,new Date(),content);
         CommentDTO commentDTO=converter.convertEntityToDto(commentRepository.save(comment));
+        String notificationContent=username +" vừa bình luận về truyện của bạn với nội dung \""+content+"\"" ;
+        Announce announce=new Announce();
+        announce.setCreatedAt(new Date());
+        announce.setUser(chapter.getComicBook_Id().getActorId());
+        announce.setRead(false);
+        announce.setType("cmt");
+        announce.setId(generateId.generateId());
+        announce.setContent(notificationContent);
+        announce.setLinkTo("/chapter/"+comment.getChapter().getId()+"?commentId="+comment.getId());
+        simpMessagingTemplate.convertAndSendToUser(chapter.getComicBook_Id().getActorId().getUserName(),"/queue/notifications",announce);
+        announceRepository.save(announce);
         return ResponseEntity.ok(new ResponseObject(true,"Comment Success!",commentDTO));
     }
 

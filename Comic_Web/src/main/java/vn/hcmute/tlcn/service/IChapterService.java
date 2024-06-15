@@ -10,5 +10,7 @@ public interface IChapterService {
     List<ChapterDTO> getChapterByComic(String comicId);
     ResponseEntity<ResponseObject> addChapter(String username, String chapterName, String comicId);
     int deleteChapter(String chapterId,String username);
+    List<ChapterDTO> getChaptersByChapter(String chapterId);
     ResponseEntity<ResponseObject> updateChapter(String username,String chapterId,String newChapterName,int newOrdinalNumber);
+    ResponseObject publicChapter(String username,String chapterId);
 }

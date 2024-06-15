@@ -1,5 +1,6 @@
 package vn.hcmute.tlcn.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import vn.hcmute.tlcn.entity.User;
 
 import java.text.SimpleDateFormat;
@@ -14,14 +15,16 @@ public class ComicBookDTO {
 
     private UserDTO actor;
     private int view;
+    private int preview;
     private float rate;
-
+    @DateTimeFormat(pattern = "yyyy/MM/dd")
     private Date publishDate;
-
+    @DateTimeFormat(pattern = "yyyy/MM/dd")
     private Date updateDate;
     private int status;
     private String image;
     private String discription;
+    private boolean open;
 
 
     private List<GenreDTO> genres=new ArrayList<>();
@@ -37,7 +40,7 @@ public class ComicBookDTO {
     public ComicBookDTO() {
     }
 
-    public ComicBookDTO(String id, String name, Boolean isPremium, UserDTO actorId, int view, float rate, Date publishDate, Date updateDate, int status,String discription,String image) {
+    public ComicBookDTO(String id, String name, Boolean isPremium, UserDTO actorId, int view, float rate, Date publishDate, Date updateDate, int status,String discription,String image,int preview) {
         this.id = id;
         this.name = name;
         this.isPremium = isPremium;
@@ -49,8 +52,16 @@ public class ComicBookDTO {
         this.status = status;
         this.image=image;
         this.discription=discription;
+        this.preview=preview;
     }
 
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
+    }
 
     public String getId() {
         return id;
@@ -139,4 +150,11 @@ public class ComicBookDTO {
         this.image = image;
     }
 
+    public int getPreview() {
+        return preview;
+    }
+
+    public void setPreview(int preview) {
+        this.preview = preview;
+    }
 }

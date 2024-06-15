@@ -1,4 +1,4 @@
-import Breadcrumb from "../Breadcrumb";
+// import Breadcrumb from "../Breadcrumb";
 import Comment from "../Comment";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
@@ -6,6 +6,7 @@ import API_URL from "../../config/config";
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { checkAuth } from "../../security/Authentication";
+import { ReactSortable } from "react-sortablejs";
 
 const ComicReadingPage = () => {
   const { chapterId } = useParams();
@@ -66,24 +67,22 @@ const ComicReadingPage = () => {
   }, [chapterId]);
 
   useEffect(() => {
-    if (imageList.length > 0) {
-      const comic = imageList[0].chapter.comicBook_Id;
-      const getChapterByComic = async () => {
-        try {
-          const response = await axios.get(`${API_URL}/chapters/${comic.id}`);
-          setChapterList(response.data.data);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      getChapterByComic();
-    }
-  }, [imageList]);
+    const getChaptersComic = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/chaptersByChapter/${chapterId}`);
+        setChapterList(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getChaptersComic();
+
+  }, []);
 
   const insertHistoryReading = async (chapterId) => {
     try {
       if (checkAuth) {
-        const response = await axios.post(
+        await axios.post(
           `${API_URL}/user/history_reading`,
           { chapterId: chapterId },
           {
@@ -99,6 +98,9 @@ const ComicReadingPage = () => {
       console.log(error);
     }
   };
+  const handleOrderChange = (newList) => {
+    setImageList(newList)
+  }
 
   return (
     <>
@@ -107,20 +109,22 @@ const ComicReadingPage = () => {
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
+
               <div className="anime__video__player__container">
                 {!premiumLimited ? (
-                  imageList &&
-                  imageList.map((item) => (
-                    <div className="anime__video__playerr" key={item.id}>
-                      <img key={item.id} src={item.link} alt="aaa" />
-                    </div>
-                  ))
+         
+                    imageList&&imageList.map((item) => (
+                      <div className="anime__video__playerr" key={item.id}>
+                        <img key={item.id} src={item.link} alt="aaa" />
+                      </div>
+                    ))
                 ) : (
                   <div className="anime__video__playerr">
                     <img src={imgOnlyPemiumUrl} alt="aaa" />
                   </div>
                 )}
               </div>
+
 
               <div className="anime__details__episodes">
                 <div className="section-title">
@@ -140,8 +144,12 @@ const ComicReadingPage = () => {
             </div>
           </div>
           <div className="row">
+
             <div className="col-lg-8">
+
               <Comment chapterId={chapterId} />
+
+
             </div>
           </div>
         </div>

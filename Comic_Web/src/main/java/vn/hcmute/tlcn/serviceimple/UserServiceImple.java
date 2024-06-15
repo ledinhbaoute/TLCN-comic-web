@@ -3,6 +3,7 @@ package vn.hcmute.tlcn.serviceimple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,6 +51,12 @@ public class UserServiceImple implements IUserService {
     EmailService emailService;
     @Autowired
     OTPManager otpManager;
+    @Autowired
+    SimpMessagingTemplate simpMessagingTemplate;
+    @Autowired
+    FollowRepository followRepository;
+    @Autowired
+    AnnounceRepository announceRepository;
 
     @Override
     public UserDTO getUser(String username) {
@@ -82,14 +89,14 @@ public class UserServiceImple implements IUserService {
         return check;
     }
     @Override
-    public ResponseObject register(String name, String email, String username, String pass, String conFirmPass) {
+    public ResponseObject register(String name, String email, String username,Date birthDate, String pass, String conFirmPass) {
         User user;
         UserDTO userDTO = new UserDTO();
         int check = checkRegisterCondition(username, pass, conFirmPass, email);
         if (check == 0) {
             String passwordEncode = passwordEncoder.encode(pass);
             user = new User(generateId.generateId(), name, "", email, "+84xxx",
-                    username, passwordEncode,false);
+                    username, passwordEncode,false,new Date(),birthDate);
 //            userDTO = converter.convertEntityToDto(userRepository.saveAndFlush(user));
             OTP otp = emailService.generateOtp();
             emailService.sendOtpEmail(email, "Verification OTP!", otp);
@@ -227,16 +234,51 @@ public class UserServiceImple implements IUserService {
         Optional<User> optionalUser = userRepository.findOneByUserName(username);
         User user = optionalUser.get();
         String currentAvt = user.getAvatar();
+        List<Follower>followers=followRepository.findByUser_UserName(username);
         try {
+
             if (currentAvt.equals("")) {
-                String newAvt = imageStorageService.storeFile(file);
+                String newAvt = imageStorageService.storeToCloudinary(file);
                 user.setAvatar(newAvt);
                 user = userRepository.save(user);
+                User finalUser1 = user;
+                followers.forEach(follower ->
+                {
+                    String content=username+ "vừa cập nhật ảnh đại diện";
+                    Announce announce=new Announce();
+                    announce.setId(generateId.generateId());
+                    announce.setUser(follower.getFollower());
+                    announce.setContent(content);
+                    announce.setCreatedAt(new Date());
+                    announce.setRead(false);
+                    announce.setType("avt");
+                    announce.setLinkTo("/user/"+ finalUser1.getId());
+                    simpMessagingTemplate.convertAndSendToUser(follower.getFollower().getUserName(),"/queue/notifications",announce);
+
+                    announceRepository.save(announce);
+                });
+
                 return ResponseEntity.ok(new ResponseObject(true, "Update Avatar Success!", user));
             } else {
-                String newAvt = imageStorageService.storeFile(file);
+                String newAvt = imageStorageService.storeToCloudinary(file);
                 user.setAvatar(newAvt);
                 user = userRepository.save(user);
+                User finalUser = user;
+                followers.forEach(follower ->
+                {
+                    String content=username+ " vừa cập nhật ảnh đại diện";
+                    Announce announce=new Announce();
+                    announce.setId(generateId.generateId());
+                    announce.setUser(follower.getFollower());
+                    announce.setContent(content);
+                    announce.setCreatedAt(new Date());
+                    announce.setRead(false);
+                    announce.setType("avt");
+                    announce.setLinkTo("/user/"+ finalUser.getId());
+                    simpMessagingTemplate.convertAndSendToUser(follower.getFollower().getUserName(),"/queue/notifications",announce);
+
+                    announceRepository.save(announce);
+                });
 //                imageStorageService.deleteFile(currentAvt);
                 return ResponseEntity.ok(new ResponseObject(true, "Update Avatar Success!", user));
             }
@@ -280,7 +322,7 @@ public class UserServiceImple implements IUserService {
 
             wallet.setBalance(wallet.getBalance() - packagePremium.getCost());
             walletRepository.save(wallet);
-            Transaction transaction = new Transaction(wallet, "Register Premium " + packagePremium.getDuration() + " days", "", (packagePremium.getCost())*(-1), new Date(), 2);
+            Transaction transaction = new Transaction(wallet, "Đăng ký gói premium " + packagePremium.getDuration() + " ngày", "", (packagePremium.getCost())*(-1), new Date(), 2,wallet.getBalance());
             transactionRepository.save(transaction);
             return new ResponseObject(true, "Register Premium Success!", userPremium);
         } catch (Exception e) {

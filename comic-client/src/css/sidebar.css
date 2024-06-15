@@ -2,6 +2,7 @@
   display: flex;
   flex: 1;
   padding-bottom: 10px; 
+  
 }
 
 .sidebar {
@@ -9,6 +10,7 @@
   background-color: #f0f0f0;
   transition: transform 0.3s ease-in-out;
   overflow-y: auto;
+  border-radius: 20px;
 }
 
 .toggle-button {
@@ -25,6 +27,7 @@
 .sidebar-menu li {
   padding: 10px;
   border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
 }
 
 .sidebar-link {
@@ -33,7 +36,7 @@
 }
 
 .sidebar-link.selected {
-  background-color: #ccc;
+  background-color: #1c0452;
 }
 
 .content {

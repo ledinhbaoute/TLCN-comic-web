@@ -7,6 +7,8 @@ import { Button } from "react-bootstrap";
 import { Dialog, Menu, MenuItem } from "@mui/material";
 import ConfirmDialog from "./dialogs/ConfirmDialog";
 import AlertDialog from "./dialogs/AlertDialog";
+import { useLocation } from "react-router-dom";
+import Scrollbars from "react-custom-scrollbars-2";
 import {
   Button as Button2,
   List,
@@ -120,6 +122,19 @@ const Comment = (props) => {
     setOpenDeleteConfirm(true);
     setAnchorEl(null);
   };
+  
+  const location = useLocation();
+  const commentId = new URLSearchParams(location.search).get('commentId');
+  
+  useEffect(() => {
+    if (commentId) {
+      const commentElement = document.getElementById(commentId);
+      if (commentElement) {
+        commentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        commentElement.focus();
+      }
+    }
+  });
 
   //
   //
@@ -159,7 +174,7 @@ const Comment = (props) => {
 
   const reportComment = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${API_URL}/user/report_comment`,
         { commentId: selectedComment.id, reasonId: checked.join(",") },
         {
@@ -193,7 +208,7 @@ const Comment = (props) => {
         <div className="section-title">
           <h5>Bình luận</h5>
         </div>
-
+        
         <AlertDialog
           open={alertDialogOpen}
           onClose={() => setAlertDialogOpen(false)}
@@ -259,12 +274,15 @@ const Comment = (props) => {
           message={"Bạn có chắc muốn xóa bình luận?"}
           title="Xóa bình luận"
         ></ConfirmDialog>
+         <Scrollbars
+                style={{ height: 300 }}>
         {commentList.length ? (
           commentList.map((item) => (
-            <div key={item.id} className="anime__review__item">
+            
+            <div id={item.id} key={item.id} className="anime__review__item">
               <div className="anime__review__item__pic">
                 <img
-                  src={`http://localhost:8081/api/v1/files/${item.user.avatar}`}
+                  src={item.user.avatar}
                   alt=""
                 />
               </div>
@@ -297,6 +315,7 @@ const Comment = (props) => {
                 <p>{item.content}</p>
               </div>
             </div>
+            
           ))
         ) : (
           <div className="anime__review__item">
@@ -304,7 +323,10 @@ const Comment = (props) => {
               <p>Chưa có bình luận</p>
             </div>
           </div>
+          
         )}
+        </Scrollbars>
+    
       </div>
       <div className="anime__details__form">
         <div className="section-title">

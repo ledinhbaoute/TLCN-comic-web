@@ -39,12 +39,11 @@ public class TransactionServiceImple {
 		if (!optionalWallet.isPresent())
 			return;
 		Wallet wallet = optionalWallet.get();
-		Transaction transaction = new Transaction(wallet, "Deposit " + amount + " to the wallet ", "", amount,
-				new Date(), 1);
 		try {
-			transactionRepository.save(transaction);
 			wallet.setBalance(wallet.getBalance() + amount);
-
+			Transaction transaction = new Transaction(wallet, "Nạp tiền vào ví " , "", amount,
+					new Date(), 1,wallet.getBalance());
+			transactionRepository.save(transaction);
 
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());

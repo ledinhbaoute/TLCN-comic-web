@@ -30,6 +30,7 @@ import Wallet from './components/Wallet';
 import PaymentInfoPage from './components/PaymentInfoPage';
 import PremiumRoute from './security/PremiumRoute';
 import PublicProfile from './components/PublicProfile';
+import Statistic from './components/Statistic';
 
 
 function App() {
@@ -58,6 +59,7 @@ function App() {
           <Route element={<ProfileSidebar />}>
             <Route path='/profile' Component={Profile} />
             <Route path='/comic-manage' Component={ComicManage} />
+            <Route path='/statistic' Component={Statistic} />
             <Route path='/chapter-manage/:comicId' Component={ChapterManage} />
             <Route path='/wallet' Component={Wallet} />
             <Route path='/wallet/payment-info' Component={PaymentInfoPage} />

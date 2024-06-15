@@ -1,5 +1,7 @@
 package vn.hcmute.tlcn.serviceimple;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -20,12 +22,15 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Stream;
 
 @Service
 public class ImageStorageService implements IStorageService {
     private final Path storageFolder = Paths.get("uploads");
+    @Autowired
+    private Cloudinary cloudinary;
 
     //    public ImageStorageService(String path) {
 //        if (!Files.exists(this.storageFolder)) {
@@ -78,6 +83,11 @@ public class ImageStorageService implements IStorageService {
         } catch (IOException exception) {
             throw new RuntimeException("Failed to store file", exception);
         }
+    }
+    public String storeToCloudinary(MultipartFile file) throws IOException {
+        Map r=cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap("resource_type","auto"));
+        String img=r.get("secure_url").toString();
+        return img;
     }
 
     @Override

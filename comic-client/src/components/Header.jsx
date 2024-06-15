@@ -7,8 +7,8 @@ import { checkAuth } from "../security/Authentication";
 import AppContext from "../context/AppContext";
 import axios from "axios";
 import API_URL from "../config/config";
-import ReactSearchBox from "react-search-box";
 import SearchResutlItem from "./SearchResultItem";
+import NotificationsPopover from "./notifications-popover";
 
 const Header = () => {
   const appContext = useContext(AppContext);
@@ -20,7 +20,6 @@ const Header = () => {
   useEffect(() => {
     if (keyWord !== "") {
       searchComic(keyWord)
-      console.log(searchingList);
     }
   }
     , [keyWord]);
@@ -174,12 +173,10 @@ const Header = () => {
           <div className="col-lg-2">
 
             <div className="header__right">
-
-
-
-
+                        
               {checkAuth() ? (
                 <a>
+                  <NotificationsPopover/>  
                   <Link to="./profile">
                     <span className="icon_profile"></span>
                   </Link>

@@ -4,6 +4,7 @@ import axios from "axios";
 import API_URL from "../config/config";
 import AlertDialog from "./dialogs/AlertDialog";
 import ConfirmDialog from "./dialogs/ConfirmDialog";
+import { format } from "date-fns";
 import Cookies from "js-cookie";
 import {
   Dialog,
@@ -14,6 +15,7 @@ import {
   DialogContentText,
   Button,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 
 // Component hiển thị thông tin ví
 const Wallet = () => {
@@ -93,7 +95,7 @@ const Wallet = () => {
       getRcvDonates();
       getSendDonates();
     }
-  }, []);
+  }, [wallet.balance]);
 
   //
   //Phân trang bảng transactions
@@ -276,7 +278,7 @@ const Wallet = () => {
         }}
         message={alertMessage}
       />
-      <p>Số dư: {wallet.balance}</p>
+      <p>Số dư: {Number(wallet.balance).toLocaleString()} đ</p>
       <p>Ngày tạo: {wallet.createdAt}</p>
       <h2>Lịch sử giao dịch</h2>
       <button
@@ -329,8 +331,9 @@ const Wallet = () => {
           <tr>
             <th>ID</th>
             <th>Nội dung</th>
-            <th>Số tiền giao động</th>
+            <th>Số tiền</th>
             <th>Thời gian</th>
+            <th>Số dư</th>
           </tr>
         </thead>
         <tbody>
@@ -338,8 +341,9 @@ const Wallet = () => {
             <tr key={transaction.id}>
               <td>{transaction.id}</td>
               <td>{transaction.title}</td>
-              <td>{transaction.amount}</td>
-              <td>{transaction.createdAt}</td>
+              <td>{Number(transaction.amount).toLocaleString()}đ</td>
+              <td>{format(transaction.createdAt,'yyyy/MM/dd HH:mm:ss')}</td>
+              <td>{Number(transaction.balance).toLocaleString()} đ</td>
             </tr>
           ))}
         </tbody>
@@ -373,10 +377,16 @@ const Wallet = () => {
           {currentrcvDonates.map((donate) => (
             <tr key={donate.id}>
               <td>{donate.id}</td>
-              <td>{donate.donateWallet.user.name}</td>
+              
+              <td>
+                <Link to={`/user/${donate.donateWallet.user.id}`}>
+                <img src={donate.donateWallet.user.avatar} alt="aaa"style={{height:40,width:40,borderRadius:20}}/>
+                </Link>
+                {donate.donateWallet.user.name}
+                </td>
               <td>{donate.message}</td>
-              <td>{donate.amount}</td>
-              <td>{donate.donateDate}</td>
+              <td>{Number(donate.amount).toLocaleString()} đ</td>
+              <td>{format(donate.donateDate,'yyyy/MM/dd HH:mm:ss')}</td>
             </tr>
           ))}
         </tbody>
@@ -400,7 +410,8 @@ const Wallet = () => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Người nhận</th>
+            <th>
+              Người nhận</th>
             <th>Tin nhắn</th>
             <th>Số tiền</th>
             <th>Thời gian</th>
@@ -410,10 +421,16 @@ const Wallet = () => {
           {currentSendDonates.map((donate) => (
             <tr key={donate.id}>
               <td>{donate.id}</td>
-              <td>{donate.receiverWallet.user.name}</td>
+              <td>
+              <Link to={`/user/${donate.receiverWallet.user.id}`} >
+              <img src={donate.receiverWallet.user.avatar} alt="aaa" style={{height:40,width:40,borderRadius:20}}/>
+              </Link>
+                {donate.receiverWallet.user.name}
+                </td>
+
               <td>{donate.message}</td>
-              <td>{donate.amount}</td>
-              <td>{donate.donateDate}</td>
+              <td>{Number(donate.amount).toLocaleString()} đ</td>
+              <td>{format(donate.donateDate,'yyyy/MM/dd HH:mm:ss')}</td>
             </tr>
           ))}
         </tbody>

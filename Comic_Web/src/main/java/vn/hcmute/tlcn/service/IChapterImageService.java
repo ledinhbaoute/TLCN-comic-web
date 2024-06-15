@@ -12,5 +12,7 @@ public interface IChapterImageService {
     ResponseEntity<ResponseObject> addImageChapter(String username, String chapterId, MultipartFile file);
 //    public byte[] readFileContent(String fileName);
     int deleteChapterImg(String username,String fileName);
+//    ResponseEntity<?> changeOrderImageList(String username, String chapterId,List<ChapterImageDTO>newOrderList);
+    ResponseEntity<?> changeOrderImageList(String username, String chapterId,List<MultipartFile>newOrderList);
 
 }

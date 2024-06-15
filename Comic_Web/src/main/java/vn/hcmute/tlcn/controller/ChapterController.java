@@ -28,6 +28,15 @@ public class ChapterController {
         } else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Cannot find Chapters with comicId " + comicId, ""));
     }
+    @GetMapping("chaptersByChapter/{chapterId}")
+    ResponseEntity<ResponseObject> getChaptersByChapter(@PathVariable String chapterId) {
+        List<ChapterDTO> chapterList = chapterServiceImple.getChaptersByChapter(chapterId);
+        if (!chapterList.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query Successful!", chapterList));
+
+        } else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Cannot find Chapters with chapterId " + chapterId, ""));
+    }
 
     @PostMapping("/user/chapters")
     ResponseEntity<?> addChapter(@RequestParam("comicId") String comicId,
@@ -76,6 +85,11 @@ public class ChapterController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseObject(false, e.getMessage(), ""));
             }
         } return ResponseEntity.status(401).body("Unauthorized!");
+    }
+    @PostMapping("user/publicChapter")
+    ResponseEntity<?>publicChapter(Authentication authentication, @RequestParam String chapterId){
+        UserDetails userDetails= (UserDetails) authentication.getPrincipal();
+        return ResponseEntity.ok().body(chapterServiceImple.publicChapter(userDetails.getUsername(),chapterId));
     }
 
 

@@ -27,13 +27,14 @@ const PublicProfile = () => {
   const [comics, setComics] = useState([]);
   const [openAlertDialog, setAlertDialogOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [follow, setFollow] = useState(false)
 
   const getUser = async () => {
     try {
       const response = await axios.get(`${API_URL}/findUser/${userId.userId}`);
-      console.log(response.data);
       if (response.data) {
         setUser(response.data);
+        checkFollow(response.data.userName)
       } else {
         navigate("/NotFound");
       }
@@ -61,6 +62,7 @@ const PublicProfile = () => {
     } else {
       getUser();
       getComics();
+      
     }
   }, [userId]);
 
@@ -75,7 +77,6 @@ const PublicProfile = () => {
     setCurrentPage(page);
   };
 
-  //
   //Donate
 
   const [openDonateDialog, setOpenDonateDialog] = useState(false);
@@ -83,6 +84,7 @@ const PublicProfile = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [donateMessage, setDonateMessage] = useState("");
+
 
   const handleAmountChange = (e) => {
     const inputValue = e.target.value;
@@ -103,6 +105,77 @@ const PublicProfile = () => {
   };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleButtonFollowClick = () => {
+    if (follow) {
+      unfollow();
+    } else {
+      addfollow();
+    }
+  };
+
+
+  const checkFollow = async (userName) => {
+    try {
+      const respone = await axios.get(
+        `${API_URL}/user/checkFollow?username=${userName}`,
+        {
+          headers: {
+            Authorization: "Bearer " + Cookies.get("access_token"),
+          },
+        }
+      );
+      setFollow(respone.data)
+      
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+    
+
+  const addfollow = async () => {
+    try {
+      const respone = await axios.post(
+        `${API_URL}/user/follows`,
+        {
+          username: user.userName,
+        },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: "Bearer " + Cookies.get("access_token"),
+          },
+        }
+      );
+      if (respone.data.status === true) {
+        setFollow(true)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const unfollow = async () => {
+    try {
+      const respone = await axios.delete(
+        `${API_URL}/user/follows`,
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: "Bearer " + Cookies.get("access_token"),
+          },
+          data: {
+            username: user.userName,
+          }
+        }
+      );
+      if (respone.data.status === true) {
+        setFollow(false)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const donate = async () => {
     try {
@@ -134,10 +207,10 @@ const PublicProfile = () => {
     if (Number(amount) < 1000) {
       window.alert("Số tiền tối thiểu là 1000VNĐ");
     }
-      else if(Number(amount)>1000000) {
-        window.alert("Số tiền donate tối đa 1 000 000 trong một lần");
-      
-    } else if(donateMessage.length>1000){
+    else if (Number(amount) > 1000000) {
+      window.alert("Số tiền donate tối đa 1 000 000 trong một lần");
+
+    } else if (donateMessage.length > 1000) {
       window.alert("Tin nhắn quá dài, tối đa 1000 ký tự");
     } else {
       donate();
@@ -212,7 +285,8 @@ const PublicProfile = () => {
         <div style={{ marginTop: "20px", marginBottom: "20px" }}>
           <img
             className="profile-avatar"
-            src={`${API_URL}/files/${user.avatar}`}
+            src={user.avatar}
+            style={{width:150,height:150,borderRadius:75}}
             alt="Avatar"
           />
           <h2 className="profile-username">{user.name}</h2>
@@ -223,6 +297,25 @@ const PublicProfile = () => {
             >
               Ủng hộ
             </Button>
+            {!follow && (
+              <Button
+
+                variant="contained"
+                onClick={handleButtonFollowClick}
+              >
+                Theo dõi
+              </Button>
+            )}
+            {follow && (
+              <Button
+
+                variant="contained"
+                onClick={handleButtonFollowClick}
+              >
+                Đã theo dõi
+              </Button>
+            )}
+
           </div>
         </div>
 

@@ -5,8 +5,6 @@ import java.util.Date;
 
 public class TransactionDTO {
     private int id;
-
-    private WalletDTO wallet;
     private String title;
     private String content;
 
@@ -14,12 +12,13 @@ public class TransactionDTO {
     private int amount;
 
     private Date createdAt;
+    private int balance;
 
     public TransactionDTO() {
     }
 
-    public TransactionDTO(int id,WalletDTO wallet, String title, String content, int amount, Date createdAt, int type) {
-        this.wallet = wallet;
+    public TransactionDTO(int id, String title, String content, int amount, Date createdAt, int type,int balance) {
+        this.balance=balance;
         this.title = title;
         this.content = content;
         this.amount = amount;
@@ -27,6 +26,8 @@ public class TransactionDTO {
         this.type=type;
         this.id=id;
     }
+
+
 
     public void setId(int id) {
         this.id = id;
@@ -53,13 +54,12 @@ public class TransactionDTO {
         return id;
     }
 
-
-    public WalletDTO getWallet() {
-        return wallet;
+    public int getBalance() {
+        return balance;
     }
 
-    public void setWallet(WalletDTO wallet) {
-        this.wallet = wallet;
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
 
     public String getTitle() {

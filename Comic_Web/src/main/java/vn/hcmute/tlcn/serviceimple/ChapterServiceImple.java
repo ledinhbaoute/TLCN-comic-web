@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ChapterServiceImple implements IChapterService {
@@ -49,6 +50,15 @@ public class ChapterServiceImple implements IChapterService {
             chapterDTOS.add(converter.convertEntityToDto(chapter));
         }
         return chapterDTOS;
+    }
+    @Override
+    public List<ChapterDTO> getChaptersByChapter(String chapterId){
+        Chapter chapter=chapterRepository.findById(chapterId).orElse(null);
+        if (chapter == null) {
+            throw new IllegalArgumentException("Chapter not found");
+        }
+       List<Chapter>chapters=chapterRepository.findByComicBook_IdOrderByOrdinalNumberAsc(chapter.getComicBook_Id().getId());
+        return chapters.stream().map(chapter1 -> converter.convertEntityToDto(chapter1)).collect(Collectors.toList());
     }
 
     public int checkCondition(String username, String comicId) {
@@ -114,6 +124,18 @@ public class ChapterServiceImple implements IChapterService {
             chapter.setChapterName(newChapterName);
             chapter.setOrdinalNumber(newOrdinalNumber);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true,"Update Success!",chapterRepository.save(chapter)));
+
+    }
+    @Override
+    public ResponseObject publicChapter(String username,String chapterId){
+        User user=userRepository.findOneByUserName(username).orElse(null);
+        Chapter chapter=chapterRepository.findById(chapterId).orElse(null);
+        if(chapter==null)
+            return new ResponseObject(false,"Chapter not exist!","");
+        if(!user.getUserName().equals(chapter.getComicBook_Id().getActorId().getUserName()))
+            return new ResponseObject(false,"Cannot public orther people chapter!","");
+        chapter.setOpen(!chapter.isOpen());
+        return new ResponseObject(true,"Success!",chapterRepository.save(chapter));
 
     }
 }

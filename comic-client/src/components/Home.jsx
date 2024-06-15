@@ -145,7 +145,7 @@ const Home = () => {
                 </div>
               </div> */}
               <div className="recent__product">
-                <div className="row">
+                <div className="row" >
                   <div className="col-lg-8 col-md-8 col-sm-8">
                     <div className="section-title">
                       <h4>Truyện mới cập nhật</h4>
@@ -159,7 +159,7 @@ const Home = () => {
                     </div>
                   </div>
                 </div>
-                <div className="row">
+                <div className="row" >
                   {listLatestUpdate && listLatestUpdate.map((item, index) => (
                     <ComicItem key={index} item={item}></ComicItem>
                   ))}

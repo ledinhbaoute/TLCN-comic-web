@@ -10,6 +10,7 @@ public class ChapterDTO {
      private Date publishDate;
 
     private int ordinalNumber;
+    private boolean open;
 
     public ChapterDTO() {
     }
@@ -28,6 +29,14 @@ public class ChapterDTO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
     }
 
     public String getChapterName() {

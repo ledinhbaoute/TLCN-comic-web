@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Rating } from 'react-simple-star-rating'
 import { checkAuth } from "../security/Authentication";
 import Cookies from 'js-cookie';
+import Scrollbars from "react-custom-scrollbars-2";
 const Review = (props) => {
     const ratingList = props.ratingList
     const comicId=props.comicId
@@ -70,13 +71,15 @@ const Review = (props) => {
                 </div>
                 <div className="anime__details__title">
                  <span>LƯỢt ĐÁNH GIÁ: {ratingList.length}</span></div>
+                 <Scrollbars
+                style={{ height: 300 }}>
                 {ratingList.length ? (ratingList.map((item) => (
                     <div key={item.id} className="anime__review__item">
                         <div className="anime__review__item__pic">
-                            <img src={`http://localhost:8081/api/v1/files/${item.user.avatar}`} alt="" />
+                            <img src={item.user.avatar} alt="" />
                         </div>
                         <div className="anime__review__item__text">
-                            <h6>{item.user.name}    <span>{item.score}⭐</span></h6>
+                            <h6>{item.user.name}<span>{item.score}⭐</span></h6>
                             <p>{item.comment}</p>
                         </div>
                     </div>
@@ -87,7 +90,7 @@ const Review = (props) => {
                         <p>Chưa có đánh giá</p>
                     </div>
                 </div>)}
-
+                </Scrollbars>
 
             </div>
             <div className="anime__details__form">

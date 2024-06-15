@@ -1,6 +1,7 @@
 package vn.hcmute.tlcn.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +29,7 @@ import vn.hcmute.tlcn.utils.Converter;
 import vn.hcmute.tlcn.utils.ValidatePassword;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -74,9 +76,10 @@ public class UserController {
     @PostMapping("/register")
     ResponseEntity<ResponseObject> registerUser(@RequestParam("name") String name, @RequestParam("email") String email,
                                                 @RequestParam("username") String username, @RequestParam("password") String pass,
-                                                @RequestParam("confirmPass") String confirmPass) {
+                                                @RequestParam("confirmPass") String confirmPass,
+                                                @RequestParam("birthDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date birthDate) {
 
-        ResponseObject responseObject = userServiceImple.register(name, email, username, pass, confirmPass);
+        ResponseObject responseObject = userServiceImple.register(name, email, username,birthDate, pass, confirmPass);
         return ResponseEntity.status(HttpStatus.OK).body(responseObject);
     }
 

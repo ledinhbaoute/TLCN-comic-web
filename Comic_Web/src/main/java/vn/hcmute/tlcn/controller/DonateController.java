@@ -5,7 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import vn.hcmute.tlcn.model.DonateDTO;
 import vn.hcmute.tlcn.serviceimple.DonateServiceImple;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -36,5 +39,9 @@ public class DonateController {
             return ResponseEntity.ok(donateServiceImple.getReceivedDonateHistory(userDetails.getUsername()));
         }
         return ResponseEntity.status(401).body("Unauthorized!");
+    }
+    @GetMapping("/hihihi")
+    List<DonateDTO>list(){
+        return donateServiceImple.getAll();
     }
 }

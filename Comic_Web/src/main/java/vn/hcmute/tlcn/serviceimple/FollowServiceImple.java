@@ -3,15 +3,20 @@ package vn.hcmute.tlcn.serviceimple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import vn.hcmute.tlcn.entity.Announce;
 import vn.hcmute.tlcn.primarykey.FollowKey;
 import vn.hcmute.tlcn.entity.Follower;
 import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.entity.User;
+import vn.hcmute.tlcn.repository.AnnounceRepository;
 import vn.hcmute.tlcn.repository.FollowRepository;
 import vn.hcmute.tlcn.repository.UserRepository;
 import vn.hcmute.tlcn.service.IFollowService;
+import vn.hcmute.tlcn.utils.GenerateId;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -20,6 +25,12 @@ public class FollowServiceImple implements IFollowService {
     UserRepository userRepository;
     @Autowired
     FollowRepository followRepository;
+    @Autowired
+    AnnounceRepository announceRepository;
+    @Autowired
+    SimpMessagingTemplate simpMessagingTemplate;
+    @Autowired
+    GenerateId generateId;
     @Override
     public ResponseEntity<ResponseObject> addFollow(String followerUserName, String userName) {
         Optional<User>optionalFollower=userRepository.findOneByUserName(followerUserName);
@@ -34,7 +45,23 @@ public class FollowServiceImple implements IFollowService {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false,"Cannot follower yourself! ",""));
         Follower follower=new Follower(userFollower,user);
         followRepository.save(follower);
-        return ResponseEntity.ok(new ResponseObject(false,"Add Follower Success!",follower));
+        String content=followerUserName +" đã theo dõi bạn";
+        Announce announce=new Announce();
+        announce.setUser(user);
+        announce.setContent(content);
+        announce.setRead(false);
+        announce.setCreatedAt(new Date());
+        announce.setType("fl");
+        announce.setLinkTo("/user/"+userFollower.getId());
+        announce.setId(generateId.generateId());
+        try {
+            simpMessagingTemplate.convertAndSendToUser(user.getUserName(),"/queue/notifications",announce);
+            announceRepository.save(announce);
+        }
+        catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+        return ResponseEntity.ok(new ResponseObject(true,"Add Follower Success!",follower));
     }
 
     @Override
@@ -58,13 +85,29 @@ public class FollowServiceImple implements IFollowService {
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false,e.getMessage(),""));
         }
-
-
     }
 
     @Override
     public List<Follower> getFollwers_User(String username) {
         return followRepository.findByUser_UserName(username);
+    }
+    @Override
+    public List<Follower> getUsers_Followers(String username) {
+        return followRepository.findByFollower_UserName(username);
+    }
 
+    @Override
+    public boolean isFollow(String username,String followerUserName) {
+        boolean f=false;
+        List<Follower>followers=getFollwers_User(username);
+        for (Follower fl:followers
+             ) {
+            if(fl.getFollower().getUserName().equals(followerUserName))
+            {
+                f=true;
+                break;
+            }
+        }
+        return f;
     }
 }

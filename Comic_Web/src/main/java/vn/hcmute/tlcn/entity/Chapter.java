@@ -27,7 +27,8 @@ public class Chapter {
     private Date publishDate;
     @Column(name = "ordinal_number")
     private int ordinalNumber;
-
+    @Column(name = "public")
+    private boolean open;
 
     public Chapter() {
     }
@@ -54,6 +55,15 @@ public class Chapter {
 
     public void setChapterName(String chapterName) {
         this.chapterName = chapterName;
+    }
+
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
     }
 
     public ComicBook getComicBook_Id() {

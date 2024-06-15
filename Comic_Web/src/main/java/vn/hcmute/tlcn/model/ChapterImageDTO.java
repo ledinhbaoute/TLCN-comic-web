@@ -2,15 +2,14 @@ package vn.hcmute.tlcn.model;
 
 public class ChapterImageDTO {
     private int id;
-    private ChapterDTO chapter;
     private String link;
 
     private int ordinalNumber;
 
     public ChapterImageDTO() {
     }
-    public ChapterImageDTO(ChapterDTO chapters, String link, int ordinalNumber) {
-        this.chapter = chapters;
+    public ChapterImageDTO( String link, int ordinalNumber) {
+
         this.link = link;
         this.ordinalNumber = ordinalNumber;
     }
@@ -23,13 +22,13 @@ public class ChapterImageDTO {
         this.id = id;
     }
 
-    public ChapterDTO getChapter() {
-        return chapter;
-    }
-
-    public void setChapter(ChapterDTO chapter) {
-        this.chapter = chapter;
-    }
+//    public ChapterDTO getChapter() {
+//        return chapter;
+//    }
+//
+//    public void setChapter(ChapterDTO chapter) {
+//        this.chapter = chapter;
+//    }
 
     public String getLink() {
         return link;

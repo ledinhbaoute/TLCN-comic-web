@@ -6,6 +6,7 @@ import vn.hcmute.tlcn.entity.ComicBook;
 import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.model.ComicBookDTO;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface IComicBookService {
@@ -15,7 +16,7 @@ public interface IComicBookService {
     List<ComicBookDTO> getComicByActor(String actorId);
     ResponseObject updateCoverImage(String username,String comicId,MultipartFile file);
 
-    ComicBookDTO addComic(String name,String username,List<String> genres,String discription, MultipartFile file);
+    ComicBookDTO addComic(String name,String username,List<String> genres,String discription, MultipartFile file) throws IOException;
     ResponseObject updateComic(String username,String comicId,String newName,List<String> genres,int newStatus,String newDescription);
     int deleteComic(String username,String comicId);
     List<ComicBookDTO>searchComicByInput(String input);
@@ -27,4 +28,5 @@ public interface IComicBookService {
     Page<ComicBookDTO> getComicByGenrePagination(String genreId,int indexPage,String sortBy);
     Page<ComicBookDTO>getBookOrderByUpdateDate(int indexPage);
     ResponseObject adminDeleteComic(String comicId);
+  //  List<ComicBookDTO>fitterSearch(String author,String genre,int status);
 }

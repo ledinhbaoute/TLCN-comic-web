@@ -32,4 +32,26 @@ public class FollowController {
         }
         return ResponseEntity.status(401).body("Unauthorized!");
     }
+    @GetMapping("user/follows")
+    ResponseEntity<?> getFollower(Authentication authentication) {
+        if (authentication != null) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+            return ResponseEntity.ok(iFollowService.getFollwers_User(userDetails.getUsername()));
+        }
+        return ResponseEntity.status(401).body("Unauthorized!");
+    }
+    @GetMapping("user/following")
+    ResponseEntity<?> getFollowing(Authentication authentication) {
+        if (authentication != null) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return ResponseEntity.ok(iFollowService.getUsers_Followers(userDetails.getUsername()));
+        }
+        return ResponseEntity.status(401).body("Unauthorized!");
+    }
+    @GetMapping ("user/checkFollow")
+    boolean checkFL(Authentication authentication,@RequestParam String username){
+        UserDetails userDetails= (UserDetails) authentication.getPrincipal();
+        return iFollowService.isFollow(username,userDetails.getUsername());
+    }
 }

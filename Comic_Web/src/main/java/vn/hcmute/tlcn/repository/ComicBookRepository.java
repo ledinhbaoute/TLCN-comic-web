@@ -16,6 +16,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook,String> {
     Page<ComicBook> findByGenres_Id(String genreId, PageRequest pageRequest);
 
     List<ComicBook>findByActor_Id(String userId);
+    List<ComicBook>findByActor_UserName(String username);
     @Query(value = "SELECT t FROM ComicBook t WHERE LOWER(t.name) LIKE LOWER(CONCAT('%', :input, '%'))")
     List<ComicBook>findByInputString(@Param("input")String input);
     List<ComicBook>findTop10ByOrderByViewDesc();

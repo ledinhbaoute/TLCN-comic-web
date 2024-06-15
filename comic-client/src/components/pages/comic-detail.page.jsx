@@ -35,7 +35,7 @@ const ComicDetailPage = () => {
         window.scrollTo({
             top: 0,
         });
-        
+
 
     }, [comicId]);
 
@@ -78,7 +78,7 @@ const ComicDetailPage = () => {
         getRatingByComic();
     }, [comicId]);
 
-    
+
 
 
     const insertHistoryReading = async (chapterId) => {
@@ -106,13 +106,30 @@ const ComicDetailPage = () => {
             <Breadcrumb currentGenre={comic} />
             <section className="anime-details spad">
                 <div className="container">
-                    <ComicDetail comic={comic}/>
+                    <ComicDetail comic={comic} />
                     <div className="anime__details__episodes">
                         <div className="section-title">
                             <h5>Danh sách Chapter</h5>
                         </div>
                         {chapterList && chapterList.map((item, index) => (
-                            <span onClick={()=>insertHistoryReading(item.id)}><Link to={`/chapter/${item.id}`} key={index}> Chapter {item.ordinalNumber} </Link></span>
+                            //<span onClick={()=>insertHistoryReading(item.id)}><Link to={`/chapter/${item.id}`} key={index}> Chapter {item.ordinalNumber} </Link></span>
+                            <span
+                                onClick={() => {
+                                    if (item.open) {
+                                        insertHistoryReading(item.id);
+                                    }
+                                }}
+
+                                className={item.open ? 'chapter-link' : 'chapter-link disabled'}
+                                key={index}
+                            >
+                                <Link
+                                    to={item.open ? `/chapter/${item.id}` : '#'}
+                                    className={item.open ? '' : 'disabled'}
+                                    style={{ pointerEvents: item.open ? 'auto' : 'none' }}
+                                >Chapter {item.ordinalNumber}</Link>
+                                {/* <Link  to={item.open ? `/chapter/${item.id}` : '#' }>Chapter {item.ordinalNumber}</Link> */}
+                            </span>
                         ))}
 
                     </div>

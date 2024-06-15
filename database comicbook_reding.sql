@@ -1,8 +1,6 @@
 CREATE DATABASE  IF NOT EXISTS `comicbooks_reading`;
 USE `comicbooks_reading`;
 
--- drop database `comicbooks_reading`
-
 CREATE TABLE `genres` (
   `id` varchar(20) NOT NULL,
   `name` nvarchar(128) NOT NULL unique,
@@ -25,7 +23,10 @@ create table `users`(
     `isLocked` tinyint(1) default 0,
     primary key (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+ALTER TABLE `users`
+ADD `created_at` date not null;
+ALTER TABLE `users`
+ADD `birthDate` date not null ;
 LOCK TABLES `users` WRITE;
 ALTER TABLE `users` DISABLE KEYS ;
 ALTER TABLE `users` ENABLE KEYS ;
@@ -40,6 +41,7 @@ CREATE TABLE `comicbooks` (
   `image` text,
   `discription` text,
   `view` int unsigned NOT NULL default 0,
+  `pre_view` int unsigned NOT NULL default 0,
   `rate` decimal(2,1) NOT NULL,
   `publish_date` date NOT NULL, 
   `update_date` date NOT NULL,
@@ -53,6 +55,10 @@ LOCK TABLES `comicbooks` WRITE;
 ALTER TABLE `comicbooks` DISABLE KEYS ;
 ALTER TABLE `comicbooks` ENABLE KEYS ;
 UNLOCK TABLES;
+ALTER TABLE `comicbooks`
+ADD `pre_view` int unsigned NOT NULL default 0;
+ALTER TABLE `comicbooks`
+ADD `public` tinyint(1) default 0;
 
 create table `comicbooks_genres`(
   `genre_id` varchar(20) NOT NULL,
@@ -88,6 +94,7 @@ create table `system_bank_account`(
     primary key (`bank_account`, `bank_name`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+alter table `system_bank_account` add `balance` int unsigned
 LOCK TABLES `system_bank_account` WRITE;
 ALTER TABLE `system_bank_account` DISABLE KEYS ;
 ALTER TABLE `system_bank_account` ENABLE KEYS ;
@@ -103,7 +110,8 @@ create table `chapters`(
     primary key (`id`),
     CONSTRAINT `fk_chapters_comicbooks` FOREIGN KEY (`comicbook_id`) REFERENCES `comicbooks` (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+ALTER TABLE `chapters`
+ADD `public` tinyint(1) default 0;
 LOCK TABLES `chapters` WRITE;
 ALTER TABLE `chapters` DISABLE KEYS ;
 ALTER TABLE `chapters` ENABLE KEYS ;
@@ -234,17 +242,21 @@ ALTER TABLE `comment_report_reasons` DISABLE KEYS ;
 ALTER TABLE `comment_report_reasons` ENABLE KEYS ;
 UNLOCK TABLES;
 
-create table `annouce`(
-	`id` int auto_increment,
+create table `announce`(
+	`id` varchar(50),
 	`receiver_id` varchar(20) not null,
     `content` text not null,
+    `created_at` timestamp(6) not null default current_timestamp(6),
+    `type` varchar(15),
+    `isRead` tinyint(1) default 0,
+    `linkTo` varchar(40),
     primary key(`id`),
-    constraint `fk_annouce_user` foreign key (`receiver_id`) references `users`(`id`)
+    constraint `fk_announce_user` foreign key (`receiver_id`) references `users`(`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-LOCK TABLES `annouce` WRITE;
-ALTER TABLE `annouce` DISABLE KEYS ;
-ALTER TABLE `annouce` ENABLE KEYS ;
+LOCK TABLES `announce` WRITE;
+ALTER TABLE `announce` DISABLE KEYS ;
+ALTER TABLE `announce` ENABLE KEYS ;
 UNLOCK TABLES;
 
 create table `package_premium`(
@@ -294,7 +306,7 @@ create table `wallets`(
     `user_id` varchar(20) not null unique,
     `balance` int default 0,
     `created_at` timestamp(6) not null default current_timestamp(6),
-     `bank_account` varchar(20) default null,
+    `bank_account` varchar(20) default null,
 	`bank_name` varchar(20) default null,
     primary key(`id`),
     constraint `fk_user_wallet` foreign key(`user_id`) references `users`(`id`)
@@ -320,6 +332,7 @@ create table `donate`(
 
 LOCK TABLES `donate` WRITE;
 ALTER TABLE `donate` DISABLE KEYS ;
+ALTER TABLE `donate` DISABLE KEYS ;
 ALTER TABLE `donate` ENABLE KEYS ;
 UNLOCK TABLES;
 
@@ -334,7 +347,8 @@ create table `transactions`(
     primary key(`id`),
     constraint `fk_wallet_transactions` foreign key(`wallet_id`) references `wallets`(`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+ALTER TABLE `transactions`
+ADD `balance` int not null;
 LOCK TABLES `transactions` WRITE;
 ALTER TABLE `transactions` DISABLE KEYS ;
 ALTER TABLE `transactions` ENABLE KEYS ;
@@ -368,6 +382,19 @@ create table `history_increase_view`(
 LOCK TABLES `history_increase_view` WRITE;
 ALTER TABLE `history_increase_view` DISABLE KEYS ;
 ALTER TABLE `history_increase_view` ENABLE KEYS ;
+unlock tables;
+
+create table `price`(
+	`id`int auto_increment,
+    `view` int unsigned,
+    `cost` int unsigned,
+    `type` int unsigned,
+    primary key(`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+LOCK TABLES `price` WRITE;
+ALTER TABLE `price` DISABLE KEYS ;
+ALTER TABLE `price` ENABLE KEYS ;
 unlock tables;
 
 

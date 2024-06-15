@@ -163,7 +163,6 @@ const Profile = () => {
   //
   //
   //Đổi mật khẩu
-
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -456,7 +455,7 @@ const Profile = () => {
           </DialogActions>
         </Dialog>
         <Row>
-          <Col md="8">
+          <Col md="12">
             <Card>
               <Card.Header>
                 <Card.Title as="h4">Profile</Card.Title>
@@ -466,16 +465,17 @@ const Profile = () => {
                   {/* <a onClick={(e) => e.preventDefault()}> */}
                   <img
                     style={{
-                      width: "100px",
-                      height: "100px",
-                      borderRadius: 50,
-                      position: "relative",
+                      width: "150px",
+                      height: "150px",
+                      borderRadius: 75,
+                      position: "center",
                     }}
                     alt="avatar"
                     className="avatar border-gray"
+
                     src={
                       user.avatar !== ""
-                        ? `${API_URL}/files/${user.avatar}`
+                        ? user.avatar
                         : defaultAvatarUrl
                     }
                   ></img>
@@ -485,7 +485,7 @@ const Profile = () => {
                       justifyContent: "right",
                       marginLeft: "250px",
                       backgroundColor: "white",
-                      border: "1px solid yellow",
+                      // border: "1px solid yellow",
                       padding: "20px",
                       minWidth: "200px",
                     }}
@@ -502,7 +502,7 @@ const Profile = () => {
                         {new Date(
                           new Date().setDate(
                             new Date(premium.startDate).getDate() +
-                              premium.packagePremium.duration
+                            premium.packagePremium.duration
                           )
                         ).toLocaleDateString()}
                       </a>
@@ -510,8 +510,6 @@ const Profile = () => {
                       <Button
                         style={{
                           marginLeft: "10px",
-                          backgroundColor: "gold",
-                          borderColor: "yellow",
                         }}
                         onClick={handleOpenPackages}
                       >
@@ -527,7 +525,7 @@ const Profile = () => {
                   htmlFor="file-upload"
                   className="custom-file-upload"
                   style={{
-                    marginLeft: 15,
+                    marginLeft: 35,
                   }}
                 >
                   Chọn ảnh
@@ -577,7 +575,7 @@ const Profile = () => {
                         ></Form.Control>
                       </Form.Group>
                     </Col>
-                    {/*  </Row>
+                     </Row>
                   <Row>
                     <Col className="pr-1" md="6">
                       <Form.Group>
@@ -656,7 +654,7 @@ const Profile = () => {
                           as="textarea"
                         ></Form.Control>
                       </Form.Group>
-                    </Col> */}
+                    </Col>
                   </Row>
                   <Button
                     className="btn-fill pull-right"
@@ -667,13 +665,14 @@ const Profile = () => {
                     }}
                     onClick={handleUpdateProfile}
                   >
-                    Update Profile
+                    Chỉnh sửa thông tin
                   </Button>
 
                   <div className="clearfix"></div>
                 </Form>
                 <Button onClick={() => setOpenChangePassDialog(true)}>
                   {" "}
+                  
                   Đổi mật khẩu
                 </Button>
               </Card.Body>
