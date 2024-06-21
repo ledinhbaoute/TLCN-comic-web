@@ -135,12 +135,6 @@ public class UserController {
         return ResponseEntity.status(401).body("Unauthorized!");
 
     }
-
-    //    @PostMapping("/forgot_password")
-//    public ResponseEntity<?>forgotPassword(@RequestParam String username,@RequestParam String email,@RequestParam String newPass,
-//                                           @RequestParam String confirmPass){
-//        return ResponseEntity.ok(userServiceImple.forgotPassword(username,email,newPass,confirmPass));
-//    }
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
@@ -175,10 +169,10 @@ public class UserController {
     }
     
     @PostMapping("user/update_profile")
-    ResponseEntity<?>updateProfile(Authentication authentication,@RequestParam String newName,@RequestParam String newPhoneNumber){
+    ResponseEntity<?>updateProfile(Authentication authentication,@RequestParam String newName,@RequestParam String newPhoneNumber,@RequestParam String newIntro,@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date newBirthDate){
         if(authentication!=null){
             UserDetails userDetails= (UserDetails) authentication.getPrincipal();
-            userServiceImple.updateProfile(userDetails.getUsername(),newName,newPhoneNumber);
+            userServiceImple.updateProfile(userDetails.getUsername(),newName,newPhoneNumber,newIntro,newBirthDate);
             return ResponseEntity.ok("Success");
         }
         return ResponseEntity.status(401).body("Unauthorized!");

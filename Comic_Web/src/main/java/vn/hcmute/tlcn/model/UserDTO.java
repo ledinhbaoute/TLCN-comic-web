@@ -18,6 +18,7 @@ public class UserDTO {
     private boolean isLocked;
     private Date createdAt;
     private Date birthDate;
+    private String intro;
     public UserDTO() {
     }
 
@@ -34,6 +35,14 @@ public class UserDTO {
         this.isLocked=isLocked;
         this.createdAt=createdAt;
         this.birthDate=birthDate;
+    }
+
+    public String getIntro() {
+        return intro;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro;
     }
 
     public Date getBirthDate() {

@@ -2,22 +2,21 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import API_URL from "../config/config";
 import Cookies from "js-cookie";
-import { useNavigateTo } from "../service/navigation";
-import AlertDialog from "./dialogs/AlertDialog";
 import toast from "react-hot-toast";
-
-// react-bootstrap components
+import { useNavigateTo } from "../service/navigation";
 import {
-  Badge,
   Button,
   Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  CardTitle,
+  FormGroup,
   Form,
-  Navbar,
-  Nav,
-  Container,
+  Input,
   Row,
   Col,
-} from "react-bootstrap";
+} from "reactstrap";
 import {
   Dialog,
   DialogTitle,
@@ -28,17 +27,23 @@ import {
   IconButton,
   DialogActions,
 } from "@mui/material";
-
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { format } from "date-fns";
+import AlertDialog from "./dialogs/AlertDialog";
 import ConfirmDialog from "./dialogs/ConfirmDialog";
-
-const Profile = () => {
+import '../css/paper-dashboard.min.css'
+import { Link } from "react-router-dom";
+function User() {
   const navigate = useNavigateTo();
 
   const [user, setUser] = useState({});
-
-  const defaultAvatarUrl = `${process.env.PUBLIC_URL}/images/default-avatar.png`;
+  const [followList, setFollowList] = useState([]);
+  const [followerList, setFollowerList] = useState([]);
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [birthdate,setBirthDate]=useState()
+  const [intro,setIntro]=useState()
   const [premium, setPremium] = useState({
     status: false,
     packagePremium: {},
@@ -47,103 +52,18 @@ const Profile = () => {
 
   const [openAlertDialog, setOpenAlertDialog] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const fileInputRef = useRef(null);
 
-  const [name, setName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const uploadAvatar = async (formData) => {
-    try {
-      const response = await axios.post(
-        `${API_URL}/user/avt-upload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: "Bearer " + Cookies.get("access_token"),
-          },
-        }
-      );
-      // console.log(response);
-      setAlertMessage("Cập nhật ảnh đại diện thành công");
-      setOpenAlertDialog(true);
-    } catch (error) {
-      console.log(error);
-      setAlertMessage("Cập nhật ảnh đại diện thất bại");
-      setOpenAlertDialog(true);
-    }
+  const handleAvatarClick = () => {
+    fileInputRef.current.click();
   };
-
-  const handleAvatarUpload = (event) => {
-    const formData = new FormData();
-
-    formData.append("file", event.target.files[0]);
-
-    console.log(formData.get("file"));
-    uploadAvatar(formData);
-    //window.alert("Cập nhật thành công");
-    // navigate("../profile");
-  };
-  const handleNameChange = (event) => {
-    setName(event.target.value);
-  };
-  const handlePhoneNumberChange = (event) => {
-    setPhoneNumber(event.target.value);
-  };
-
-  const handleUpdateProfile = async (event) => {
-    event.preventDefault();
-    if (!/^\d{10}$/.test(phoneNumber)) {
-      toast("Vui lòng nhập đúng định dạng số điện thoại 10 chữ số!",{
-        icon:'🛈',
-        position:"top-right",
-        style: {
-          border: '1px solid #713200',
-          padding: '16px',
-          color: '#713200',
-        },
-       })
-      
-    } else {
-      try {
-        const response = await axios.post(
-          `${API_URL}/user/update_profile`,
-          { newName: name, newPhoneNumber: phoneNumber },
-          {
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-              Authorization: "Bearer " + Cookies.get("access_token"),
-            },
-          }
-        );
-        setAlertMessage("Cập nhật thông tin thành công");
-        setOpenAlertDialog(true);
-        // navigate("../profile");
-      } catch (error) {
-        console.log(error);
-        setAlertMessage("Cập nhật ảnh đại diện thất bại");
-        setOpenAlertDialog(true);
-      }
-    }
-  };
-
+  const defaultAvatarUrl = `${process.env.PUBLIC_URL}/images/default-avatar.png`;
   useEffect(() => {
-    const getUser = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/user`, {
-          headers: {
-            Authorization: "Bearer " + Cookies.get("access_token"),
-          },
-        });
-        setUser(response.data);
-        setName(response.data.name);
-        setPhoneNumber(response.data.phoneNumber);
-        console.log(user.avatar);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+   
     getUser();
+    getFollowList();
+    getFollowerList()
   }, []);
-
   useEffect(() => {
     const getPremiumStatus = async () => {
       try {
@@ -169,10 +89,135 @@ const Profile = () => {
     };
     getPremiumStatus();
   }, []);
+  const getUser = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/user`, {
+        headers: {
+          Authorization: "Bearer " + Cookies.get("access_token"),
+        },
+      });
+      const userData = response.data;
+      const formattedBirthDate = format(new Date(userData.birthDate), 'yyyy-MM-dd');
+      const formattedCreatedDate = format(new Date(userData.createdAt), 'yyyy-MM-dd');
+      setName(userData.name);
+      setPhoneNumber(userData.phoneNumber);
+      setIntro(userData.intro)
+      setBirthDate(formattedBirthDate)
+      setUser({
+        ...userData,
+        birthDate: formattedBirthDate,
+        createdAt: formattedCreatedDate,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getFollowList = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/user/following`, {
+        headers: {
+          Authorization: "Bearer " + Cookies.get("access_token"),
+        },
+      });
+      setFollowList(response.data)
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getFollowerList = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/user/follows`, {
+        headers: {
+          Authorization: "Bearer " + Cookies.get("access_token"),
+        },
+      });
+      setFollowerList(response.data)
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  //
-  //
-  //Đổi mật khẩu
+  const uploadAvatar = async (formData) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/user/avt-upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: "Bearer " + Cookies.get("access_token"),
+          },
+        }
+      );
+      getUser();
+    } catch (error) {
+      console.log(error); 
+    }
+  };
+
+  const handleAvatarUpload = async(event) => {
+    const formData = new FormData();
+
+    formData.append("file", event.target.files[0]);
+    const toastId = toast.loading("Đang tải lên ảnh đại diện...");
+    try{
+      await uploadAvatar(formData); 
+    toast.success("Cập nhật ảnh đại diện thành công",{id:toastId});
+    }
+   catch (error) {
+    toast.error("Cập nhật ảnh đại diện thất bại",{id:toastId});
+  }
+  };
+  const handleNameChange = (event) => {
+    setName(event.target.value);
+  };
+  const handlePhoneNumberChange = (event) => {
+    setPhoneNumber(event.target.value);
+  };
+  const handleIntroChange = (event) => {
+    setIntro(event.target.value);
+  };
+  const handleBirthDateChange=(event)=>{
+    setBirthDate(event.target.value)
+  }
+
+  const handleUpdateProfile = async (event) => {
+    event.preventDefault();
+    if (!/^\d{10}$/.test(phoneNumber)) {
+      toast("Vui lòng nhập đúng định dạng số điện thoại 10 chữ số!",{
+        icon:'🛈',
+        position:"top-right",
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+       })
+      
+    } else {
+      try {
+         await axios.post(
+          `${API_URL}/user/update_profile`,
+          { newName: name, newPhoneNumber: phoneNumber,newIntro:intro,newBirthDate:birthdate },
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Authorization: "Bearer " + Cookies.get("access_token"),
+            },
+          }
+        );
+        getUser();
+        toast.success("Cập nhật thông tin thành công!",{duration:3000,position:"top-right"})
+      } catch (error) {
+        console.log(error);
+        toast.error("Lỗi, cập nhật thông tin thất bại!",{position:"top-right"});
+      }
+    }
+  };
+
+  //Doi mat khau
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -269,8 +314,6 @@ const Profile = () => {
     }
   };
 
-  //
-  //
   //Đăng ký premium
   const [openPremiumPackage, setOpenPremiumPackage] = useState(false);
   const [premiumPackages, setPremiumPackages] = useState([]);
@@ -369,11 +412,14 @@ const Profile = () => {
       setOpenAlertDialog(true);
     }
   };
-
   return (
     <>
-      <Container fluid>
-        
+      <div className="content">
+      <AlertDialog
+          open={openAlertDialog}
+          onClose={() => setOpenAlertDialog(false)}
+          message={alertMessage}
+        />
         <Dialog
           open={openPremiumPackage}
           onClose={() => setOpenPremiumPackage(false)}
@@ -405,12 +451,6 @@ const Profile = () => {
           onAccept={buyPackage}
           message={`Bạn muốn mua gói premium ${selectedPackage.duration} tháng có giá ${selectedPackage.cost} VNĐ? `}
         ></ConfirmDialog>
-
-        <AlertDialog
-          open={openAlertDialog}
-          onClose={() => setOpenAlertDialog(false)}
-          message={alertMessage}
-        />
         <Dialog
           open={openChangePassDialog}
           onClose={() => setOpenChangePassDialog(false)}
@@ -487,294 +527,279 @@ const Profile = () => {
           </DialogActions>
         </Dialog>
         <Row>
-          <Col md="12">
-            <Card>
-              <Card.Header>
-                <Card.Title as="h4">Profile</Card.Title>
-              </Card.Header>
-              <Card.Body>
+          <Col md="4">
+            <Card className="card-user">
+              <div className="image">
+                <img alt="..." src="https://tse4.mm.bing.net/th?id=OIP.e3soQUyXZOwzwhUyPh2IxQHaEK&pid=Api&P=0&h=220" />
+              </div>
+              <CardBody>
                 <div className="author">
-                  {/* <a onClick={(e) => e.preventDefault()}> */}
+
                   <img
-                    style={{
-                      width: "150px",
-                      height: "150px",
-                      borderRadius: 75,
-                      position: "center",
-                    }}
-                    alt="avatar"
+                    alt="..."
                     className="avatar border-gray"
+                    src={user.avatar}
+                    onClick={handleAvatarClick}
+                  />
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: 'none' }}
+                    onChange={handleAvatarUpload}
+                    accept="image/*"
+                  />
 
-                    src={
-                      user.avatar !== ""
-                        ? user.avatar
-                        : defaultAvatarUrl
-                    }
-                  ></img>
-                  <a
-                    style={{
-                      position: "relative",
-                      justifyContent: "right",
-                      marginLeft: "250px",
-                      backgroundColor: "white",
-                      // border: "1px solid yellow",
-                      padding: "20px",
-                      minWidth: "200px",
-                    }}
-                  >
-                    <i
-                      className="fa fa-star"
-                      style={{ marginRight: "5px" }}
-                    ></i>
-                    Premium:
-                    {/* <a style={{backgroundColor: "white"}}>Còn hạn đến ngày dd:mm:yyyy</a> */}
-                    {premium.status == true ? (
-                      <a>
-                        còn hạn đến{" "}
-                        {new Date(
-                          new Date().setDate(
-                            new Date(premium.startDate).getDate() +
-                            premium.packagePremium.duration
-                          )
-                        ).toLocaleDateString()}
-                      </a>
-                    ) : (
-                      <Button
-                        style={{
-                          marginLeft: "10px",
-                        }}
-                        onClick={handleOpenPackages}
-                      >
-                        Đăng ký ngay
-                      </Button>
-                    )}
-                  </a>
-                  {/* </a> */}
+                  <h5 className="title">{user.name}</h5>
 
-                  {/* <p className="description">michael24</p> */}
+                  <p className="description">@{user.userName}</p>
                 </div>
-                <label
-                  htmlFor="file-upload"
-                  className="custom-file-upload"
-                  style={{
-                    marginLeft: 35,
-                  }}
-                >
-                  Chọn ảnh
-                </label>
-                <input
-                  id="file-upload"
-                  type="file"
-                  onChange={handleAvatarUpload}
-                  style={{ display: "none" }}
-                />
-
-                <br></br>
-
+                <p className="description text-center">
+                  "{user.intro}"
+                </p>
+              </CardBody>
+              <CardFooter>
+                <hr />
+                <div className="button-container">
+                  <Row>
+                    <Col className="ml-auto" lg="3" md="6" xs="6">
+                      <h5>
+                        {followerList.length} <br />
+                        <small>Lượt theo dõi</small>
+                      </h5>
+                    </Col>
+                    <Col className="ml-auto mr-auto" lg="4" md="6" xs="6">
+                      <h5>
+                        {followList.length} <br />
+                        <small>Đang theo dõi</small>
+                      </h5>
+                    </Col>
+                    {/* <Col className="mr-auto" lg="3">
+                      <h5>
+                        24,6$ <br />
+                        <small>Spent</small>
+                      </h5>
+                    </Col> */}
+                  </Row>
+                </div>
+              </CardFooter>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle tag="h4">Premium 👑</CardTitle>
+              </CardHeader>
+              <CardBody>
+                {premium.status?(
+                  <h5>Premium còn hạn đến{" "}
+                  {new Date(
+                    new Date().setDate(
+                      new Date(premium.startDate).getDate() +
+                      premium.packagePremium.duration
+                    )
+                  ).toLocaleDateString()} </h5>
+                ): ( <Button
+                onClick={handleOpenPackages}
+                className="btn-round"
+                color="primary"
+              >
+                Đăng ký ngay
+              </Button>)}
+             
+             
+              
+              </CardBody>
+            </Card>
+          </Col>
+          <Col md="8">
+            <Card className="card-user">
+              <CardHeader>
+                <CardTitle tag="h5">Cập nhật thông tin</CardTitle>
+              </CardHeader>
+              <CardBody>
                 <Form>
                   <Row>
                     <Col className="pr-1" md="5">
-                      <Form.Group>
-                        <label>Email</label>
-                        <Form.Control
+                      <FormGroup>
+                        <label>Email (disabled)</label>
+                        <Input
                           defaultValue={user.email}
                           disabled
-                          placeholder="email"
-                          type="email"
-                        ></Form.Control>
-                      </Form.Group>
+                          placeholder="Email"
+                          type="text"
+                        />
+                      </FormGroup>
                     </Col>
                     <Col className="px-1" md="3">
-                      <Form.Group>
-                        <label>Họ tên</label>
-                        <Form.Control
-                          defaultValue={name}
+                      <FormGroup>
+                        <label>Họ và tên</label>
+                        <Input
+                          defaultValue={user.name}
                           placeholder="Họ và tên"
                           type="text"
                           onChange={handleNameChange}
-                        ></Form.Control>
-                      </Form.Group>
+                        />
+                      </FormGroup>
                     </Col>
                     <Col className="pl-1" md="4">
-                      <Form.Group>
-                        <label>SĐT</label>
-                        <Form.Control
-                          defaultValue={user.phoneNumber}
-                          placeholder="SĐT"
-                          type="tel"
-                          pattern="[0-9]{10}"
+                      <FormGroup>
+                        <label htmlFor="exampleInputEmail1">
+                          Số điện thoại
+                        </label>
+                        <Input placeholder="Số điện thoại"
+                          defaultValue={user.phoneNumber} type="text" 
                           onChange={handlePhoneNumberChange}
-                        ></Form.Control>
-                      </Form.Group>
+                          />
+                      </FormGroup>
                     </Col>
-                     </Row>
+                  </Row>
                   <Row>
                     <Col className="pr-1" md="6">
-                      <Form.Group>
-                        <label>First Name</label>
-                        <Form.Control
-                          defaultValue="Mike"
+                      <FormGroup>
+                        <label>Ngày sinh</label>
+                        <Input
+                          defaultValue={user.birthDate}
                           placeholder="Company"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
+                          type="date"
+                          onChange={handleBirthDateChange}
+                        />
+                      </FormGroup>
                     </Col>
                     <Col className="pl-1" md="6">
-                      <Form.Group>
-                        <label>Last Name</label>
-                        <Form.Control
-                          defaultValue="Andrew"
+                      <FormGroup>
+                        <label>Ngày tạo</label>
+                        <Input
+                          disabled
+
+                          // defaultValue={format(user.createdAt,'yyyy/MM/dd')}
+                          defaultValue={user.createdAt}
                           placeholder="Last Name"
                           type="text"
-                        ></Form.Control>
-                      </Form.Group>
+                        />
+                      </FormGroup>
                     </Col>
                   </Row>
-                  <Row>
-                    <Col md="12">
-                      <Form.Group>
-                        <label>Address</label>
-                        <Form.Control
-                          defaultValue="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
-                          placeholder="Home Address"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="pr-1" md="4">
-                      <Form.Group>
-                        <label>City</label>
-                        <Form.Control
-                          defaultValue="Mike"
-                          placeholder="City"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                    <Col className="px-1" md="4">
-                      <Form.Group>
-                        <label>Country</label>
-                        <Form.Control
-                          defaultValue="Andrew"
-                          placeholder="Country"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                    <Col className="pl-1" md="4">
-                      <Form.Group>
-                        <label>Postal Code</label>
-                        <Form.Control
-                          placeholder="ZIP Code"
-                          type="number"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="12">
-                      <Form.Group>
-                        <label>About Me</label>
-                        <Form.Control
-                          cols="80"
-                          defaultValue="Lamborghini Mercy, Your chick she so thirsty, I'm in
-                          that two seat Lambo."
-                          placeholder="Here can be your description"
-                          rows="4"
-                          as="textarea"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Button
-                    className="btn-fill pull-right"
-                    type="submit"
-                    variant="info"
-                    style={{
-                      marginTop: 10,
-                    }}
-                    onClick={handleUpdateProfile}
-                  >
-                    Chỉnh sửa thông tin
-                  </Button>
 
-                  <div className="clearfix"></div>
+                  <Row>
+                    <Col md="12">
+                      <FormGroup>
+                        <label>Giới thiệu</label>
+                        <Input
+                          type="textarea"
+                          defaultValue={user.intro}
+                          onChange={handleIntroChange}
+                        />
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <div className="update ml-auto mr-auto">
+                      <Button
+                        className="btn-round"
+                        color="primary"
+                        onClick={handleUpdateProfile}
+                      >
+                        Cập nhật thông tin
+                      </Button>
+                      <Button
+                      onClick={() => setOpenChangePassDialog(true)}
+                        className="btn-round"
+                        color="primary"
+                      >
+                        Đổi mật khẩu
+                      </Button>
+                    </div>
+                  </Row>
                 </Form>
-                <Button onClick={() => setOpenChangePassDialog(true)}>
-                  {" "}
-                  
-                  Đổi mật khẩu
-                </Button>
-              </Card.Body>
+              </CardBody>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle tag="h4">Đang theo dõi</CardTitle>
+              </CardHeader>
+              <CardBody>
+                <ul className="list-unstyled team-members">
+                {followList.map((follow,index)=>(
+                  <li key={index}>
+                  <Row>
+                    <Col md="2" xs="2">
+                      <div className="avatar">
+                        <Link to={`/user/${follow.user.id}`}>
+                        <img
+                          alt="..."
+                          className="img-circle img-no-padding img-responsive"
+                          src={follow.user.avatar}
+                        />
+                        </Link>
+                      </div>
+                    </Col>
+                    <Col md="7" xs="7">
+                      {follow.user.name} <br />
+                      <span className="text-muted">
+                        <small>@{follow.user.userName}</small>
+                      </span>
+                    </Col>
+                    <Col className="text-right" md="3" xs="3">
+                      <Button
+                        className="btn-round btn-icon"
+                        color="success"
+                        outline
+                        size="sm"
+                      >
+                        <i className="fa fa-envelope" />
+                      </Button>
+                    </Col>
+                  </Row>
+                </li> )) }
+                
+                </ul>
+              </CardBody>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle tag="h4">Người theo dõi</CardTitle>
+              </CardHeader>
+              <CardBody>
+                <ul className="list-unstyled team-members">
+                {followerList.map((follow,index)=>(
+                  <li key={index}>
+                  <Row>
+                    <Col md="2" xs="2">
+                      <div className="avatar">
+                      <Link to={`/user/${follow.user.id}`}>
+                        <img
+                          alt="..."
+                          className="img-circle img-no-padding img-responsive"
+                          src={follow.follower.avatar}
+                        />
+                        </Link>
+                      </div>
+                    </Col>
+                    <Col md="7" xs="7">
+                      {follow.follower.name} <br />
+                      <span className="text-muted">
+                        <small>@{follow.follower.userName}</small>
+                      </span>
+                    </Col>
+                    <Col className="text-right" md="3" xs="3">
+                      <Button
+                        className="btn-round btn-icon"
+                        color="success"
+                        outline
+                        size="sm"
+                      >
+                        <i className="fa fa-envelope" />
+                      </Button>
+                    </Col>
+                  </Row>
+                </li> )) }
+                
+                </ul>
+              </CardBody>
             </Card>
           </Col>
-          {/* <Col md="4">
-            <Card className="card-user">
-              <div className="card-image">
-                <img
-                  alt="..."
-                  src={require("")}
-                ></img>
-              </div>
-              <Card.Body>
-                <div className="author">
-                  <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                    <img
-                      style={{
-                        width: "124px",
-                        height: "124px",
-                        border: "5px solid #FFFFFF",
-                        position: "relative",
-                      }}
-                      alt="..."
-                      className="avatar border-gray"
-                      src={`${API_URL}/files/${user.avatar}`}
-                    ></img>
-                    <h5 className="title">Mike Andrew</h5>
-                  </a>
-                  <p className="description">michael24</p>
-                </div>
-                <p className="description text-center">
-                  "Lamborghini Mercy <br></br>
-                  Your chick she so thirsty <br></br>
-                  I'm in that two seat Lambo"
-                </p>
-              </Card.Body>
-              <hr></hr>
-              <div className="button-container mr-auto ml-auto">
-                <Button
-                  className="btn-simple btn-icon"
-                  href="#pablo"
-                  onClick={(e) => e.preventDefault()}
-                  variant="link"
-                >
-                  <i className="fab fa-facebook-square"></i>
-                </Button>
-                <Button
-                  className="btn-simple btn-icon"
-                  href="#pablo"
-                  onClick={(e) => e.preventDefault()}
-                  variant="link"
-                >
-                  <i className="fab fa-twitter"></i>
-                </Button>
-                <Button
-                  className="btn-simple btn-icon"
-                  href="#pablo"
-                  onClick={(e) => e.preventDefault()}
-                  variant="link"
-                >
-                  <i className="fab fa-google-plus-square"></i>
-                </Button>
-              </div>
-            </Card>
-          </Col> */}
         </Row>
-      </Container>
+      </div>
     </>
   );
-};
+}
 
-export default Profile;
+export default User;

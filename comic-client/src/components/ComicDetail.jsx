@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { Dialog } from "@mui/material";
 import AlertDialog from "./dialogs/AlertDialog";
+import toast from "react-hot-toast";
 
 const ComicDetail = (props) => {
   const comic = props.comic;
@@ -37,7 +38,10 @@ const ComicDetail = (props) => {
         }
       );
       setFavorite(response.data.data);
-      // window.alert("Đã thêm truyện vào ưa thích");
+      setIsfavorite(true)
+      toast.success("Đã thêm truyện vào mục ưa thích!",{
+        position:"top-right"
+      });
     } catch (error) {
       console.log(error);
     }
@@ -45,10 +49,18 @@ const ComicDetail = (props) => {
 
   const handleBtnFavoriteSubmit = () => {
     if (!checkAuth()) {
-      alert("Bạn cần đăng nhập để thêm truyện vào ưa thích");
+      toast("Bạn cần đăng nhập để thêm truyện vào ưa thích!",{
+        icon:'🛈',
+        position:"top-right",
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+       })
     } else {
       addFavoriteComic();
-      window.location.reload();
+     
     }
   };
 
@@ -89,7 +101,7 @@ const ComicDetail = (props) => {
         },
         data: { comicId: comic.id },
       });
-      // window.alert("Đã xóa khỏi truyện yêu thích");
+      setIsfavorite(false)
     } catch (error) {
       console.error("Error increasing view:", error);
     }
@@ -97,8 +109,6 @@ const ComicDetail = (props) => {
 
   const handleDeleteFavorite = async () => {
     deleteFavoriteComic();
-
-    window.location.reload();
   };
 
   //
@@ -123,7 +133,15 @@ const ComicDetail = (props) => {
       getReportReasonList();
       setOpenReportReason(true);
     } else {
-      window.alert("Bạn phải đăng nhập để báo cáo");
+     toast("Bạn cần đăng nhập để báo cáo!",{
+      icon:'🛈',
+      position:"top-right",
+      style: {
+        border: '1px solid #713200',
+        padding: '16px',
+        color: '#713200',
+      },
+     })
     }
   };
 
@@ -166,7 +184,15 @@ const ComicDetail = (props) => {
       reportCommic();
       setOpenReportReason(false);
     } else {
-      window.alert("Phải chọn ít nhất một lý do");
+      toast("Phải có ít nhất 1 lý do!",{
+        icon:'🛈',
+        position:"top-right",
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+       })
     }
   };
 

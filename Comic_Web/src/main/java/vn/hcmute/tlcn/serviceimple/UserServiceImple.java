@@ -110,9 +110,9 @@ public class UserServiceImple implements IUserService {
             System.out.println("User Tempo Size:"+OTPManager.userTemporary.size());
             return new ResponseObject(true, "OTP has seen to your email, verify to complete registration!", "");
         } else if (check == 1) {
-            return new ResponseObject(false, "User name or Email already exist!", "");
+            return new ResponseObject(false, "Tên đăng nhập hoặc email đã tồn tại!", "");
         } else if (check == 2)
-            return new ResponseObject(false, "Password and confirm password doesn't match!", "");
+            return new ResponseObject(false, "Mật khẩu và xác thực mật khẩu không khớp!", "");
         else return validatePassword.checkPasswordValid(pass);
     }
 
@@ -168,9 +168,9 @@ public class UserServiceImple implements IUserService {
     public ResponseObject forgotPassword(String username, String email) {
         User user = userRepository.findOneByUserName(username).orElse(null);
         if (user == null)
-            return new ResponseObject(false, "User not exist!", "");
+            return new ResponseObject(false, "Người dùng không tồn tại!", "");
         if (!user.getEmail().equals(email))
-            return new ResponseObject(false, "Email and Username not match!", "");
+            return new ResponseObject(false, "Tên người dùng với email không khớp!!", "");
         OTP otp = emailService.generateOtp();
         emailService.sendOtpEmail(email, "Verification OTP!", otp);
         for (OTP o : OTPManager.otpList.keySet()) {
@@ -233,11 +233,8 @@ public class UserServiceImple implements IUserService {
     public ResponseEntity<ResponseObject> uploadAvatar(String username, MultipartFile file) {
         Optional<User> optionalUser = userRepository.findOneByUserName(username);
         User user = optionalUser.get();
-        String currentAvt = user.getAvatar();
         List<Follower>followers=followRepository.findByUser_UserName(username);
         try {
-
-            if (currentAvt.equals("")) {
                 String newAvt = imageStorageService.storeToCloudinary(file);
                 user.setAvatar(newAvt);
                 user = userRepository.save(user);
@@ -259,29 +256,7 @@ public class UserServiceImple implements IUserService {
                 });
 
                 return ResponseEntity.ok(new ResponseObject(true, "Update Avatar Success!", user));
-            } else {
-                String newAvt = imageStorageService.storeToCloudinary(file);
-                user.setAvatar(newAvt);
-                user = userRepository.save(user);
-                User finalUser = user;
-                followers.forEach(follower ->
-                {
-                    String content=username+ " vừa cập nhật ảnh đại diện";
-                    Announce announce=new Announce();
-                    announce.setId(generateId.generateId());
-                    announce.setUser(follower.getFollower());
-                    announce.setContent(content);
-                    announce.setCreatedAt(new Date());
-                    announce.setRead(false);
-                    announce.setType("avt");
-                    announce.setLinkTo("/user/"+ finalUser.getId());
-                    simpMessagingTemplate.convertAndSendToUser(follower.getFollower().getUserName(),"/queue/notifications",announce);
 
-                    announceRepository.save(announce);
-                });
-//                imageStorageService.deleteFile(currentAvt);
-                return ResponseEntity.ok(new ResponseObject(true, "Update Avatar Success!", user));
-            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, e.getMessage(), ""));
         }
@@ -306,14 +281,14 @@ public class UserServiceImple implements IUserService {
         User user = userRepository.findOneByUserName(username).get();
         Optional<PackagePremium> optionalPackagePremium = packagePremiumRepository.findById(packageId);
         if (!optionalPackagePremium.isPresent())
-            return new ResponseObject(false, "Package not exist!", "");
+            return new ResponseObject(false, "Gói không tồn tại!", "");
         PackagePremium packagePremium = optionalPackagePremium.get();
         Optional<Wallet> optional = walletRepository.findOneByUser_UserName(username);
         if (!optional.isPresent())
-            return new ResponseObject(false, "You need Wallet to register Premium!", "");
+            return new ResponseObject(false, "Bạn cần mở ví để thực hiện đăng ký!", "");
         Wallet wallet = optional.get();
         if (wallet.getBalance() < packagePremium.getCost())
-            return new ResponseObject(false, "Not enough money to register this package!", "");
+            return new ResponseObject(false, "Số dư ví không đủ để đăng ký!", "");
 
         try {
 
@@ -322,19 +297,21 @@ public class UserServiceImple implements IUserService {
 
             wallet.setBalance(wallet.getBalance() - packagePremium.getCost());
             walletRepository.save(wallet);
-            Transaction transaction = new Transaction(wallet, "Đăng ký gói premium " + packagePremium.getDuration() + " ngày", "", (packagePremium.getCost())*(-1), new Date(), 2,wallet.getBalance());
+            Transaction transaction = new Transaction(wallet, "Đăng ký gói premium " + packagePremium.getDuration() + " ngày", "", packagePremium.getCost(), new Date(), 2,wallet.getBalance());
             transactionRepository.save(transaction);
-            return new ResponseObject(true, "Register Premium Success!", userPremium);
+            return new ResponseObject(true, "Đăng ký premium thành công!", userPremium);
         } catch (Exception e) {
 
             return new ResponseObject(false, e.getMessage(), "");
         }
     }
 
-    public void updateProfile(String username,String newName,String newPhoneNumber){
+    public void updateProfile(String username,String newName,String newPhoneNumber,String newIntro,Date newBirthDate){
         User user=userRepository.findOneByUserName(username).orElse(null);
         user.setName(newName);
         user.setPhoneNumber(newPhoneNumber);
+        user.setIntro(newIntro);
+        user.setBirthDate(newBirthDate);
         userRepository.save(user);
     }
 

@@ -8,6 +8,7 @@ import { Dialog } from "@mui/material";
 // import { isImage, isSizeExceeded } from "../security/CheckingFile";
 import { ReactSortable } from "react-sortablejs";
 import AlertDialog from "./AlertDialog";
+import toast, { Toaster } from "react-hot-toast";
 
 const EditChapterDialog = ({ open, onClose, selectedChapter }) => {
     const [chapter, setChapter] = useState(selectedChapter)
@@ -88,10 +89,18 @@ const EditChapterDialog = ({ open, onClose, selectedChapter }) => {
     };
     const handleEditChapter = () => {
         if (chapter.ordinalNumber === "" || chapter.name === "") {
-            window.alert("Vui lòng nhập đầy đủ các mục");
+            toast("Vui lòng nhập đầy đủ các mục!", {
+                icon: '🛈',
+                position: "top-right",
+                style: {
+                    border: '1px solid #713200',
+                    padding: '16px',
+                    color: '#713200',
+                },
+            })
         } else {
             if (chapter.ordinalNumber < 0) {
-                window.alert("Số chương không được nhỏ hơn 0");
+                toast.error("Số chương không được nhỏ hơn 0",{position:"top-right"});
             } else {
                 editChapter();
                 changeOrderImage(chapter.id, selectedFiles)
@@ -152,6 +161,7 @@ const EditChapterDialog = ({ open, onClose, selectedChapter }) => {
 
     return (
         <>
+        <Toaster/>
             <AlertDialog
                 open={alertDialogOpen}
                 onClose={() => setAlertDialogOpen(false)}

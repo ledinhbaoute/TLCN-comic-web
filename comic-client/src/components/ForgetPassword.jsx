@@ -12,6 +12,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import OtpDialogInput from "./dialogs/OTPDialogInput";
 import Loading from "./Loading";
+import toast from "react-hot-toast";
 
 const ForgetPassword = () => {
   const [username, setUsername] = useState("");
@@ -110,7 +111,10 @@ const ForgetPassword = () => {
 
     const forgetpassResponse = await forgetpass();
     if (!forgetpassResponse.data.status)
-      window.alert(forgetpassResponse.data.message);
+    toast.error(forgetpassResponse.data.message,{
+      position:"top-right",
+      duration:3000
+    })
     else {
       handleOpenDialog();
     }
@@ -121,9 +125,15 @@ const ForgetPassword = () => {
 
     const resetPassResponse = await resetpass();
     if (!resetPassResponse.data.status)
-      window.alert(resetPassResponse.data.message);
+      toast.error(resetPassResponse.data.message,{
+        duration:3000,
+        position:"top-right"
+      })
     else {
-      window.alert("Cập nhật mật khẩu thành công");
+      toast.success("Cập nhật mật khẩu thành công!",{
+        duration:3000,
+        position:"top-right"
+      })
       setResetPassFormOpen(false);
       navigate("/login");
     }
@@ -143,6 +153,7 @@ const ForgetPassword = () => {
 
   return (
     <>
+   
     {isLoading && <Loading/>}
       <section className="login spad">
         <div className="container">

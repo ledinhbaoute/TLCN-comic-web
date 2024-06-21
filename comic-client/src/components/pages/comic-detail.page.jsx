@@ -78,9 +78,6 @@ const ComicDetailPage = () => {
         getRatingByComic();
     }, [comicId]);
 
-
-
-
     const insertHistoryReading = async (chapterId) => {
         try {
             if (checkAuth) {

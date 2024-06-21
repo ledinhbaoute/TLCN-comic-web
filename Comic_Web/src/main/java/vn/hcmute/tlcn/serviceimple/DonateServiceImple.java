@@ -63,8 +63,8 @@ public class DonateServiceImple {
         donateRepository.save(donate);
         donateWallet.setBalance(donateWallet.getBalance() - amount);
         receiverWallet.setBalance(receiverWallet.getBalance() + amount);
-        Transaction transactionIn=new Transaction(receiverWallet,"Nhận donate từ "+ donateWallet.getUser().getName(),donate.getMessage(),amount,new Date(),1,receiverWallet.getBalance());
-        Transaction transactionOut=new Transaction(donateWallet,"Donate cho "+ receiverWallet.getUser().getName(),donate.getMessage(),amount,new Date(),2,donateWallet.getBalance());
+        Transaction transactionIn=new Transaction(receiverWallet,"Nhận donate từ "+ donateWallet.getUser().getName(),donate.getMessage(),amount,new Date(),4,receiverWallet.getBalance());
+        Transaction transactionOut=new Transaction(donateWallet,"Donate cho "+ receiverWallet.getUser().getName(),donate.getMessage(),amount,new Date(),3,donateWallet.getBalance());
         transactionRepository.save(transactionOut);
         transactionRepository.save(transactionIn);
         try {

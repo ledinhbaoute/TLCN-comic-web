@@ -50,7 +50,7 @@ public class ScheduledTask {
                     walletRepository.save(wallet);
                     if (profits > 0) {
                         Transaction transaction = new Transaction(wallet, "Lợi nhuận hằng tháng", "", (int) Math.ceil(profits),
-                                new Date(), 1, wallet.getBalance());
+                                new Date(), 5, wallet.getBalance());
                         transactionRepository.save(transaction);
                         String content="Bạn vừa nhận được lợi nhuận tháng số tiền "+(int) Math.ceil(profits) +"VND";
                         Announce announce=new Announce();

@@ -5,6 +5,7 @@ import { Rating } from 'react-simple-star-rating'
 import { checkAuth } from "../security/Authentication";
 import Cookies from 'js-cookie';
 import Scrollbars from "react-custom-scrollbars-2";
+import toast from "react-hot-toast";
 const Review = (props) => {
     const ratingList = props.ratingList
     const comicId=props.comicId
@@ -32,6 +33,7 @@ const Review = (props) => {
                 );
                 if(response.data.status===true){
                     setRating(response.data.data)
+                    
                 }
                
 
@@ -44,13 +46,29 @@ const Review = (props) => {
         //event.preventDefault()
         if (!checkAuth()) {
 
-            alert("Bạn cần đăng nhập để đánh giá truyện")
+            toast("Bạn cần đăng nhập để đánh giá truyện!",{
+                icon:'🛈',
+                position:"top-right",
+                style: {
+                  border: '1px solid #713200',
+                  padding: '16px',
+                  color: '#713200',
+                },
+               })
              event.preventDefault()
         }
         else if(ratingScore===0 || ratingComment===""){
             setRatingScore(0);
             setRatingComment("")
-            alert("Nhập nội dung và điểm điểm đánh giá")
+            toast("Nhập nội dung và điểm để đánh giá",{
+                icon:'🛈',
+                position:"top-right",
+                style: {
+                  border: '1px solid #713200',
+                  padding: '16px',
+                  color: '#713200',
+                },
+               })
              event.preventDefault()
         }
         else {
@@ -66,20 +84,20 @@ const Review = (props) => {
         <>
             <div className="anime__details__review">
                 <div className="section-title">
-                    <h5>Đánh giá</h5>
+                    <h5>Đánh giá ({ratingList.length})</h5>
                    
                 </div>
                 <div className="anime__details__title">
-                 <span>LƯỢt ĐÁNH GIÁ: {ratingList.length}</span></div>
-                 <Scrollbars
-                style={{ height: 300 }}>
+              </div>
+                <Scrollbars
+                autoHeight autoHeightMax={300}>
                 {ratingList.length ? (ratingList.map((item) => (
                     <div key={item.id} className="anime__review__item">
                         <div className="anime__review__item__pic">
                             <img src={item.user.avatar} alt="" />
                         </div>
                         <div className="anime__review__item__text">
-                            <h6>{item.user.name}<span>{item.score}⭐</span></h6>
+                            <h6>{item.user.name}<br></br><span>{item.score}⭐</span></h6>
                             <p>{item.comment}</p>
                         </div>
                     </div>

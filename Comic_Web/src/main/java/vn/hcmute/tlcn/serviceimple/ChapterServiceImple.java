@@ -3,17 +3,14 @@ package vn.hcmute.tlcn.serviceimple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vn.hcmute.tlcn.entity.ComicBook;
+import vn.hcmute.tlcn.entity.*;
 import vn.hcmute.tlcn.model.ResponseObject;
-import vn.hcmute.tlcn.entity.User;
-import vn.hcmute.tlcn.repository.ComicBookRepository;
-import vn.hcmute.tlcn.repository.UserRepository;
+import vn.hcmute.tlcn.repository.*;
 import vn.hcmute.tlcn.utils.Converter;
-import vn.hcmute.tlcn.entity.Chapter;
 import vn.hcmute.tlcn.model.ChapterDTO;
-import vn.hcmute.tlcn.repository.ChapterRepository;
 import vn.hcmute.tlcn.service.IChapterService;
 import vn.hcmute.tlcn.utils.GenerateId;
 
@@ -40,6 +37,12 @@ public class ChapterServiceImple implements IChapterService {
     ChapterImageServiceImple chapterImageServiceImple;
     @Autowired
     ImageStorageService imageStorageService;
+    @Autowired
+    SimpMessagingTemplate simpMessagingTemplate;
+    @Autowired
+    FavoriteComicRepository favoriteComicRepository;
+    @Autowired
+    AnnounceRepository announceRepository;
 
     @Override
     public List<ChapterDTO> getChapterByComic(String comicId) {
@@ -84,7 +87,7 @@ public class ChapterServiceImple implements IChapterService {
         Optional<ComicBook> optionalComicBook = comicBookRepository.findById(comicId);
         ComicBook comicBook = optionalComicBook.get();
         int ordinalNumber = chapterRepository.findByComicBook_IdOrderByOrdinalNumberAsc(comicId).size() + 1;
-        Chapter chapter = new Chapter(generateId.generateId(), chapterName, comicBook, new Date(), ordinalNumber);
+        Chapter chapter = new Chapter(generateId.generateId(), chapterName, comicBook, null, ordinalNumber);
         comicBook.setUpdateDate(new Date());
         return ResponseEntity.ok().body(new ResponseObject(true, "Add Chapter Success!",converter.convertEntityToDto( chapterRepository.save(chapter))));
     }
@@ -134,7 +137,30 @@ public class ChapterServiceImple implements IChapterService {
             return new ResponseObject(false,"Chapter not exist!","");
         if(!user.getUserName().equals(chapter.getComicBook_Id().getActorId().getUserName()))
             return new ResponseObject(false,"Cannot public orther people chapter!","");
-        chapter.setOpen(!chapter.isOpen());
+
+        if(chapter.getPublishDate()==null){
+            chapter.setPublishDate(new Date());
+            chapter.setOpen(!chapter.isOpen());
+            List<FavoriteComic>favoriteComics=favoriteComicRepository.findByComicBook_Id(chapter.getComicBook_Id().getId());
+            favoriteComics.forEach(favoriteComic -> {
+                String content=favoriteComic.getComicBook().getName()+ ", truyện mà bạn thích vừa thêm 1 chương mới";
+                Announce announce=new Announce();
+                announce.setUser(favoriteComic.getUser());
+                announce.setType("fvr");
+                announce.setRead(false);
+                announce.setCreatedAt(new Date());
+                announce.setContent(content);
+                announce.setId(generateId.generateId());
+                announce.setLinkTo("/comic-detail/"+favoriteComic.getComicBook().getId());
+                simpMessagingTemplate.convertAndSendToUser(favoriteComic.getUser().getUserName(),"/queue/notifications",announce);
+                announceRepository.save(announce);
+            });
+
+        }
+        else {
+            chapter.setOpen(!chapter.isOpen());
+        }
+
         return new ResponseObject(true,"Success!",chapterRepository.save(chapter));
 
     }

@@ -9,6 +9,7 @@ import ConfirmDialog from "./dialogs/ConfirmDialog";
 import AlertDialog from "./dialogs/AlertDialog";
 import { useLocation } from "react-router-dom";
 import Scrollbars from "react-custom-scrollbars-2";
+import toast from "react-hot-toast";
 import {
   Button as Button2,
   List,
@@ -56,6 +57,7 @@ const Comment = (props) => {
       );
       if (response.data.status === true) {
         setComment(response.data.data);
+        setCommentList((prev)=>[response.data.data,...prev])
       }
     } catch (error) {
       console.log(error);
@@ -66,14 +68,31 @@ const Comment = (props) => {
   };
   const handleSubmit = (event) => {
     if (!checkAuth()) {
-      alert("Bạn cần đăng nhập để bình luận");
+      toast("Bạn cần đăng nhập để bình luận!",{
+        icon:'🛈',
+        position:"top-right",
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+       })
       event.preventDefault();
     } else if (commentContent === "") {
-      alert("Nhập nội dung bình luận");
+      toast("Vui lòng nhập nội dung bình luận!",{
+        icon:'🛈',
+        position:"top-right",
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+       })
       event.preventDefault();
     } else {
       insertComment();
       setCommentContent("");
+      event.preventDefault();
     }
   };
 
@@ -198,7 +217,15 @@ const Comment = (props) => {
         reportComment();
         setOpenReportReason(false);
     } else {
-        window.alert("Phải chọn ít nhất một lý do");
+      toast("Phải chọn ít nhất 1 lí do!",{
+        icon:'🛈',
+        position:"top-right",
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+       })
     }
   }
 
@@ -206,7 +233,7 @@ const Comment = (props) => {
     <>
       <div className="anime__details__review">
         <div className="section-title">
-          <h5>Bình luận</h5>
+          <h5>Bình luận ({commentList.length})</h5>
         </div>
         
         <AlertDialog
@@ -275,7 +302,7 @@ const Comment = (props) => {
           title="Xóa bình luận"
         ></ConfirmDialog>
          <Scrollbars
-                style={{ height: 300 }}>
+               autoHeight autoHeightMax={300}>
         {commentList.length ? (
           commentList.map((item) => (
             

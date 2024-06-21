@@ -13,6 +13,7 @@ import DialogContent from "@mui/material/DialogContent";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Loading from "./Loading";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const imgBgUrl = `${process.env.PUBLIC_URL}images/normal-breadcrumb.jpg`;
@@ -124,7 +125,8 @@ const Register = () => {
     const registerResponse = await register();
     console.log(birthdate)
     if (!registerResponse.data.status)
-      window.alert(registerResponse.data.message);
+      // window.alert(registerResponse.data.message);
+    toast.error(registerResponse.data.message,{duration:3000,position:"top-right"})
     else {
       handleOpenDialog();
       // console.log(otpDialogOpen);
@@ -145,6 +147,7 @@ const Register = () => {
 
   return (
     <div>
+     
       {isLoading && <Loading />}
       {/* <!-- Normal Breadcrumb Begin --> */}
       <section

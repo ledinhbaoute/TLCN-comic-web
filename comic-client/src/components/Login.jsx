@@ -6,6 +6,7 @@ import axios from "axios";
 import API_URL from "../config/config";
 import Cookies from "js-cookie";
 import { useNavigateTo } from "../service/navigation";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const imgBgUrl = `${process.env.PUBLIC_URL}images/normal-breadcrumb.jpg`;
@@ -22,7 +23,7 @@ const Login = () => {
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
-
+  
   const getUser = async () => {
     try {
       const response = await axios.get(`${API_URL}/user`, {
@@ -51,7 +52,11 @@ const Login = () => {
         await getUser();
         navigate("/");
     } catch (error) {
-      window.alert("Đăng nhập thất bại. Sai tên đăng nhập hoặc mật khẩu");
+      toast.error("Đăng nhập thất bại. Sai tên đăng nhập hoặc mật khẩu",{
+        duration: 3000,
+        position: 'top-right',
+      });
+      
       console.error(error);
     }
   };
@@ -115,6 +120,7 @@ const Login = () => {
                   <button type="submit" className="site-btn">
                     Đăng nhập
                   </button>
+
                 </form>
                 <Link to="../forgetpass" className="forget_pass">
                   Quên mật khẩu?

@@ -102,13 +102,10 @@ public class Statistical {
     public List<Integer> getProfits(Date startDate, Date endDate, String username){
         List<Integer> profits=new ArrayList<>();
         List<Transaction> transactions=transactionRepository.findAllByWallet_User_UserNameOrderByCreatedAtDesc(username);
-        List<Transaction>transactionsIn=transactions.stream().filter(t->t.getCreatedAt().after(startDate)&&t.getCreatedAt().before(endDate)&&t.getType()==1).
+        List<Transaction>transactionsIn=transactions.stream().filter(t->t.getCreatedAt().after(startDate)&&t.getCreatedAt().before(endDate)&&(t.getType()==1||t.getType()==4||t.getType()==5)).
         sorted((t1,t2)->t2.getCreatedAt().compareTo(t1.getCreatedAt())).collect(Collectors.toList());
-        List<Transaction>transactionsOut=transactions.stream().filter(t->t.getCreatedAt().after(startDate)&& t.getCreatedAt().before(endDate)&&t.getType()==2).
+        List<Transaction>transactionsOut=transactions.stream().filter(t->t.getCreatedAt().after(startDate)&& t.getCreatedAt().before(endDate)&&(t.getType()==2||t.getType()==3)).
                 sorted((t1,t2)->t2.getCreatedAt().compareTo(t1.getCreatedAt())).collect(Collectors.toList());
-
-        List<Donate>donatesOut=donateRepository.findAllByDonateWallet_User_UserNameOrderByDonateDateDesc(username).stream().filter(donate -> donate.getDonateDate().after(startDate)&&donate.getDonateDate().before(endDate)).collect(Collectors.toList());
-        List<Donate>donatesIn=donateRepository.findAllByReceiverWallet_User_UserNameOrderByDonateDateDesc(username).stream().filter(donate -> donate.getDonateDate().after(startDate)&&donate.getDonateDate().before(endDate)).collect(Collectors.toList());
         int moneyIn=0;
         int moneyOut=0;
 
@@ -116,17 +113,10 @@ public class Statistical {
              ) {
             moneyIn=moneyIn+transaction.getAmount();
         }
-        for (Donate donate:donatesIn
-        ) {
-            moneyIn=moneyIn+donate.getAmount();
-        }
+
         for (Transaction transaction:transactionsOut
         ) {
             moneyOut=moneyOut+transaction.getAmount();
-        }
-        for (Donate donate:donatesOut
-        ) {
-            moneyOut=moneyOut+donate.getAmount();
         }
         profits.add(moneyIn);
         profits.add(moneyOut);

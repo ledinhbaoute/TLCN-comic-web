@@ -10,7 +10,6 @@ const ComicItem = ({ item,chapter }) => {
   const location = useLocation();
   const currentPath = location.pathname
 
-
   const increaseView = async () => {
     try {
       const response = await axios.post(`${API_URL}/comic/view`,

@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface FavoriteComicRepository extends JpaRepository<FavoriteComic, FavoriteComicKey> {
     List<FavoriteComic>findByUser_UserName(String username);
+    List<FavoriteComic>findByComicBook_Id(String comicId);
 }

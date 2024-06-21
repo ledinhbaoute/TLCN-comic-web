@@ -8,6 +8,7 @@ import { Dialog } from "@mui/material";
 import { isImage, isSizeExceeded } from "../../security/CheckingFile";
 import { ReactSortable } from "react-sortablejs";
 import AlertDialog from "./AlertDialog";
+import toast, { Toaster } from "react-hot-toast";
 
 const AddChapterDialog = ({ open, onClose, comicId }) => {
     const [newChapterName, setNewChapterName] = useState("")
@@ -131,12 +132,19 @@ const AddChapterDialog = ({ open, onClose, comicId }) => {
                 }
                 onClose()
             } else {
-                window.alert("Có file không phải ảnh hoặc vượt quá 1Mb");
+                toast.error("Có file không phải ảnh hoặc vượt quá 1Mb",{position:"top-right"})
             }
         } else {
-            window.alert("Vui lòng nhập đầy đủ các mục");
+            toast("Vui lòng nhập đầy đủ các mục!", {
+                icon: '🛈',
+                position: "top-right",
+                style: {
+                    border: '1px solid #713200',
+                    padding: '16px',
+                    color: '#713200',
+                },
+            })
         }
-        // window.location.reload();
     };
     const handleOrderChange = (newList) => {
         const newFiles = newList.map(item => selectedFiles[item.id])
@@ -145,6 +153,7 @@ const AddChapterDialog = ({ open, onClose, comicId }) => {
     }
     return (
         <>
+            <Toaster />
             <AlertDialog
                 open={alertDialogOpen}
                 onClose={() => setAlertDialogOpen(false)}

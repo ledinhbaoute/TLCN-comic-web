@@ -141,13 +141,13 @@ public class ComicServiceImple implements IComicBookService {
                 genreList.add(genre.get());
         }
         comicBook.setGenres(genreList);
-        String image = imageStorageService.storeToCloudinary(file);
+        String image = imageStorageService.storeFile(file);
         comicBook.setImage(image);
 
         comicBookRepository.save(comicBook);
         List<Follower>followers=followRepository.findByUser_UserName(username);
         followers.forEach(follower -> {
-            String content=username+ "vừa tạo 1 truyện mới";
+            String content=user.getName()+ "vừa tạo 1 truyện mới";
             Announce announce=new Announce();
             announce.setUser(follower.getFollower());
             announce.setType("ncm");
@@ -161,7 +161,6 @@ public class ComicServiceImple implements IComicBookService {
         });
         return converter.convertEntityToDto(comicBook);
     }
-
     @Override
     public ResponseObject updateComic(String username, String comicId, String newName, List<String> genres, int newStatus,String newDescription) {
         Optional<User> optionalUser = userRepository.findOneByUserName(username);
@@ -274,7 +273,6 @@ public class ComicServiceImple implements IComicBookService {
         calendar.setTime(currentDate);
         calendar.add(Calendar.DAY_OF_YEAR, -8);
         Date overOneWeekAgo = calendar.getTime();
-        historyIncreaseViewRepo.deleteOldRecord(overOneWeekAgo);
     }
 
     @Override

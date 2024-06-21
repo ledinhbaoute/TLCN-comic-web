@@ -31,12 +31,16 @@ import PaymentInfoPage from './components/PaymentInfoPage';
 import PremiumRoute from './security/PremiumRoute';
 import PublicProfile from './components/PublicProfile';
 import Statistic from './components/Statistic';
+import User from './components/User';
+import UserPublic from './components/UserPublic';
+import { Toaster } from 'react-hot-toast';
 
 
 function App() {
   return (
 
     <BrowserRouter>
+    <Toaster/>
       <Routes>
         <Route element={<PageLayout />}>
           <Route exact path="/" Component={Home} />
@@ -51,13 +55,13 @@ function App() {
           <Route path='/favorite-comic' Component={FavoriteComicPage} />
           <Route path='/history-reading' Component={HistoryReadingPage} />
           <Route path='/testing' Component={OtpDialogInput} />
-          <Route path='/user/:userId' Component={PublicProfile}/>
+          <Route path='/user/:userId' Component={UserPublic}/>
 
         </Route>
 
         <Route element={<PrivateRoute />}>
           <Route element={<ProfileSidebar />}>
-            <Route path='/profile' Component={Profile} />
+            <Route path='/profile' Component={User} />
             <Route path='/comic-manage' Component={ComicManage} />
             <Route path='/statistic' Component={Statistic} />
             <Route path='/chapter-manage/:comicId' Component={ChapterManage} />

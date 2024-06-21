@@ -27,6 +27,10 @@ ALTER TABLE `users`
 ADD `created_at` date not null;
 ALTER TABLE `users`
 ADD `birthDate` date not null ;
+ALTER TABLE `users`
+ADD `intro` text ;
+
+
 LOCK TABLES `users` WRITE;
 ALTER TABLE `users` DISABLE KEYS ;
 ALTER TABLE `users` ENABLE KEYS ;
@@ -105,7 +109,7 @@ create table `chapters`(
 	`id` varchar(20) not null,
     `chapter_name` nvarchar(128) not null,
     `comicbook_id` varchar(20) not null,
-    `publish_date` date not null,
+    `publish_date` date,
     `ordinal_number` int unsigned not null,
     primary key (`id`),
     CONSTRAINT `fk_chapters_comicbooks` FOREIGN KEY (`comicbook_id`) REFERENCES `comicbooks` (`id`)

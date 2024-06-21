@@ -31,7 +31,7 @@ public class User implements Serializable {
     private Date createdAt;
     @Column(name = "birthDate")
     private Date birthDate;
-
+    private String intro;
 
     public User() {
     }
@@ -47,6 +47,14 @@ public class User implements Serializable {
         this.isLocked = isLocked;
         this.createdAt=createdAt;
         this.birthDate=birthDate;
+    }
+
+    public String getIntro() {
+        return intro;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro;
     }
 
     public Date getBirthDate() {

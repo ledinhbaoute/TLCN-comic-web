@@ -19,6 +19,7 @@ import {
 import AlertDialog from "./dialogs/AlertDialog";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import toast from "react-hot-toast";
 
 const PublicProfile = () => {
   const userId = useParams("userId");
@@ -205,13 +206,38 @@ const PublicProfile = () => {
 
   const handleClickDonate = () => {
     if (Number(amount) < 1000) {
-      window.alert("Số tiền tối thiểu là 1000VNĐ");
+      toast("Số tiền tối thiểu là 1000VNĐ",{
+        icon:'🛈',
+        position:"top-right",
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+       })
+      
     }
     else if (Number(amount) > 1000000) {
-      window.alert("Số tiền donate tối đa 1 000 000 trong một lần");
+      toast("Số tiền donate tối đa 1 000 000 trong một lần",{
+        icon:'🛈',
+        position:"top-right",
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+       })
 
     } else if (donateMessage.length > 1000) {
-      window.alert("Tin nhắn quá dài, tối đa 1000 ký tự");
+      toast("Tin nhắn quá dài, tối đa 1000 ký tự",{
+        icon:'🛈',
+        position:"top-right",
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+       })
     } else {
       donate();
     }
@@ -219,6 +245,7 @@ const PublicProfile = () => {
 
   return (
     <div className="profile-page-container">
+     
       <AlertDialog
         open={openAlertDialog}
         onClose={() => setAlertDialogOpen(false)}

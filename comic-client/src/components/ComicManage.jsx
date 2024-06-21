@@ -7,6 +7,7 @@ import AppContext from "../context/AppContext";
 import { Dialog } from "@mui/material";
 import AlertDialog from "./dialogs/AlertDialog";
 import ConfirmDialog from "./dialogs/ConfirmDialog";
+import toast from "react-hot-toast";
 
 const ComicManage = () => {
   const genresList = useContext(AppContext);
@@ -158,7 +159,15 @@ const ComicManage = () => {
       newComic.genres.length === 0 ||
       newComicImage === null
     ) {
-      window.alert("Vui lòng nhập đầy đủ các mục");
+      toast("Vui lòng nhập đầy đủ các mục!",{
+        icon:'🛈',
+        position:"top-right",
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+       })
     } else {
       const formData = new FormData();
       formData.append("comicName", newComic.name);
@@ -167,8 +176,6 @@ const ComicManage = () => {
       formData.append("image", newComicImage);
       addComic(formData);
       setShowAddDialog(false);
-
-      // window.location.reload();
     }
   };
 
@@ -313,7 +320,15 @@ const ComicManage = () => {
       selectedComic.discription === "" ||
       selectedComic.genres.length === 0
     ) {
-      window.alert("Vui lòng nhập đầy đủ thông tin");
+      toast("Vui lòng nhập đầy đủ thông tin!",{
+        icon:'🛈',
+        position:"top-right",
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+       })
     } else {
       if (!(selectedComicImg === null)) {
         const formData = new FormData();
@@ -361,6 +376,7 @@ const ComicManage = () => {
 
   return (
     <div className="comic-list-container">
+      
       <div className="search-bar">
         <input
           type="text"

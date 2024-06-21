@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import { Fade } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
 const Home = () => {
-  const imgHeroUrl = `${process.env.PUBLIC_URL}images/hero/hero-1.jpg`;
   const [listTopView, setListTopView] = useState([])
   const [listTrending, setListTrending] = useState([])
   const [listLatestUpdate, setListLatestUpdate] = useState([])
@@ -125,25 +124,7 @@ const Home = () => {
                   ))}
                 </div>
               </div>
-              {/* <div className="popular__product">
-                <div className="row">
-                  <div className="col-lg-8 col-md-8 col-sm-8">
-                    <div className="section-title">
-                      <h4>Popular Shows</h4>
-                    </div>
-                  </div>
-                  <div className="col-lg-4 col-md-4 col-sm-4">
-                    <div className="btn__all">
-                      <a href="#" className="primary-btn">
-                        View All <span className="arrow_right"></span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-    
-                </div>
-              </div> */}
+             
               <div className="recent__product">
                 <div className="row" >
                   <div className="col-lg-8 col-md-8 col-sm-8">
@@ -166,25 +147,6 @@ const Home = () => {
 
                 </div>
               </div>
-              {/* <div className="live__product">
-                <div className="row">
-                  <div className="col-lg-8 col-md-8 col-sm-8">
-                    <div className="section-title">
-                      <h4>Live Action</h4>
-                    </div>
-                  </div>
-                  <div className="col-lg-4 col-md-4 col-sm-4">
-                    <div className="btn__all">
-                      <a href="#" className="primary-btn">
-                        View All <span className="arrow_right"></span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                <div className="row">        
-           
-                           </div>
-              </div> */}
             </div>
             <div className="col-lg-4 col-md-6 col-sm-8">
               <ComicList listComic={listTopView} title="Lượt xem cao nhất"></ComicList>

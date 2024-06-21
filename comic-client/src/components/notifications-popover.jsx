@@ -329,6 +329,12 @@ function renderContent(notification) {
       title,
     };
   }
+  if (notification.type === 'fvr') {
+    return {
+      avatar: <img alt={notification.title} src="/assets/icons/glass/ic_comic.png" />,
+      title,
+    };
+  }
   return {
     avatar: notification.avatar ? <img alt={notification.title} src={notification.avatar} /> : null,
     title,

@@ -341,7 +341,7 @@ const Wallet = () => {
             <tr key={transaction.id}>
               <td>{transaction.id}</td>
               <td>{transaction.title}</td>
-              <td>{Number(transaction.amount).toLocaleString()}đ</td>
+              <td>{transaction.type===2||transaction.type===3? '-'+Number(transaction.amount).toLocaleString():'+'+Number(transaction.amount).toLocaleString()}đ</td>
               <td>{format(transaction.createdAt,'yyyy/MM/dd HH:mm:ss')}</td>
               <td>{Number(transaction.balance).toLocaleString()} đ</td>
             </tr>
