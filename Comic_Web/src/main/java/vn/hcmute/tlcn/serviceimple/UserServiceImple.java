@@ -314,6 +314,11 @@ public class UserServiceImple implements IUserService {
         user.setBirthDate(newBirthDate);
         userRepository.save(user);
     }
+    public void updateStatusOnline(String username){
+        User user=userRepository.findOneByUserName(username).orElse(null);
+        user.setOnline(!user.isOnline());
+        userRepository.save(user);
+    }
 
     public void deleteExpiredPremiumPackage(String username) {
         UserPremium userPremium = userPremiumRepo.findOneByUser_UserName(username).orElse(null);

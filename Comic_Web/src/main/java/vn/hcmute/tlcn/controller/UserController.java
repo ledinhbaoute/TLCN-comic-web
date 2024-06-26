@@ -59,6 +59,10 @@ public class UserController {
         }
         return ResponseEntity.status(401).body("Unauthorized!");
     }
+    @GetMapping("/getUserByUserName")
+    ResponseEntity<?> getUserByUserName(@RequestParam String userName) {
+        return ResponseEntity.ok(userServiceImple.getUser(userName));
+    }
     
     @GetMapping("/findUser/{userId}")
     ResponseEntity<?> getUserbyId(@PathVariable String userId) {
@@ -112,6 +116,7 @@ public class UserController {
                 .loadUserByUsername(username);
         final String token = jwtService.generateToken(userDetails);
         userServiceImple.deleteExpiredPremiumPackage(userDetails.getUsername());
+        userServiceImple.updateStatusOnline(username);
         return ResponseEntity.ok(new Token(token));
     }
 
@@ -173,6 +178,15 @@ public class UserController {
         if(authentication!=null){
             UserDetails userDetails= (UserDetails) authentication.getPrincipal();
             userServiceImple.updateProfile(userDetails.getUsername(),newName,newPhoneNumber,newIntro,newBirthDate);
+            return ResponseEntity.ok("Success");
+        }
+        return ResponseEntity.status(401).body("Unauthorized!");
+    }
+    @PostMapping("user/update_status")
+    ResponseEntity<?>updateStatusOnline(Authentication authentication){
+        if(authentication!=null){
+            UserDetails userDetails= (UserDetails) authentication.getPrincipal();
+            userServiceImple.updateStatusOnline(userDetails.getUsername());
             return ResponseEntity.ok("Success");
         }
         return ResponseEntity.status(401).body("Unauthorized!");

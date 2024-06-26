@@ -13,6 +13,7 @@ public class ComicWebApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ComicWebApplication.class, args);
 	}
+
 	@Bean
 	public Cloudinary cloudinary(){
 

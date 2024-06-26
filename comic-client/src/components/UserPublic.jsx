@@ -30,6 +30,9 @@ import AlertDialog from "./dialogs/AlertDialog";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import toast from "react-hot-toast";
+import Chatbox from "./Chatbox";
+import ChatHead from "./ChatHead";
+import Comment from "@mui/icons-material/Comment";
 
 const UserPublic = () => {
     const userId = useParams("userId");
@@ -365,6 +368,19 @@ const UserPublic = () => {
                                                 </Button>
                                             )}
                                         </Col>
+                                        
+                                    </Row>
+                                    <Row>
+                                        <Col className="ml-auto mr-auto" lg="3" md="6" xs="6">
+                                    <ChatHead
+                                        icon={
+                                            <IconButton size="small" sx={{ my: "12px", color: "primary.contrastText" }}>
+                                                <Comment sx={{color:'gray'}}/>
+                                            </IconButton>
+                                        }>
+                                        <Chatbox receiverUserName={user.userName}/>
+                                    </ChatHead>
+                                    </Col>
                                     </Row>
 
                                 </CardBody>
@@ -424,7 +440,7 @@ const UserPublic = () => {
                                                     </Col>
                                                 </Row>
                                             </li>))}
-                                        
+
                                     </ul>
                                     <div className="pagination-container">
                                         {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (

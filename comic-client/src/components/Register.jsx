@@ -26,6 +26,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [otpDialogOpen, setOtpDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isOlderThanToday, setIsOlderThanToday] = useState(false);
 
   const registerFailReasons = {
     "Password must be 8 or more characters in length.":
@@ -54,7 +55,11 @@ const Register = () => {
     setEmail(event.target.value);
   };
   const handleBirthDateChange=(event)=>{
-    setBirthDate(event.target.value)
+    const selectedDate = event.target.value;
+    setBirthDate(selectedDate);
+    const birthDateObject = new Date(selectedDate);
+    const today = new Date();
+    setIsOlderThanToday(birthDateObject < today);
   }
 
   const handleUsernameChange = (event) => {
@@ -121,6 +126,10 @@ const Register = () => {
 
   const handleRegisterFormSubmit = async (event) => {
     event.preventDefault();
+    if(!isOlderThanToday){
+      toast.error("Ngày sinh vượt quá ngày hiện tại",{position:"top-right"});
+      return;
+    }
 
     const registerResponse = await register();
     console.log(birthdate)
@@ -184,6 +193,7 @@ const Register = () => {
                       id="username"
                       placeholder="Tên đăng nhập"
                       value={username}
+                      required
                       onChange={handleUsernameChange}
                     />
                     <span className="icon_profile"></span>
@@ -195,6 +205,7 @@ const Register = () => {
                       id="email"
                       placeholder="Email"
                       value={email}
+                      required
                       onChange={handleEmailChange}
                     />
                     <span className="icon_mail"></span>
@@ -206,6 +217,7 @@ const Register = () => {
                       id="fullname"
                       placeholder="Họ và tên"
                       value={fullname}
+                      required
                       onChange={handleFullnameChange}
                     />
                     <span className="icon_info"></span>
@@ -219,6 +231,7 @@ const Register = () => {
                       id="birthdate"
                       placeholder="Ngày Sinh"
                       value={birthdate}
+                      required
                       onChange={handleBirthDateChange}
                     />
                     <span className="fa fa-calendar"></span>
@@ -232,6 +245,7 @@ const Register = () => {
                       id="password"
                       placeholder="Mật khẩu"
                       value={password}
+                      required
                       onChange={handlePasswordChange}
                     />
                     <span className="icon_lock"></span>
@@ -243,6 +257,7 @@ const Register = () => {
                       id="confirmPassword"
                       placeholder="Nhập lại mật khẩu"
                       value={confirmPassword}
+                      required
                       onChange={handleConfirmPasswordChange}
                     />
                     <span className="icon_lock"></span>

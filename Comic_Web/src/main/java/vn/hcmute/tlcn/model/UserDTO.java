@@ -19,6 +19,7 @@ public class UserDTO {
     private Date createdAt;
     private Date birthDate;
     private String intro;
+    private boolean isOnline;
     public UserDTO() {
     }
 
@@ -43,6 +44,14 @@ public class UserDTO {
 
     public void setIntro(String intro) {
         this.intro = intro;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(boolean online) {
+        isOnline = online;
     }
 
     public Date getBirthDate() {

@@ -32,6 +32,7 @@ public class User implements Serializable {
     @Column(name = "birthDate")
     private Date birthDate;
     private String intro;
+    private boolean isOnline;
 
     public User() {
     }
@@ -47,6 +48,7 @@ public class User implements Serializable {
         this.isLocked = isLocked;
         this.createdAt=createdAt;
         this.birthDate=birthDate;
+        this.isOnline=false;
     }
 
     public String getIntro() {
@@ -55,6 +57,14 @@ public class User implements Serializable {
 
     public void setIntro(String intro) {
         this.intro = intro;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(boolean online) {
+        isOnline = online;
     }
 
     public Date getBirthDate() {

@@ -9,6 +9,7 @@ import axios from "axios";
 import API_URL from "../config/config";
 import SearchResutlItem from "./SearchResultItem";
 import NotificationsPopover from "./notifications-popover";
+import MessagesPopover from "./MessagesPopover";
 
 const Header = () => {
   const appContext = useContext(AppContext);
@@ -17,6 +18,7 @@ const Header = () => {
 
   const [keyWord, setKeyWord] = useState("");
   const [searchingList, setSearchingList] = useState([]);
+  
   useEffect(() => {
     if (keyWord !== "") {
       searchComic(keyWord)
@@ -28,20 +30,6 @@ const Header = () => {
     setKeyWord(event.target.value);
   }
 
-  // try {
-  //   const response = await axios.get(
-  //     `${API_URL}/search/comics?keySearch=${keyWord}`
-  //   );
-  //   setSearchingList(response.data.data);
-  //   setData(searchingList.map((item) => ({
-  //     key: item.id,
-  //     value: item.name
-  //   })))
-  //   console.log(searchingList);
-  // } catch (error) {
-  //   console.log(error);
-  // }
-  // };
   const searchComic = async (keyS) => {
 
     try {
@@ -56,10 +44,25 @@ const Header = () => {
     }
   };
 
-  // const [genres, setGenres] = useState([]);
   const navigate = useNavigate();
 
+  const changeStatusOnline = async () => {
+      try {
+         await axios.post(
+          `${API_URL}/user/update_status`, {},
+          {
+            headers: {
+              Authorization: "Bearer " + Cookies.get("access_token"),
+            },
+          }
+        );
+       
+      } catch (error) {
+        console.log(error);
+      } 
+  };
   const logout = () => {
+    changeStatusOnline();
     Cookies.remove("access_token");
     window.sessionStorage.clear();
   };
@@ -74,18 +77,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    // const fetchData = async () => {
-    //   try {
-    //     const response = await axios.get(`${API_URL}/genres`);
-    //     setGenres(response.data.data);
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // };
-    // fetchData();
-    // setGenres(appContext.genres);
     checkAuth();
-    //console.log(appContext.genres)
   }, []);
 
   return (
@@ -155,7 +147,7 @@ const Header = () => {
                     /> */}
 
                     <input className="searchTerm" type="text" placeholder="Search Here..." onChange={handleKeyWordChange}></input>
-                    {(keyWord != "" && searchingList != []) && (
+                    {(keyWord !== "" && searchingList != []) && (
 
                       <ul className="dropdown-search">
                         <li>
@@ -173,10 +165,11 @@ const Header = () => {
           <div className="col-lg-2">
 
             <div className="header__right">
-                        
+
               {checkAuth() ? (
                 <a>
-                  <NotificationsPopover/>  
+                  <MessagesPopover/>
+                  <NotificationsPopover />
                   <Link to="./profile">
                     <span className="icon_profile"></span>
                   </Link>
@@ -187,11 +180,23 @@ const Header = () => {
                       className="fa fa-sign-out"
                     ></span>
                   </Link>
+                  {/* <ChatHead
+                    icon={
+                      <IconButton size="small" sx={{ my: "12px", color: "primary.contrastText" }}>
+                        <Comment />
+                      </IconButton>
+                    }>
+                    <Chatbox />
+                  </ChatHead> */}
+
                 </a>
               ) : (
-                <Link to="./login">
-                  <span className="fa fa-sign-in"></span>
-                </Link>
+                <>
+                  <Link to="./login">
+                    <span className="fa fa-sign-in"></span>
+                  </Link>
+                 
+                </>
               )}
             </div>
           </div>

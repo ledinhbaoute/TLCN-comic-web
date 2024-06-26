@@ -21,6 +21,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import toast from "react-hot-toast";
 
+
 const PublicProfile = () => {
   const userId = useParams("userId");
   const [user, setUser] = useState({});

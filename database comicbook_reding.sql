@@ -29,6 +29,8 @@ ALTER TABLE `users`
 ADD `birthDate` date not null ;
 ALTER TABLE `users`
 ADD `intro` text ;
+ALTER TABLE `users`
+ADD `isOnline` tinyint(1) default 0 ;
 
 
 LOCK TABLES `users` WRITE;
@@ -399,6 +401,23 @@ create table `price`(
 LOCK TABLES `price` WRITE;
 ALTER TABLE `price` DISABLE KEYS ;
 ALTER TABLE `price` ENABLE KEYS ;
+unlock tables;
+
+create table `messages`(
+	`id`int auto_increment,
+    `sender` varchar(20) not null,
+    `receiver` varchar(20) not null,
+    `content` text ,
+    `time` timestamp(6) default current_timestamp(6),
+    foreign key (`sender`) references users(`id`),
+    foreign key (`receiver`) references users(`id`),
+    primary key(`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+alter table messages add `isRead` tinyint(1) default 0;
+LOCK TABLES `messages` WRITE;
+ALTER TABLE `messages` DISABLE KEYS ;
+ALTER TABLE `messages` ENABLE KEYS ;
 unlock tables;
 
 
