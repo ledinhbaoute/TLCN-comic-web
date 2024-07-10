@@ -9,6 +9,7 @@ import AlertDialog from "./dialogs/AlertDialog";
 
 import EditChapterDialog from "./dialogs/EditChapterDialog";
 import AddChapterDialog from "./dialogs/AddChapterDialog";
+import toast from "react-hot-toast";
 
 const ChapterManage = () => {
   const { comicId } = useParams();
@@ -20,13 +21,27 @@ const ChapterManage = () => {
 
   const getChapters = async () => {
     try {
-      const response = await axios.get(`${API_URL}/chapters/${comicId}`);
-      setChapterList(response.data.data);
-      //   console.log(response.data.data);
+      const response = await axios.get(`${API_URL}/user/chapters/${comicId}`, {
+        headers: {
+          Authorization: "Bearer " + Cookies.get("access_token"),
+        },
+      });
+      setChapterList(response.data.data)
+
     } catch (error) {
       console.log(error);
     }
   };
+  const updateChapterList = (updatedChapter,isEdit) => {
+    if(isEdit){
+    setChapterList((prevChapters) => 
+      prevChapters.map(chapter => chapter.id === updatedChapter.id ? updatedChapter : chapter)
+    );
+  }
+    else{
+     setChapterList((prevChapters)=>[...prevChapters,updatedChapter])
+    }
+  }
 
   useEffect(() => {
     getChapters();
@@ -93,16 +108,6 @@ const ChapterManage = () => {
   };
 
   const handleDeleteClick = (chapterId, chapterName, ordinalNumber) => {
-    // const shouldDelete = window.confirm(
-    //   "Bạn có chắc chắn muốn xóa chương này?"
-    // );
-
-    // if (shouldDelete) {
-    //   console.log(chapterId);
-    //   deleteChapter(chapterId);
-    //   //   window.location.reload();
-    // }
-
     setChapterToDelete({
       id: chapterId,
       name: chapterName,
@@ -135,7 +140,7 @@ const ChapterManage = () => {
   }
   const publicChapter = async (chapterId) => {
     try {
-      await axios.post(`${API_URL}/user/publicChapter`, {
+      const response = await axios.post(`${API_URL}/user/publicChapter`, {
         chapterId: chapterId
       },
         {
@@ -145,9 +150,14 @@ const ChapterManage = () => {
           },
 
         });
-        setChapterList(prevList => prevList.map(chapter => 
+      if (response.data.status) {
+        setChapterList(prevList => prevList.map(chapter =>
           chapter.id === chapterId ? { ...chapter, open: !chapter.open } : chapter
         ));
+      }
+      else {
+        toast.error(response.data.message)
+      }
 
     } catch (error) {
       console.log(error);
@@ -184,9 +194,9 @@ const ChapterManage = () => {
         onClose={() => setAlertDialogOpen(false)}
         message={alertMessage}
       />
-      <AddChapterDialog open={showAddDialog} onClose={handleCancelAdd} comicId={comicId} />
+      <AddChapterDialog open={showAddDialog} onClose={handleCancelAdd} comicId={comicId} setChapterList={updateChapterList}/>
 
-      <EditChapterDialog open={showEditDialog} onClose={handleCancelEdit} selectedChapter={selectedChapter} />
+      <EditChapterDialog open={showEditDialog} onClose={handleCancelEdit} selectedChapter={selectedChapter} setChapterList={updateChapterList} />
 
       <table>
         <thead>
@@ -194,7 +204,11 @@ const ChapterManage = () => {
             <th>Số thứ tự</th>
             <th></th>
             <th>Tên chương</th>
+            <th></th>
+            <th>Trạng thái</th>
+            <th></th>
             <th>Công khai</th>
+            <th></th>
             <th></th>
             <th></th>
           </tr>
@@ -207,11 +221,15 @@ const ChapterManage = () => {
               <td>
                 <Link to={`/chapter/${chapter.id}`}>{chapter.chapterName}</Link>
               </td>
+              <td></td>
+              <td>
+                {chapter.accepted?"Đã được duyệt":"Đang chờ duyệt"}
+              </td>
+              <td></td>
               {chapter.open ?
-                <td><img onClick={() => publicChapter(chapter.id)} src="https://cdn-icons-png.flaticon.com/128/13680/13680221.png" alt="public" /></td> :
-                <td><img onClick={() => publicChapter(chapter.id)} src="https://cdn-icons-png.flaticon.com/128/16208/16208276.png" alt="private" /></td>
+                <td><img style={{height:40,width:40}} onClick={() => publicChapter(chapter.id)} src="https://cdn-icons-png.flaticon.com/128/13680/13680221.png" alt="public" /></td> :
+                <td><img style={{height:40,width:40}} onClick={() => publicChapter(chapter.id)} src="https://cdn-icons-png.flaticon.com/128/16208/16208276.png" alt="private" /></td>
               }
-
               <td></td>
               <td>
                 <button

@@ -12,6 +12,7 @@ const Review = (props) => {
     const [ratingComment, setRatingComment] = useState("");
     const [ratingScore, setRatingScore] = useState(0)
     const [rating, setRating] = useState({})
+    const defaultAvatarUrl = `${process.env.PUBLIC_URL}/images/default-avatar.png`;
     
     const handleTextareaChange = (event) => {
         setRatingComment(event.target.value);
@@ -94,7 +95,7 @@ const Review = (props) => {
                 {ratingList.length ? (ratingList.map((item) => (
                     <div key={item.id} className="anime__review__item">
                         <div className="anime__review__item__pic">
-                            <img src={item.user.avatar} alt="" />
+                            <img src={item.user.avatar?item.user.avatar:defaultAvatarUrl} alt="" />
                         </div>
                         <div className="anime__review__item__text">
                             <h6>{item.user.name}<br></br><span>{item.score}⭐</span></h6>

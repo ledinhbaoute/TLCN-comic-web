@@ -538,7 +538,7 @@ function User() {
                   <img
                     alt="..."
                     className="avatar border-gray"
-                    src={user.avatar}
+                    src={user.avatar?user.avatar:defaultAvatarUrl}
                     onClick={handleAvatarClick}
                   />
                   <input

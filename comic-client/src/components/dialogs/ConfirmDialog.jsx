@@ -1,13 +1,19 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import * as React from "react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
-const ConfirmDialog = ({open, onClose, onAccept, message, title = 'Xác nhận'}) => {
- 
+const ConfirmDialog = ({
+  open,
+  onClose,
+  onAccept,
+  message,
+  title = "Xác nhận",
+  buttonText = "Xác nhận",
+}) => {
   const handleAccept = () => {
     onClose();
     onAccept();
@@ -25,18 +31,16 @@ const ConfirmDialog = ({open, onClose, onAccept, message, title = 'Xác nhận'}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {title}
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-                {message}
+            {message}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleExit}>Hủy</Button>
-          <Button onClick={handleAccept} autoFocus style={{color: "red"}}>
-            Xác nhận
+          <Button onClick={handleAccept} autoFocus style={{ color: "red" }}>
+            {buttonText}
           </Button>
         </DialogActions>
       </Dialog>

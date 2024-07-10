@@ -11,16 +11,18 @@ public class ChapterDTO {
 
     private int ordinalNumber;
     private boolean open;
+    private  boolean isAccepted;
 
     public ChapterDTO() {
     }
 
-    public ChapterDTO(String id, String chapterName, ComicBookDTO comicBook_Id, Date publishDate, int ordinalNumber) {
+    public ChapterDTO(String id, String chapterName, ComicBookDTO comicBook_Id, Date publishDate, int ordinalNumber,boolean isAccepted) {
         this.id = id;
         this.chapterName = chapterName;
         this.comicBookDTO = comicBook_Id;
         this.publishDate = publishDate;
         this.ordinalNumber = ordinalNumber;
+        this.isAccepted=isAccepted;
     }
 
     public String getId() {
@@ -37,6 +39,14 @@ public class ChapterDTO {
 
     public void setOpen(boolean open) {
         this.open = open;
+    }
+
+    public boolean isAccepted() {
+        return isAccepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        isAccepted = accepted;
     }
 
     public String getChapterName() {

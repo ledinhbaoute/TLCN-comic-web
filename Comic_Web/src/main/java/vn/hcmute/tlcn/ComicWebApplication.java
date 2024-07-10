@@ -16,7 +16,6 @@ public class ComicWebApplication {
 
 	@Bean
 	public Cloudinary cloudinary(){
-
 	Cloudinary c= new Cloudinary(ObjectUtils.asMap(
 			"cloud_name", "dooppr30k",
 			"api_key", "856277726967137",

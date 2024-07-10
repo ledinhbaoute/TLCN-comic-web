@@ -74,20 +74,29 @@ public class ChapterImageServiceImple implements IChapterImageService {
         return new ResponseObject(true, "Success!", chapterImageDTOS);
 }
     @Override
-public ResponseEntity<?> changeOrderImageList(String username, String chapterId,List<MultipartFile>newOrderList){
-    User user=userRepository.findOneByUserName(username).orElse(null);
-    if(user==null)
-        return ResponseEntity.ok().body(new ResponseObject(false,"User not exist!",""));
-    Chapter chapter=chapterRepository.findById(chapterId).orElse(null);
-    if(!chapter.getComicBook_Id().getActorId().getUserName().equals(username))
-        return ResponseEntity.ok().body(new ResponseObject(false,"Cannot edit others people's chapter",""));
-    List<ChapterImage>chapterImages=chapterImageRepository.findByChapter_IdOrderByOrdinalNumberAsc(chapterId);
-    chapterImageRepository.deleteAll(chapterImages);
-    for (MultipartFile file:newOrderList
-         ) {
-        addImageChapter(username,chapterId,file);
-    }
-    return ResponseEntity.ok().body(new ResponseObject(true,"Success",""));
+public ResponseEntity<?> changeOrderImageList(String username, String chapterId,List<MultipartFile>newOrderList,boolean isAccept){
+        User user=userRepository.findOneByUserName(username).orElse(null);
+        if(user==null)
+            return ResponseEntity.ok().body(new ResponseObject(false,"User not exist!",""));
+        Chapter chapter=chapterRepository.findById(chapterId).orElse(null);
+        if(!chapter.getComicBook_Id().getActorId().getUserName().equals(username))
+            return ResponseEntity.ok().body(new ResponseObject(false,"Cannot edit others people's chapter",""));
+        List<ChapterImage>chapterImages=chapterImageRepository.findByChapter_IdOrderByOrdinalNumberAsc(chapterId);
+        chapterImageRepository.deleteAll(chapterImages);
+        for (MultipartFile file:newOrderList
+        ) {
+            addImageChapter(username,chapterId,file);
+        }
+        if(!isAccept){
+            chapter.setAccepted(false);
+            chapter.setOpen(false);
+            chapterRepository.save(chapter);
+        }
+        else {
+            chapter.setAccepted(true);
+            chapterRepository.save(chapter);
+        }
+        return ResponseEntity.ok().body(new ResponseObject(true,"Success",converter.convertEntityToDto(chapter)));
 
 }
     @Override

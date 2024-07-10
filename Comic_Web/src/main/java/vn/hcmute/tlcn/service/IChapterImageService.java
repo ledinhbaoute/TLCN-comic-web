@@ -13,6 +13,6 @@ public interface IChapterImageService {
 //    public byte[] readFileContent(String fileName);
     int deleteChapterImg(String username,String fileName);
 //    ResponseEntity<?> changeOrderImageList(String username, String chapterId,List<ChapterImageDTO>newOrderList);
-    ResponseEntity<?> changeOrderImageList(String username, String chapterId,List<MultipartFile>newOrderList);
+    ResponseEntity<?> changeOrderImageList(String username, String chapterId,List<MultipartFile>newOrderList,boolean isAccept);
 
 }

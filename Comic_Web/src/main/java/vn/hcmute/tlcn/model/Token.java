@@ -5,6 +5,7 @@ public class Token {
 
     public Token(String accessToken) {
         this.accessToken = accessToken;
+
     }
 
     public Token() {

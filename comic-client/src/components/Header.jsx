@@ -10,6 +10,7 @@ import API_URL from "../config/config";
 import SearchResutlItem from "./SearchResultItem";
 import NotificationsPopover from "./notifications-popover";
 import MessagesPopover from "./MessagesPopover";
+import SearchResultPopover from "./SearchResultPopover";
 
 const Header = () => {
   const appContext = useContext(AppContext);
@@ -24,7 +25,7 @@ const Header = () => {
       searchComic(keyWord)
     }
   }
-    , [keyWord]);
+  , [keyWord]);
 
   const handleKeyWordChange = (event) => {
     setKeyWord(event.target.value);
@@ -136,19 +137,11 @@ const Header = () => {
                     </NavLink>
                   </li>
                   <li>
-                    {/* <ReactSearchBox
-                      leftIcon={<>🔎</>}
-                      iconBoxSize="28px"
-                      placeholder="Search Here..."
-                      data={
-                        transformedArray
-                      }
-                      onChange={handleKeyWordChange}
-                    /> */}
-
-                    <input className="searchTerm" type="text" placeholder="Search Here..." onChange={handleKeyWordChange}></input>
+                    <SearchResultPopover/>
+                    {/* <input className="searchTerm" type="text" placeholder="Search Here..." onChange={handleKeyWordChange}></input>        
                     {(keyWord !== "" && searchingList != []) && (
 
+                      
                       <ul className="dropdown-search">
                         <li>
                           {searchingList.map((item) => (
@@ -156,7 +149,7 @@ const Header = () => {
                           ))}
                         </li>
                       </ul>
-                    )}
+                    )} */}
                   </li>
                 </ul>
               </nav>
@@ -180,14 +173,7 @@ const Header = () => {
                       className="fa fa-sign-out"
                     ></span>
                   </Link>
-                  {/* <ChatHead
-                    icon={
-                      <IconButton size="small" sx={{ my: "12px", color: "primary.contrastText" }}>
-                        <Comment />
-                      </IconButton>
-                    }>
-                    <Chatbox />
-                  </ChatHead> */}
+                
 
                 </a>
               ) : (

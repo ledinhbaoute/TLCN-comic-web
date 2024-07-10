@@ -48,8 +48,8 @@ public class ChapterImageController {
         return ResponseEntity.status(401).body("Unauthenticated!");
     }
     @PostMapping("/user/changeOrderNumber")
-    ResponseEntity<?>changeOrderNumber(Authentication authentication,@RequestParam String chapterId, @RequestParam("newList") List<MultipartFile>newList){
+    ResponseEntity<?>changeOrderNumber(Authentication authentication,@RequestParam String chapterId, @RequestParam("newList") List<MultipartFile>newList,@RequestParam boolean isAccept){
        UserDetails userDetails= (UserDetails) authentication.getPrincipal();
-        return imageService.changeOrderImageList(userDetails.getUsername(),chapterId,newList);
+        return imageService.changeOrderImageList(userDetails.getUsername(),chapterId,newList,isAccept);
     }
 }

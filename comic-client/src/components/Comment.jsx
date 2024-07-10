@@ -26,6 +26,7 @@ const Comment = (props) => {
   const [comment, setComment] = useState({});
   const [alertMessage, setAlertMessage] = useState("");
   const [alertDialogOpen, setAlertDialogOpen] = useState(false);
+  const defaultAvatarUrl = `${process.env.PUBLIC_URL}/images/default-avatar.png`;
 
   useEffect(() => {
     const getCommentByChapter = async () => {
@@ -303,13 +304,14 @@ const Comment = (props) => {
         ></ConfirmDialog>
          <Scrollbars
                autoHeight autoHeightMax={300}>
+                
         {commentList.length ? (
           commentList.map((item) => (
             
             <div id={item.id} key={item.id} className="anime__review__item">
               <div className="anime__review__item__pic">
                 <img
-                  src={item.user.avatar}
+                  src={item.user.avatar?item.user.avatar:defaultAvatarUrl}
                   alt=""
                 />
               </div>

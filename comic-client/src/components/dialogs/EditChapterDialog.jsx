@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 import API_URL from "../../config/config";
+import { PY_API_URL } from "../../config/config";
 import Cookies from "js-cookie";
 import { Dialog } from "@mui/material";
 // import { isImage, isSizeExceeded } from "../security/CheckingFile";
@@ -10,23 +11,25 @@ import { ReactSortable } from "react-sortablejs";
 import AlertDialog from "./AlertDialog";
 import toast, { Toaster } from "react-hot-toast";
 
-const EditChapterDialog = ({ open, onClose, selectedChapter }) => {
+const EditChapterDialog = ({ open, onClose, selectedChapter, setChapterList }) => {
     const [chapter, setChapter] = useState(selectedChapter)
     const [selectedFiles, setSelectedFiles] = useState([])
+    const [isAccept, setIsAccept] = useState(true)
     const [imageList, setImageList] = useState([]);
     const [previewImages, setPreviewImages] = useState([])
     const [alertDialogOpen, setAlertDialogOpen] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
 
     useEffect(() => {
-        
+
         setChapter(selectedChapter);
         getChapterDetail(selectedChapter.id)
     }, [selectedChapter]);
-    useEffect(()=>{
+    useEffect(() => {
         setPreviewImages([])
         setSelectedFiles([])
-    },[open])
+        setIsAccept(true)
+    }, [open])
 
     const getChapterDetail = async (chapterId) => {
         try {
@@ -81,13 +84,55 @@ const EditChapterDialog = ({ open, onClose, selectedChapter }) => {
         setSelectedFiles(newFiles)
         setPreviewImages(newList.map(i => i.url))
     }
+    const handleCheckingImage = async (image) => {
+        try {
+            const formData = new FormData();
+            formData.append("image", image);
+            const response = await axios.post(
+                `${PY_API_URL}/checking_image`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+            
+            return response.data;
+        } catch (error) {
+            console.log(error);
+            setAlertMessage("Kiểm tra ảnh thất bại, đã có lỗi xảy ra");
+            setAlertDialogOpen(true);
+        }
+    };
+    const handleAzureCheckingImage = async (image) => {
+        try {
+            const formData = new FormData();
+            formData.append("image", image);
+            const response = await axios.post(
+                `${PY_API_URL}/azure_checking_image`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+            console.log(response.data);
+            return response.data;
+        } catch (error) {
+            console.log(error);
+            setAlertMessage("Kiểm tra ảnh thất bại, đã có lỗi xảy ra");
+            setAlertDialogOpen(true);
+        }
+    };
     const handleRemoveImage = (index) => {
         const newPreviewImages = previewImages.filter((_, i) => i !== index);
         const newSelectedFiles = selectedFiles.filter((_, i) => i !== index);
         setPreviewImages(newPreviewImages);
         setSelectedFiles(newSelectedFiles);
     };
-    const handleEditChapter = () => {
+    const handleEditChapter = async () => {
         if (chapter.ordinalNumber === "" || chapter.name === "") {
             toast("Vui lòng nhập đầy đủ các mục!", {
                 icon: '🛈',
@@ -100,12 +145,102 @@ const EditChapterDialog = ({ open, onClose, selectedChapter }) => {
             })
         } else {
             if (chapter.ordinalNumber < 0) {
-                toast.error("Số chương không được nhỏ hơn 0",{position:"top-right"});
+                toast.error("Số chương không được nhỏ hơn 0", { position: "top-right" });
             } else {
-                editChapter();
-                changeOrderImage(chapter.id, selectedFiles)
+                const results = [];
+                for (const file of selectedFiles) {
+                    const result = await handleCheckingImage(file);
+                    if (!result.SFW) {
+                        results.push(result);
+                    }
+                }
+                if (results.length === 0) {
+                    const azure_results = [];
+                    for (const file of selectedFiles) {
+                        const azure_result = await handleAzureCheckingImage(file);
+                        if (!azure_result.SFW) {
+                            azure_results.push(azure_result);
+                        }
+                    }
+                    if (azure_results.length === 0) {
+                        editChapter();
+                        changeOrderImage(chapter.id, selectedFiles, true)
+                        toast.success("Cập nhật chương thành công")
+                        onClose();
+                    }
+                    else {
+                        var listFile = "";
+                        azure_results.forEach((azure_result) => {
+                            listFile = listFile + azure_result.filename + ", ";
+                        });
 
-                onClose();
+                        toast.error(`Nội dung của bạn không được duyệt do chứa các file hình ảnh nhạy cảm sau: ${listFile}`)
+                        setIsAccept(false)
+                    }
+                }
+                else {
+                    var listFile = "";
+                    results.forEach((result) => {
+                        listFile = listFile + result.filename + ", ";
+                    });
+
+                    toast.error(`Nội dung của bạn không được duyệt do chứa các file hình ảnh nhạy cảm sau: ${listFile}`)
+                    setIsAccept(false)
+                }
+            }
+        }
+    };
+    const handleEditChapterIfHaveSensetive = async () => {
+        if (chapter.ordinalNumber === "" || chapter.name === "") {
+            toast("Vui lòng nhập đầy đủ các mục!", {
+                icon: '🛈',
+                position: "top-right",
+                style: {
+                    border: '1px solid #713200',
+                    padding: '16px',
+                    color: '#713200',
+                },
+            })
+        } else {
+            if (chapter.ordinalNumber < 0) {
+                toast.error("Số chương không được nhỏ hơn 0", { position: "top-right" });
+            } else {
+                const results = [];
+                for (const file of selectedFiles) {
+                    const result = await handleCheckingImage(file);
+                    if (!result.SFW) {
+                        results.push(result);
+                    }
+                }
+                if (results.length === 0) {
+                    const azure_results = [];
+                    for (const file of selectedFiles) {
+                        const azure_result = await handleAzureCheckingImage(file);
+                        if (!azure_result.SFW) {
+                            azure_results.push(azure_result);
+                        }
+                    }
+                    if (azure_results.length === 0) {
+                        editChapter();
+                        changeOrderImage(chapter.id, selectedFiles, true)
+                        toast.success("Cập nhật chương thành công")
+                        onClose();
+                    }
+                    else {
+                        editChapter()
+                        changeOrderImage(chapter.id, selectedFiles, false)
+                        setIsAccept(true)
+                        toast.success("Đã gửi yêu cầu duyệt lại")
+                        onClose();
+                    }
+                }
+                else {
+                    editChapter()
+                    changeOrderImage(chapter.id, selectedFiles, false)
+                    setIsAccept(true)
+                    toast.success("Đã gửi yêu cầu duyệt lại")
+                    onClose();
+                }
             }
         }
     };
@@ -125,19 +260,17 @@ const EditChapterDialog = ({ open, onClose, selectedChapter }) => {
                     },
                 }
             );
-            console.log(response.data);
-
-            setAlertMessage("Cập nhật thông tin chương thành công.");
-            setAlertDialogOpen(true);
+            return response.data.data;
         } catch (error) {
             console.log(error);
             setAlertMessage("Cập nhật thông tin chương thất bại.");
             setAlertDialogOpen(true);
         }
     };
-    const changeOrderImage = async (chapterId, newList) => {
+    const changeOrderImage = async (chapterId, newList, isAccept) => {
         const formData = new FormData();
         formData.append('chapterId', chapterId);
+        formData.append('isAccept', isAccept);
         newList.forEach((file) => {
             formData.append('newList', file);
         });
@@ -153,7 +286,9 @@ const EditChapterDialog = ({ open, onClose, selectedChapter }) => {
                     },
                 },
             );
-            console.log(response.data)
+            if (response.data.status) {
+                setChapterList(response.data.data, true)
+            }
         } catch (error) {
             console.log(error);
         }
@@ -161,7 +296,6 @@ const EditChapterDialog = ({ open, onClose, selectedChapter }) => {
 
     return (
         <>
-        <Toaster/>
             <AlertDialog
                 open={alertDialogOpen}
                 onClose={() => setAlertDialogOpen(false)}
@@ -225,7 +359,9 @@ const EditChapterDialog = ({ open, onClose, selectedChapter }) => {
                         </ReactSortable>
                     }
                     <div>
-                        <button onClick={handleEditChapter}>Xác nhận</button>
+                        {isAccept && <button onClick={handleEditChapter}>Xác nhận</button>}
+                        {!isAccept && <button onClick={handleEditChapterIfHaveSensetive}>Yêu cầu duyệt lại</button>}
+
                         <button onClick={onClose}>Hủy</button>
                     </div>
                 </div>

@@ -184,18 +184,20 @@ export default function Chatbox({ togglePopup, receiverUserName, setChatList }) 
       }
     };
     markReadChat()
-    setChatList(prevChatList => {
-      const updatedChatList = new Map(Object.entries(prevChatList));
-      if (updatedChatList.has(receiverUserName)) {
-        const updatedMessages = updatedChatList.get(receiverUserName).map(message => ({
-          ...message,
-          read: true
-        }));
-        updatedChatList.set(receiverUserName, updatedMessages);
-      }
+    if (setChatList) {
+      setChatList(prevChatList => {
+        const updatedChatList = new Map(Object.entries(prevChatList));
+        if (updatedChatList.has(receiverUserName)) {
+          const updatedMessages = updatedChatList.get(receiverUserName).map(message => ({
+            ...message,
+            read: true
+          }));
+          updatedChatList.set(receiverUserName, updatedMessages);
+        }
 
-      return Object.fromEntries(updatedChatList);
-    })
+        return Object.fromEntries(updatedChatList);
+      })
+    }
   }, [receiverUserName])
 
 
@@ -263,10 +265,10 @@ export default function Chatbox({ togglePopup, receiverUserName, setChatList }) 
     <ChatContainer>
       <ProfileBox>
         <Box display="flex" alignItems="center">
-          <ChatAvatar src={receiverUser.avatar} status={receiverUser.online?"online":"offline"} />
+          <ChatAvatar src={receiverUser.avatar} status={receiverUser.online ? "online" : "offline"} />
           <ChatStatus>
             <H5>{receiverUser.name}</H5>
-            <H5>{receiverUser.online?"Online":"Offline"}</H5>
+            <H5>{receiverUser.online ? "Online" : "Offline"}</H5>
           </ChatStatus>
         </Box>
         <IconButton onClick={togglePopup}>

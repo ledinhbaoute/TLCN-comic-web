@@ -17,7 +17,25 @@ public class ValidatePassword {
         RuleResult ruleResult=passwordValidator.validate(new PasswordData(password));
         if(ruleResult.isValid())
             return new ResponseObject(true,"Password valid","");
-        return new ResponseObject(false,passwordValidator.getMessages(ruleResult).toString(),"");
+        return new ResponseObject(false,translateMessage(passwordValidator.getMessages(ruleResult).get(0)),"");
+    }
+    public String translateMessage(String message){
+        if(message.contains("8")){
+            return ("Mật khẩu phải có ít nhất 8 ký tự!");
+        }
+        if(message.contains("lowercase")){
+            return ("Mật khẩu phải có ít nhất 1 chữ viết thường!");
+        }
+        if(message.contains("uppercase")){
+            return ("Mật khẩu phải có ít nhất 1 chữ viết hoa!");
+        }
+        if(message.contains("digit")){
+            return ("Mật khẩu phải có ít nhất 1 chữ số!");
+        }
+        if(message.contains("special")){
+            return ("Mật khẩu phải có ít nhất 1 ký tự đặc biệt!");
+        }
+        return "";
     }
 
 }

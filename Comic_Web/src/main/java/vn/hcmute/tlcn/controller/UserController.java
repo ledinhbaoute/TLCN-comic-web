@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+import vn.hcmute.tlcn.entity.RefreshToken;
 import vn.hcmute.tlcn.model.OTP;
 import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.entity.User;
@@ -21,10 +22,7 @@ import vn.hcmute.tlcn.model.Token;
 import vn.hcmute.tlcn.model.UserDTO;
 import vn.hcmute.tlcn.repository.UserRepository;
 import vn.hcmute.tlcn.securiry.CustomUserDetailsService;
-import vn.hcmute.tlcn.serviceimple.ChapterImageServiceImple;
-import vn.hcmute.tlcn.serviceimple.EmailService;
-import vn.hcmute.tlcn.serviceimple.ImageStorageService;
-import vn.hcmute.tlcn.serviceimple.UserServiceImple;
+import vn.hcmute.tlcn.serviceimple.*;
 import vn.hcmute.tlcn.utils.Converter;
 import vn.hcmute.tlcn.utils.ValidatePassword;
 
@@ -119,7 +117,6 @@ public class UserController {
         userServiceImple.updateStatusOnline(username);
         return ResponseEntity.ok(new Token(token));
     }
-
     @PostMapping("user/change-password")
     ResponseEntity<?> changePasswordUser(@RequestParam("password") String oldpass,
                                          @RequestParam("newPass") String newPass, @RequestParam("confirmPass") String confirmPass,

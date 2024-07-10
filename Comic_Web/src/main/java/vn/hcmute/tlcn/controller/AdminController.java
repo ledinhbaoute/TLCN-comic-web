@@ -10,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import vn.hcmute.tlcn.jwt.JwtService;
-import vn.hcmute.tlcn.model.AdminDTO;
 import vn.hcmute.tlcn.model.Token;
 import vn.hcmute.tlcn.securiry.CustomAdminDetailService;
 import vn.hcmute.tlcn.service.IAdminService;
@@ -30,6 +29,7 @@ public class AdminController {
     @Autowired
     private AdminServiceImplement adminServiceImplement;
 
+
     @GetMapping("/admin")
     public ResponseEntity<?> getAdminInfo(Authentication authentication){
         if(authentication!=null){
@@ -47,8 +47,6 @@ public class AdminController {
                 .loadUserByUsername(username);
 
         final String token = jwtService.generateToken( userDetails);
-        System.out.println(userDetails.getAuthorities());
-
         return ResponseEntity.ok(new Token(token));
     }
     @PostMapping("/admin/lock-or-unlock_user")

@@ -20,13 +20,22 @@ public class ChapterController {
     private IChapterService chapterServiceImple;
 
     @GetMapping("chapters/{comicId}")
-    ResponseEntity<ResponseObject> getChapterByComic(@PathVariable String comicId) {
-        List<ChapterDTO> chapterList = chapterServiceImple.getChapterByComic(comicId);
+    ResponseEntity<ResponseObject> getChapterAcceptedByComic(@PathVariable String comicId) {
+        List<ChapterDTO> chapterList = chapterServiceImple.getChapterAcceptedByComic(comicId);
         if (!chapterList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query Successful!", chapterList));
 
         } else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Cannot find Chapters with comicId " + comicId, ""));
+    }
+    @GetMapping({"user/chapters/{comicId}", "admin/chapters/{comicId}"})
+    ResponseEntity<ResponseObject> getAllChapterByComic(@PathVariable String comicId) {
+        List<ChapterDTO> chapterList = chapterServiceImple.getAllChapterByComic(comicId);
+        if (!chapterList.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query Successful!", chapterList));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Cannot find Chapters with comicId " + comicId, ""));
+        }
     }
     @GetMapping("chaptersByChapter/{chapterId}")
     ResponseEntity<ResponseObject> getChaptersByChapter(@PathVariable String chapterId) {
@@ -47,6 +56,34 @@ public class ChapterController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             try {
                 return chapterServiceImple.addChapter(userDetails.getUsername(), chapterName, comicId);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseObject(false, e.getMessage(), ""));
+            }
+        }
+        return ResponseEntity.status(401).body("Unauthorized!");
+    }
+    @PostMapping("/user/addChapterNotAccept")
+    ResponseEntity<?> addChapterNotAccept(@RequestParam("comicId") String comicId,
+                                 @RequestParam("chapterName") String chapterName,
+                                 Authentication authentication
+    ) {
+        if (authentication != null) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            try {
+                return chapterServiceImple.addChapterNotAccepted(userDetails.getUsername(), chapterName, comicId);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseObject(false, e.getMessage(), ""));
+            }
+        }
+        return ResponseEntity.status(401).body("Unauthorized!");
+    }
+    @PostMapping("/admin/accept_chapter")
+    ResponseEntity<?> acceptChapter(@RequestParam("chapterId") String chapterId,
+                                 Authentication authentication) {
+        if (authentication != null) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            try {
+                return chapterServiceImple.acceptChapter(userDetails.getUsername(), chapterId);
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseObject(false, e.getMessage(), ""));
             }

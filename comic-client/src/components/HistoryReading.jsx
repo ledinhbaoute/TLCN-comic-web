@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import API_URL from "../config/config";
-import Pagination from "./Pagination";
 import ComicItem from "./ComicItem";
 import Cookies from "js-cookie";
+import RecommentComicList from "./RecommentComicList";
 import { checkAuth } from "../security/Authentication";
 const HistoryReadingPage = () => {
     const [listComic, setListComic] = useState([])
@@ -77,7 +77,10 @@ const HistoryReadingPage = () => {
                             }
 
                         </div>
-                        {/* <Pagination totalPage={totalPage} listBy={listBy} currentPage={indexPage} /> */}
+                       
+                    </div>
+                    <div className="col-lg-4 col-md-6 col-sm-8">
+                        <RecommentComicList tittle="Gợi ý cho bạn"></RecommentComicList>
                     </div>
                 </div>
             </div>

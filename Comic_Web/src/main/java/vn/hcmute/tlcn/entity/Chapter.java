@@ -29,16 +29,19 @@ public class Chapter {
     private int ordinalNumber;
     @Column(name = "public")
     private boolean open;
+    @Column(name = "isAccepted")
+    private boolean isAccepted;
 
     public Chapter() {
     }
 
-    public Chapter(String id, String chapterName, ComicBook comicBook_Id, Date publishDate, int ordinalNumber) {
+    public Chapter(String id, String chapterName, ComicBook comicBook_Id, Date publishDate, int ordinalNumber,boolean isAccepted) {
         this.id = id;
         this.chapterName = chapterName;
         this.comicBook = comicBook_Id;
         this.publishDate = publishDate;
         this.ordinalNumber = ordinalNumber;
+        this.isAccepted=isAccepted;
     }
 
     public String getId() {
@@ -57,6 +60,13 @@ public class Chapter {
         this.chapterName = chapterName;
     }
 
+    public boolean isAccepted() {
+        return isAccepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        isAccepted = accepted;
+    }
 
     public boolean isOpen() {
         return open;

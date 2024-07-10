@@ -7,11 +7,6 @@ import axios from "axios";
 import API_URL from "../config/config";
 import { useNavigateTo } from "../service/navigation";
 import OtpDialogInput from "./dialogs/OTPDialogInput";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import Loading from "./Loading";
 import toast from "react-hot-toast";
 
@@ -28,22 +23,6 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOlderThanToday, setIsOlderThanToday] = useState(false);
 
-  const registerFailReasons = {
-    "Password must be 8 or more characters in length.":
-      "Mật khẩu phải từ 8 ký tự trở lên",
-    "Password must contain 1 or more lowercase characters.":
-      "Mật khẩu phải có tối thiểu 1 ký tự viết thường",
-    "Password must contain 1 or more uppercase characters.":
-      "Mật khẩu phải có tối thiểu 1 ký tự viết hoa",
-    "Password must contain 1 or more digit characters.":
-      "Mật khẩu phải có tối thiểu 1 ký tự số",
-    "Password must contain 1 or more special characters.":
-      "Mật khẩu phải có tối thiểu 1 ký tự đặc biệt",
-    "User name or Email already exist!":
-      "Tên đăng nhập hoặc email đã được đăng ký",
-    "Password and confirm password doesn't match!":
-      "Mật khẩu nhập lại không khớp",
-  };
 
   const navigate = useNavigateTo();
 
@@ -133,9 +112,11 @@ const Register = () => {
 
     const registerResponse = await register();
     console.log(birthdate)
-    if (!registerResponse.data.status)
-      // window.alert(registerResponse.data.message);
+    if (!registerResponse.data.status){
+      
+    
     toast.error(registerResponse.data.message,{duration:3000,position:"top-right"})
+  }
     else {
       handleOpenDialog();
       // console.log(otpDialogOpen);
@@ -249,6 +230,7 @@ const Register = () => {
                       onChange={handlePasswordChange}
                     />
                     <span className="icon_lock"></span>
+                    
                   </div>
                   <div className="input__item">
                     <input

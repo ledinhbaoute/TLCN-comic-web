@@ -297,6 +297,8 @@ const ComicDetail = (props) => {
                     <li>
                       <span>Trạng thái:</span>{" "}
                       {comic.status === 1 && "Đang tiến hành"}
+                      {comic.status === 2 && "Đã xong"}
+                      {comic.status === 3 && "Tạm ngưng"}
                     </li>
                     <li>
                       <span>Thể loại:</span>

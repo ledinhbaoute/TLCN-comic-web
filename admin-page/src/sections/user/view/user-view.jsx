@@ -143,7 +143,6 @@ return (
                 { id: 'name', label: 'Name' },
                 { id: 'email', label: 'Email' },
                 { id: 'phoneNumber', label: 'Phone Number' },
-                // { id: 'isVerified', label: 'Verified', align: 'center' },
                 { id: 'status', label: 'Status' },
                 { id: '' },
               ]}
@@ -159,7 +158,7 @@ return (
                     phoneNumber={row.phoneNumber}
                     status={!row.locked ? "Active":"Banned"}
                     email={row.email}
-                    avatarUrl={`${API_URL}/files/${row.avatar}`}
+                    avatarUrl={row.avatar}
                     isVerified={row.isVerified}
                    
                    

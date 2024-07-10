@@ -43,9 +43,22 @@ public class ChapterServiceImple implements IChapterService {
     FavoriteComicRepository favoriteComicRepository;
     @Autowired
     AnnounceRepository announceRepository;
+    @Autowired
+    AdminRepository adminRepository;
 
     @Override
-    public List<ChapterDTO> getChapterByComic(String comicId) {
+    public List<ChapterDTO> getChapterAcceptedByComic(String comicId) {
+        List<ChapterDTO> chapterDTOS = new ArrayList<>();
+        List<Chapter> chapters = chapterRepository.findByComicBook_IdOrderByOrdinalNumberAsc(comicId);
+        for (Chapter chapter : chapters
+        ) {
+            if (chapter.isAccepted())
+                chapterDTOS.add(converter.convertEntityToDto(chapter));
+        }
+        return chapterDTOS;
+    }
+    @Override
+    public List<ChapterDTO> getAllChapterByComic(String comicId) {
         List<ChapterDTO> chapterDTOS = new ArrayList<>();
         List<Chapter> chapters = chapterRepository.findByComicBook_IdOrderByOrdinalNumberAsc(comicId);
         for (Chapter chapter : chapters
@@ -61,7 +74,8 @@ public class ChapterServiceImple implements IChapterService {
             throw new IllegalArgumentException("Chapter not found");
         }
        List<Chapter>chapters=chapterRepository.findByComicBook_IdOrderByOrdinalNumberAsc(chapter.getComicBook_Id().getId());
-        return chapters.stream().map(chapter1 -> converter.convertEntityToDto(chapter1)).collect(Collectors.toList());
+        List<Chapter>acceptedChapter=chapters.stream().filter(Chapter::isAccepted).collect(Collectors.toList());
+        return acceptedChapter.stream().map(chapter1 -> converter.convertEntityToDto(chapter1)).collect(Collectors.toList());
     }
 
     public int checkCondition(String username, String comicId) {
@@ -87,10 +101,43 @@ public class ChapterServiceImple implements IChapterService {
         Optional<ComicBook> optionalComicBook = comicBookRepository.findById(comicId);
         ComicBook comicBook = optionalComicBook.get();
         int ordinalNumber = chapterRepository.findByComicBook_IdOrderByOrdinalNumberAsc(comicId).size() + 1;
-        Chapter chapter = new Chapter(generateId.generateId(), chapterName, comicBook, null, ordinalNumber);
+        Chapter chapter = new Chapter(generateId.generateId(), chapterName, comicBook, null, ordinalNumber,true);
         comicBook.setUpdateDate(new Date());
-        return ResponseEntity.ok().body(new ResponseObject(true, "Add Chapter Success!",converter.convertEntityToDto( chapterRepository.save(chapter))));
+        return ResponseEntity.ok().body(new ResponseObject(
+                true, "Add Chapter Success!",converter.convertEntityToDto( chapterRepository.save(chapter))));
     }
+    @Override
+    public ResponseEntity<ResponseObject> addChapterNotAccepted(String username, String chapterName, String comicId) {
+        int check = checkCondition(username, comicId);
+        if (check == 1)
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, "Comic not exist!", ""));
+        if (check == 2)
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ResponseObject(false, "You can't add Chapter into someone else's Comic Book ", ""));
+        Optional<ComicBook> optionalComicBook = comicBookRepository.findById(comicId);
+        ComicBook comicBook = optionalComicBook.get();
+        int ordinalNumber = chapterRepository.findByComicBook_IdOrderByOrdinalNumberAsc(comicId).size() + 1;
+        Chapter chapter = new Chapter(generateId.generateId(), chapterName, comicBook, null, ordinalNumber,false);
+        comicBook.setUpdateDate(new Date());
+        return ResponseEntity.ok().body(new ResponseObject(
+                true, "Add Chapter Success!",converter.convertEntityToDto( chapterRepository.save(chapter))));
+    }
+    @Override
+    public ResponseEntity<ResponseObject> acceptChapter(String username, String chapterId){
+        Admin admin= adminRepository.findOneByUserName(username).orElse(null);
+        if(admin==null){
+            return ResponseEntity.ok().body(new ResponseObject(false,"You not admin",""));
+        }
+        Chapter chapter=chapterRepository.findById(chapterId).orElse(null);
+        if(chapter==null){
+            return ResponseEntity.ok().body(new ResponseObject(false,"Chapter not exist",""));
+        }
+        if(chapter.isAccepted()){
+            return ResponseEntity.ok().body(new ResponseObject(false,"Chapter already accepted",""));
+        }
+        chapter.setAccepted(true);
+        return ResponseEntity.ok().body(new ResponseObject(true,"Success!",converter.convertEntityToDto(chapterRepository.save(chapter))));
+    }
+
 
     @Override
     public int deleteChapter(String chapterId, String username) {
@@ -134,10 +181,11 @@ public class ChapterServiceImple implements IChapterService {
         User user=userRepository.findOneByUserName(username).orElse(null);
         Chapter chapter=chapterRepository.findById(chapterId).orElse(null);
         if(chapter==null)
-            return new ResponseObject(false,"Chapter not exist!","");
+            return new ResponseObject(false,"Chương truyện không tồn tại!","");
         if(!user.getUserName().equals(chapter.getComicBook_Id().getActorId().getUserName()))
-            return new ResponseObject(false,"Cannot public orther people chapter!","");
-
+            return new ResponseObject(false,"Không thể công khai 1 chương truyện của người dùng khác!","");
+        if(!chapter.isAccepted())
+            return new ResponseObject(false,"Truyện của bạn chưa được duyệt nên không thể công khai","");
         if(chapter.getPublishDate()==null){
             chapter.setPublishDate(new Date());
             chapter.setOpen(!chapter.isOpen());

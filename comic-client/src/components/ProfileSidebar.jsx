@@ -66,7 +66,7 @@ function ProfileSidebar() {
             {/* Add more menu items as needed */}
           </ul>
         </div>
-        <div className="content">
+        <div className="content" >
           <Outlet />
         </div>
       </div>

@@ -6,6 +6,7 @@ import ComicItem from "./ComicItem";
 import { Link } from "react-router-dom";
 import { Fade } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
+import RecommentComicList from "./RecommentComicList";
 const Home = () => {
   const [listTopView, setListTopView] = useState([])
   const [listTrending, setListTrending] = useState([])
@@ -150,7 +151,7 @@ const Home = () => {
             </div>
             <div className="col-lg-4 col-md-6 col-sm-8">
               <ComicList listComic={listTopView} title="Lượt xem cao nhất"></ComicList>
-
+              <RecommentComicList tittle="Gợi ý cho bạn"></RecommentComicList>
             </div>
           </div>
         </div>

@@ -5,6 +5,7 @@ import Pagination from "./Pagination";
 import ComicItem from "./ComicItem";
 import Cookies from "js-cookie";
 import { checkAuth } from "../security/Authentication";
+import RecommentComicList from "./RecommentComicList";
 const FavoriteComicPage = () => {
     const [listComic, setListComic] = useState([])
     const imageError = process.env.PUBLIC_URL + '/images/hihihi.png';
@@ -74,7 +75,9 @@ const FavoriteComicPage = () => {
                             }
 
                         </div>
-                        {/* <Pagination totalPage={totalPage} listBy={listBy} currentPage={indexPage} /> */}
+                    </div>
+                    <div className="col-lg-4 col-md-6 col-sm-8">
+                        <RecommentComicList tittle="Gợi ý cho bạn"></RecommentComicList>
                     </div>
                 </div>
             </div>

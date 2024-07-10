@@ -849,14 +849,16 @@ ol {
 
 .product__sidebar__comment__item {
 	overflow: hidden;
+	
 }
 
 .product__sidebar__comment__item__pic {
 	float: left;
 	margin-right: 5px;
-	width: 25px;
-	height: 40px;
+	width: 80px;
+	height: 100%;
 }
+
 
 .product__sidebar__comment__item__text {
 	overflow: hidden;
@@ -868,10 +870,11 @@ ol {
 
 .product__sidebar__comment__item__text ul li {
 	list-style: none;
-	font-size: 20px;
+	font-size: 10px;
 	color: #ffffff;
 	font-weight: 700;
 	padding: 1px 11px;
+	margin-right: 2px;
 	background: rgba(255, 255, 255, 0.2);
 	border-radius: 50px;
 	display: inline-block;
@@ -885,7 +888,7 @@ ol {
 	color: #ffffff;
 	font-weight: 700;
 	line-height: 6px;
-	font-size: 1px;
+	
 }
 
 .product__sidebar__comment__item__text span {
@@ -1217,13 +1220,64 @@ ol {
   Anime Watching
 -----------------------*/
 
-.anime__video__playerr {
+/* .anime__video__playerr {
 	
 	display: flex;
   justify-content: center;
-}
+} */
+.chapter-selected {
+	background-color: #ffffff; /* Màu trắng */
+  }
+.anime__video__playerr {
+	flex: 1;
+	width: 50%;
+	padding: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: calc(100vh - 150px);
+  }
+  .image-pair {
+	display: flex;
+	flex-wrap: nowrap;
+  }
+.anime__video__playerr img {
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: contain;
+  }
+  .anime__video__playerr:first-child {
+	border-right: 2px solid #ccc; /* Màu và kích thước của đường kẻ */
+  }
+.page-controls {
+	display: flex;
+	justify-content: center;
+	margin: 10px 0;
+	margin-bottom: 50; 
+  }
+  
+  .page-controls button {
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	background: #ffffff;
+	border: none;
+	padding: 10px 15px;
+	border-radius: 2px;
+	margin: 0 10px;
+	cursor: pointer;
+  }
+  .image-container {
+	border: 2px solid #ccc; 
+	padding: 5px;
+	display: flex;
+	justify-content: center;
+  }
 .anime__video__player__container{
-margin-bottom: 70px;
+margin-bottom: 20px;
+
+display: flex;
+justify-content: center;
 }
 
 .anime__video__player .plyr--video {
@@ -1349,6 +1403,12 @@ margin-bottom: 70px;
 .anime__details__episodes a.disabled {
     color: grey;
     background: rgba(255, 255, 255, 0.1);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.anime__details__episodes a.selected {
+    color: grey;
+    background:#ffffff;
     cursor: not-allowed;
     pointer-events: none;
 }
@@ -2413,4 +2473,5 @@ margin-bottom: 70px;
 		cursor: pointer;
 		color: blue;
 	}
+	
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, Component } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import API_URL from "../config/config";
+import { PY_API_URL } from "../config/config";
 import Cookies from "js-cookie";
 import AppContext from "../context/AppContext";
 import { Dialog } from "@mui/material";
@@ -75,7 +76,49 @@ const ComicManage = () => {
   const indexOfLastComic = currentPage * comicsPerPage;
   const indexOfFirstComic = indexOfLastComic - comicsPerPage;
   const currentcomics = searchResult.slice(indexOfFirstComic, indexOfLastComic);
+  ///nhận diện ảnh nhạy cảm
+  const handleCheckingImage = async (image) => {
+    try {
+      const formData = new FormData();
+      formData.append("image", image);
+      const response = await axios.post(
+        `${PY_API_URL}/checking_image`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      setAlertMessage("Kiểm tra ảnh thất bại, đã có lỗi xảy ra");
+      setAlertDialogOpen(true);
+    }
+  };
+  const handleAzureCheckingImage = async (image) => {
+    try {
+      const formData = new FormData();
+      formData.append("image", image);
+      const response = await axios.post(
+        `${PY_API_URL}/azure_checking_image`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      setAlertMessage("Kiểm tra ảnh thất bại, đã có lỗi xảy ra");
+      setAlertDialogOpen(true);
+    }
+  };
   //
   //Xử lý xóa comic
   //
@@ -149,33 +192,37 @@ const ComicManage = () => {
     setShowAddDialog(true);
   };
 
-  const handleAddComic = () => {
-    // Xử lý logic thêm truyện mới ở đây
-    // console.log(newComic);
-    // console.log(newComicImage);
+  const handleAddComic = async () => {
     if (
       newComic.name === "" ||
       newComic.description === "" ||
       newComic.genres.length === 0 ||
       newComicImage === null
     ) {
-      toast("Vui lòng nhập đầy đủ các mục!",{
-        icon:'🛈',
-        position:"top-right",
+      toast("Vui lòng nhập đầy đủ các mục!", {
+        icon: '🛈',
+        position: "top-right",
         style: {
           border: '1px solid #713200',
           padding: '16px',
           color: '#713200',
         },
-       })
+      })
     } else {
-      const formData = new FormData();
-      formData.append("comicName", newComic.name);
-      formData.append("genreIds", newComic.genres);
-      formData.append("discription", newComic.description);
-      formData.append("image", newComicImage);
-      addComic(formData);
-      setShowAddDialog(false);
+      const result = await handleCheckingImage(newComicImage)
+      const azure_result = await handleAzureCheckingImage(newComicImage)
+      if (!result.SFW || !azure_result.SFW) {
+        toast.error("Ảnh được phát hiện là nhạy cảm")
+      }
+      else {
+        const formData = new FormData();
+        formData.append("comicName", newComic.name);
+        formData.append("genreIds", newComic.genres);
+        formData.append("discription", newComic.description);
+        formData.append("image", newComicImage);
+        addComic(formData);
+        setShowAddDialog(false);
+      }
     }
   };
 
@@ -216,7 +263,6 @@ const ComicManage = () => {
     try {
       const response = await axios.get(`${API_URL}/comicbooks/${comicId}`);
       setSelectedComic(response.data.data);
-      console.log(selectedComic);
     } catch (error) {
       console.log(error);
     }
@@ -264,6 +310,7 @@ const ComicManage = () => {
         }
       );
       //   console.log(response.data);
+      setSelectedComic(response.data.data)
       setAlertMessage(
         (preMessage) => `${preMessage} Cập nhật thông tin truyện thành công.`
       );
@@ -320,25 +367,31 @@ const ComicManage = () => {
       selectedComic.discription === "" ||
       selectedComic.genres.length === 0
     ) {
-      toast("Vui lòng nhập đầy đủ thông tin!",{
-        icon:'🛈',
-        position:"top-right",
+      toast("Vui lòng nhập đầy đủ thông tin!", {
+        icon: '🛈',
+        position: "top-right",
         style: {
           border: '1px solid #713200',
           padding: '16px',
           color: '#713200',
         },
-       })
+      })
     } else {
       if (!(selectedComicImg === null)) {
-        const formData = new FormData();
-        formData.append("comicId", selectedComic.id);
-        formData.append("file", selectedComicImg);
-        await updateCoverImg(formData);
+        const result = await handleCheckingImage(selectedComicImg)
+        const azure_result = await handleAzureCheckingImage(selectedComicImg)
+        if (!result.SFW || !azure_result.SFW) {
+          toast.error("Không thể cập nhật ảnh vì phát hiện ảnh nhạy cảm!")
+        }
+        else {
+          const formData = new FormData();
+          formData.append("comicId", selectedComic.id);
+          formData.append("file", selectedComicImg);
+          await updateCoverImg(formData);
+        }
       }
       await updateComic();
       setAlertDialogOpen(true);
-      // window.location.reload();
       setShowEditDialog(false);
     }
   };
@@ -376,7 +429,7 @@ const ComicManage = () => {
 
   return (
     <div className="comic-list-container">
-      
+
       <div className="search-bar">
         <input
           type="text"
