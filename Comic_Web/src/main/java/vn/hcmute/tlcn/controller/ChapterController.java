@@ -37,6 +37,15 @@ public class ChapterController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Cannot find Chapters with comicId " + comicId, ""));
         }
     }
+    @GetMapping( "admin/chaptersNotAccept")
+    ResponseEntity<ResponseObject> getAllChapterNotAccept(Authentication authentication) {
+        List<ChapterDTO> chapterList = chapterServiceImple.getAllChapterNotAccepted();
+        if (!chapterList.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query Successful!", chapterList));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Don't have chapter not accepted! " , ""));
+        }
+    }
     @GetMapping("chaptersByChapter/{chapterId}")
     ResponseEntity<ResponseObject> getChaptersByChapter(@PathVariable String chapterId) {
         List<ChapterDTO> chapterList = chapterServiceImple.getChaptersByChapter(chapterId);
@@ -127,6 +136,12 @@ public class ChapterController {
     ResponseEntity<?>publicChapter(Authentication authentication, @RequestParam String chapterId){
         UserDetails userDetails= (UserDetails) authentication.getPrincipal();
         return ResponseEntity.ok().body(chapterServiceImple.publicChapter(userDetails.getUsername(),chapterId));
+    }
+    @DeleteMapping("admin/rejectChapter")
+    ResponseEntity<?>rejectChapter(Authentication authentication, @RequestParam String chapterId){
+        UserDetails userDetails= (UserDetails) authentication.getPrincipal();
+        return ResponseEntity.ok(chapterServiceImple.adminDeleteChapter(userDetails.getUsername(),chapterId));
+
     }
 
 

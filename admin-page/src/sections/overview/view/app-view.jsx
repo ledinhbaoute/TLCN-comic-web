@@ -1,7 +1,6 @@
 import axios from 'axios';
 import * as React from 'react'; 
 import Cookies from 'js-cookie';
-import { faker } from '@faker-js/faker';
 import { useState,useEffect } from 'react';
 
 import Container from '@mui/material/Container';
@@ -10,18 +9,12 @@ import Typography from '@mui/material/Typography';
 
 import API_URL from 'src/config/config';
 
-import Iconify from 'src/components/iconify';
-
-import AppTasks from '../app-tasks';
 import AppNewsUpdate from '../app-news-update';
 import AppOrderTimeline from '../app-order-timeline';
 import AppCurrentVisits from '../app-current-visits';
 import AppWebsiteVisits from '../app-website-visits';
 import AppWidgetSummary from '../app-widget-summary';
-import AppTrafficBySite from '../app-traffic-by-site';
-import AppCurrentSubject from '../app-current-subject';
 import AppConversionRates from '../app-conversion-rates';
-// import OptionStatistic from '../option-statistic';
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +28,7 @@ export default function AppView() {
   const[picker,setPicker]=useState([null,2023])
   const [comicTrendings,setComicTrendings]=useState([])
   const [comicUpdateLastest,setComicUpdateLastest]=useState([])
+  const [chaptersNotAccept,setChaptersNotAccept]=useState([])
   const handlePickerChange = (newValue) => {
     setPicker(newValue);
   };
@@ -43,6 +37,9 @@ export default function AppView() {
 
   const handleOptionChange = (newOption) => {
     setSelectedOption(newOption);
+  };
+  const removeAcceptedChapter = (chapterId) => {
+    setChaptersNotAccept((prev) => prev.filter((chapter) => chapter.id !== chapterId));
   };
   useEffect(() => {
     const getUserAgeDistribution = async () => {
@@ -62,6 +59,24 @@ export default function AppView() {
       }
     }
     getUserAgeDistribution();
+  }, []);
+  useEffect(() => {
+    const getChapterNotAccept = async () => {
+      try {
+       
+          const response = await axios.get(
+            `${API_URL}/admin/chaptersNotAccept`
+          ,{
+            headers:{
+            Authorization:`Bearer ${Cookies.get("access_token")}`
+          }
+        });
+            setChaptersNotAccept(response.data.data)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getChapterNotAccept();
   }, []);
   useEffect(() => {
     const getComicTrending = async () => {
@@ -139,8 +154,8 @@ export default function AppView() {
     getDataRegistration();
   }, [picker,selectedOption]);
   useEffect(() => {
-    console.log(comicUpdateLastest)
-  }, [comicUpdateLastest]);
+    console.log(chaptersNotAccept)
+  }, [chaptersNotAccept]);
 
   const generateLabels = () => {
     if (picker[0] === null) {
@@ -207,18 +222,6 @@ export default function AppView() {
             chart={{
               labels: generateLabels(),
               series: [
-                // {
-                //   name: 'Team A',
-                //   type: 'column',
-                //   fill: 'solid',
-                //   data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
-                // },
-                // { 
-                //   name: 'Team B',
-                //   type: 'area',
-                //   fill: 'gradient',
-                //   data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
-                // },
                 {
                   name: 'Người đăng kí',
                   type: 'line',
@@ -262,19 +265,18 @@ export default function AppView() {
         </Grid>
 
         <Grid xs={12} md={6} lg={4}>
-          <AppCurrentSubject
-            title="Current Subject"
-            chart={{
-              categories: ['English', 'History', 'Physics', 'Geography', 'Chinese', 'Math'],
-              series: [
-                { name: 'Series 1', data: [80, 50, 30, 40, 100, 20] },
-                { name: 'Series 2', data: [20, 30, 40, 80, 20, 80] },
-                { name: 'Series 3', data: [44, 76, 78, 13, 43, 10] },
-              ],
-            }}
+          <AppOrderTimeline
+            title="Yêu cầu duyệt chương"
+            list={chaptersNotAccept.length>0?chaptersNotAccept.map(chapter=>({
+                id:chapter.id,
+                title:chapter.comicBook_Id.name,
+                chapterName:`Chapter ${chapter.ordinalNumber}`,
+                image: `${API_URL}/files/${chapter.comicBook_Id.image}`,
+            })):[]
+          }
+          onAccept={removeAcceptedChapter}
           />
         </Grid>
-
         <Grid xs={12} md={6} lg={8}>
           <AppNewsUpdate
             title="Truyen moi cap nhat"
@@ -285,65 +287,6 @@ export default function AppView() {
               image: `${API_URL}/files/${comic.image}`,
               postedAt: comic.updateDate,
             })):[]}
-          />
-        </Grid>
-
-        <Grid xs={12} md={6} lg={4}>
-          <AppOrderTimeline
-            title="Order Timeline"
-            list={[...Array(5)].map((_, index) => ({
-              id: faker.string.uuid(),
-              title: [
-                '1983, orders, $4220',
-                '12 Invoices have been paid',
-                'Order #37745 from September',
-                'New order placed #XF-2356',
-                'New order placed #XF-2346',
-              ][index],
-              type: `order${index + 1}`,
-              time: faker.date.past(),
-            }))}
-          />
-        </Grid>
-
-        <Grid xs={12} md={6} lg={4}>
-          <AppTrafficBySite
-            title="Traffic by Site"
-            list={[
-              {
-                name: 'FaceBook',
-                value: 323234,
-                icon: <Iconify icon="eva:facebook-fill" color="#1877F2" width={32} />,
-              },
-              {
-                name: 'Google',
-                value: 341212,
-                icon: <Iconify icon="eva:google-fill" color="#DF3E30" width={32} />,
-              },
-              {
-                name: 'Linkedin',
-                value: 411213,
-                icon: <Iconify icon="eva:linkedin-fill" color="#006097" width={32} />,
-              },
-              {
-                name: 'Twitter',
-                value: 443232,
-                icon: <Iconify icon="eva:twitter-fill" color="#1C9CEA" width={32} />,
-              },
-            ]}
-          />
-        </Grid>
-
-        <Grid xs={12} md={6} lg={8}>
-          <AppTasks
-            title="Tasks"
-            list={[
-              { id: '1', name: 'Create FireStone Logo' },
-              { id: '2', name: 'Add SCSS and JS files if required' },
-              { id: '3', name: 'Stakeholder Meeting' },
-              { id: '4', name: 'Scoping & Estimations' },
-              { id: '5', name: 'Sprint Showcase' },
-            ]}
           />
         </Grid>
       </Grid>

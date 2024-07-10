@@ -11,11 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
-import vn.hcmute.tlcn.entity.RefreshToken;
-import vn.hcmute.tlcn.model.OTP;
 import vn.hcmute.tlcn.model.ResponseObject;
-import vn.hcmute.tlcn.entity.User;
 import vn.hcmute.tlcn.entity.UserPremium;
 import vn.hcmute.tlcn.jwt.JwtService;
 import vn.hcmute.tlcn.model.Token;
@@ -26,7 +22,6 @@ import vn.hcmute.tlcn.serviceimple.*;
 import vn.hcmute.tlcn.utils.Converter;
 import vn.hcmute.tlcn.utils.ValidatePassword;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 

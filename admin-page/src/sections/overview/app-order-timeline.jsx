@@ -1,38 +1,37 @@
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
+import toast from 'react-hot-toast';
+import Scrollbars from 'react-custom-scrollbars-2';
 
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Timeline from '@mui/lab/Timeline';
-import TimelineDot from '@mui/lab/TimelineDot';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import CardHeader from '@mui/material/CardHeader';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
+import ListItemButton  from '@mui/material/ListItemButton';
 
-import { fDateTime } from 'src/utils/format-time';
+import API_URL from 'src/config/config';
+
+import ImageDialog from './ImageDialog';
+
 
 // ----------------------------------------------------------------------
 
-export default function AnalyticsOrderTimeline({ title, subheader, list, ...other }) {
+export default function AnalyticsOrderTimeline({ title, chapterName,onAccept, subheader, list, ...other }) {
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />
-
-      <Timeline
-        sx={{
-          m: 0,
-          p: 3,
-          [`& .${timelineItemClasses.root}:before`]: {
-            flex: 0,
-            padding: 0,
-          },
-        }}
-      >
+      <Stack sx={{ p: 3, pr: 0 }}>
+      <Scrollbars
+               autoHeight autoHeightMax={332}>
         {list.map((item, index) => (
-          <OrderItem key={item.id} item={item} lastTimeline={index === list.length - 1} />
+          <OrderItem key={item.id} item={item} onAccept={onAccept} />
         ))}
-      </Timeline>
+        </Scrollbars>
+      </Stack>
     </Card>
   );
 }
@@ -41,39 +40,128 @@ AnalyticsOrderTimeline.propTypes = {
   list: PropTypes.array,
   subheader: PropTypes.string,
   title: PropTypes.string,
+  chapterName: PropTypes.string,
+  onAccept: PropTypes.func, 
 };
+function OrderItem({ item,onAccept}) {
+  const { id,image, title, chapterName } = item;
+  const [openDialog, setOpenDialog] = useState(false);
+  const [imageList, setImageList] = useState([]);
 
-// ----------------------------------------------------------------------
+  const getImageList = async (chapterId) => {
+    try {
 
-function OrderItem({ item, lastTimeline }) {
-  const { type, title, time } = item;
+      const response = await axios.get(
+        `${API_URL}/chapter_images/${chapterId}`
+      );
+      setImageList(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleOpenDialog = async (chapterId) => {
+    await getImageList(chapterId);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+  const acceptChapter = async (chapterId) => {
+    try {
+      await axios.post(
+        `${API_URL}/admin/accept_chapter`,
+        { 'chapterId': chapterId },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization":`Bearer  ${Cookies.get("access_token")}`
+          },
+        }
+      );
+      toast.success("Đã duyệt chương")
+      onAccept(chapterId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const rejectChapter = async (chapterId) => {
+    try {
+        const response = await axios.delete(`${API_URL}/admin/rejectChapter`,
+            {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get("access_token")}`,
+                    "Content-Type": "application/x-www-form-urlencoded"
+
+                }, data: { chapterId },
+            });
+
+            console.log(response)
+            if(response.data.body.status){
+            
+              toast.success("Đã xóa chương truyện này")
+              onAccept(chapterId);
+            }
+            else{
+              toast.error(response.data.body.message)
+            }
+            
+
+    } catch (error) {
+        console.error( error);
+    }
+};
+  
+
   return (
-    <TimelineItem>
-      <TimelineSeparator>
-        <TimelineDot
-          color={
-            (type === 'order1' && 'primary') ||
-            (type === 'order2' && 'success') ||
-            (type === 'order3' && 'info') ||
-            (type === 'order4' && 'warning') ||
-            'error'
-          }
+    <>
+     <Stack direction="column" alignItems="left" >
+      <ListItemButton sx={{
+        py: 1.5,
+        px: 2.5,
+        mt: '1px'
+      }} onClick={() => handleOpenDialog(id)}>
+        <Box
+          component="img"
+          alt={title}
+          src={image}
+          sx={{ width: 48, height: 48, borderRadius: 1.5, flexShrink: 0 }}
         />
-        {lastTimeline ? null : <TimelineConnector />}
-      </TimelineSeparator>
 
-      <TimelineContent>
-        <Typography variant="subtitle2">{title}</Typography>
+        <Box sx={{ minWidth: 240, flexGrow: 1 }}>
+          <Typography color="inherit" variant="subtitle2" underline="hover" noWrap>
+            {title}
+          </Typography>
 
-        <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-          {fDateTime(time)}
-        </Typography>
-      </TimelineContent>
-    </TimelineItem>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+            {chapterName}
+          </Typography>
+          
+        </Box>
+      </ListItemButton>
+      <Stack direction="row" alignItems="center" spacing={1} sx={{
+        px: 2.5,
+        mt: '1px'
+      }}>
+            <Button variant="contained" color="primary" onClick={()=>acceptChapter(item.id)}>
+              Duyệt
+            </Button>
+            <Button variant="contained" color="primary" onClick={()=>rejectChapter(item.id)}>
+              Từ chối
+            </Button>
+          </Stack>
+          </Stack>
+      <ImageDialog open={openDialog} onClose={handleCloseDialog} images={imageList} />
+    </>
   );
 }
 
 OrderItem.propTypes = {
-  item: PropTypes.object,
-  lastTimeline: PropTypes.bool,
+  item: PropTypes.shape({
+    id:PropTypes.string,
+    image: PropTypes.string,
+    title: PropTypes.string,
+    chapterName: PropTypes.string,
+    
+  }),onAccept:PropTypes.func
 };

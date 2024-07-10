@@ -58,6 +58,17 @@ public class ChapterServiceImple implements IChapterService {
         return chapterDTOS;
     }
     @Override
+    public List<ChapterDTO> getAllChapterNotAccepted() {
+        List<ChapterDTO> chapterDTOS = new ArrayList<>();
+        List<Chapter> chapters = chapterRepository.findByIsAccepted(false);
+        for (Chapter chapter : chapters
+        ) {
+                chapterDTOS.add(converter.convertEntityToDto(chapter));
+        }
+        return chapterDTOS;
+    }
+
+    @Override
     public List<ChapterDTO> getAllChapterByComic(String comicId) {
         List<ChapterDTO> chapterDTOS = new ArrayList<>();
         List<Chapter> chapters = chapterRepository.findByComicBook_IdOrderByOrdinalNumberAsc(comicId);
@@ -135,9 +146,52 @@ public class ChapterServiceImple implements IChapterService {
             return ResponseEntity.ok().body(new ResponseObject(false,"Chapter already accepted",""));
         }
         chapter.setAccepted(true);
+        String content="Chương truyện "+chapter.getChapterName()+" của bạn đã được duyệt!";
+        Announce announce=new Announce();
+        announce.setContent(content);
+        announce.setUser(chapter.getComicBook_Id().getActorId());
+        announce.setType("acpt");
+        announce.setCreatedAt(new Date());
+        announce.setId(generateId.generateId());
+        announce.setLinkTo("/chapter-manage/"+chapter.getComicBook_Id().getId());
+        try {
+            simpMessagingTemplate.convertAndSendToUser(chapter.getComicBook_Id().getActorId().getUserName(),"/queue/notifications",announce);
+            announceRepository.save(announce);
+        }
+        catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
         return ResponseEntity.ok().body(new ResponseObject(true,"Success!",converter.convertEntityToDto(chapterRepository.save(chapter))));
     }
+    @Override
+    public ResponseEntity<ResponseObject> adminDeleteChapter(String username, String chapterId){
+        Admin admin= adminRepository.findOneByUserName(username).orElse(null);
+        if(admin==null){
+            return ResponseEntity.ok().body(new ResponseObject(false,"You not admin",""));
+        }
+        Chapter chapter=chapterRepository.findById(chapterId).orElse(null);
+        if(chapter==null){
+            return ResponseEntity.ok().body(new ResponseObject(false,"Chapter not exist",""));
+        }
 
+        chapterRepository.delete(chapter);
+        String content="Chương truyện "+chapter.getChapterName()+" của bạn không được duyệt và bị xóa do chứa hình ảnh nhạy cảm!";
+        Announce announce=new Announce();
+        announce.setContent(content);
+        announce.setUser(chapter.getComicBook_Id().getActorId());
+        announce.setType("reject");
+        announce.setCreatedAt(new Date());
+        announce.setId(generateId.generateId());
+        announce.setLinkTo("/chapter-manage/"+chapter.getComicBook_Id().getId());
+        try {
+            simpMessagingTemplate.convertAndSendToUser(chapter.getComicBook_Id().getActorId().getUserName(),"/queue/notifications",announce);
+            announceRepository.save(announce);
+        }
+        catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+        return ResponseEntity.ok().body(new ResponseObject(true,"Success!",""));
+    }
 
     @Override
     public int deleteChapter(String chapterId, String username) {
