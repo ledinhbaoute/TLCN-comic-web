@@ -6,6 +6,7 @@ import { checkAuth } from "../../security/Authentication";
 import Comment from "../Comment";
 import API_URL from "../../config/config";
 import RecommentComicList from "../RecommentComicList";
+import { Modal, Button } from 'react-bootstrap';
 
 const ComicReadingPage = () => {
   const { chapterId } = useParams();
@@ -13,6 +14,8 @@ const ComicReadingPage = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [premiumLimited, setPremiumLimited] = useState(false);
   const [chapterList, setChapterList] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [savedPage, setSavedPage] = useState(0);
 
   const imgOnlyPemiumUrl = `${process.env.PUBLIC_URL}/images/only-premium.png`;
 
@@ -70,15 +73,70 @@ const ComicReadingPage = () => {
       console.log(error);
     }
   };
+  const updateBookMark = async (chapterId,currentPage) => {
+    try {
+      if (checkAuth) {
+        await axios.post(
+          `${API_URL}/user/bookmark`,
+          { chapterId: chapterId,currentPage:currentPage },
+          {
+            headers: {
+              Authorization: "Bearer " + Cookies.get("access_token"),
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          }
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    const getBookMark = async () => {
+      try {
+        if (checkAuth) {
+          const response=await axios.get(
+            `${API_URL}/user/bookmark?chapterId=${chapterId}`,
+            {
+              headers: {
+                Authorization: "Bearer " + Cookies.get("access_token")
+              }
+            }
+          );
+          console.log(response)
+          if (response && response.data.data.currentPage > 0) {
+            setSavedPage(response.data.data.currentPage);
+            setShowModal(true);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+   getBookMark();
+  }, [chapterId]);
+  
+  const handleContinueReading = () => {
+    setShowModal(false);
+    setCurrentPage(savedPage);
+  };
+
+  const handleStartFromBeginning = () => {
+    setShowModal(false);
+    setCurrentPage(0);
+  };
+
 
   const nextPage = () => {
     if (currentPage < imageList.length - 2) {
+      updateBookMark(chapterId,currentPage+2)
       setCurrentPage(currentPage + 2);
     }
   };
 
   const prevPage = () => {
     if (currentPage > 0) {
+      updateBookMark(chapterId,currentPage-2)
       setCurrentPage(currentPage - 2);
     }
   };
@@ -133,6 +191,22 @@ const ComicReadingPage = () => {
           </div>
         </div>
       </section>
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title style={{fontSize:20}}>Bạn có muốn đọc tiếp truyện từ lần đọc trước?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{fontSize:16}}>
+          Hệ thống ghi nhận bạn đã đọc tới trang {savedPage + 1} từ lần đọc trước. Bạn có muốn tiếp tục đọc từ trang này không?
+        </Modal.Body>
+        <Modal.Footer style={{height:80}}>
+          <Button variant="primary" onClick={handleContinueReading}>
+            Tiếp tục đọc
+          </Button>
+          <Button variant="secondary" onClick={handleStartFromBeginning}>
+            Đọc lại từ đầu
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
