@@ -19,27 +19,23 @@ const Header = () => {
 
   const [keyWord, setKeyWord] = useState("");
   const [searchingList, setSearchingList] = useState([]);
-  
+
   useEffect(() => {
     if (keyWord !== "") {
-      searchComic(keyWord)
+      searchComic(keyWord);
     }
-  }
-  , [keyWord]);
+  }, [keyWord]);
 
   const handleKeyWordChange = (event) => {
     setKeyWord(event.target.value);
-  }
+  };
 
   const searchComic = async (keyS) => {
-
     try {
       const response = await axios.get(
         `${API_URL}/search/comics?keySearch=${keyS}`
       );
       setSearchingList(response.data.data);
-
-
     } catch (error) {
       console.log(error);
     }
@@ -48,19 +44,19 @@ const Header = () => {
   const navigate = useNavigate();
 
   const changeStatusOnline = async () => {
-      try {
-         await axios.post(
-          `${API_URL}/user/update_status`, {},
-          {
-            headers: {
-              Authorization: "Bearer " + Cookies.get("access_token"),
-            },
-          }
-        );
-       
-      } catch (error) {
-        console.log(error);
-      } 
+    try {
+      await axios.post(
+        `${API_URL}/user/update_status`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + Cookies.get("access_token"),
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
   const logout = () => {
     changeStatusOnline();
@@ -121,10 +117,12 @@ const Header = () => {
                           </Link>
                         ))}
                       </li>
-
                     </ul>
                   </li>
                   <li>
+                    {/* <NavLink to="./search-comic" activeclassname="active">
+                      Tìm truyện
+                    </NavLink> */}
                   </li>
                   <li>
                     <NavLink to="./favorite-comic" activeclassname="active">
@@ -137,7 +135,7 @@ const Header = () => {
                     </NavLink>
                   </li>
                   <li>
-                    <SearchResultPopover/>
+                    <SearchResultPopover />
                     {/* <input className="searchTerm" type="text" placeholder="Search Here..." onChange={handleKeyWordChange}></input>        
                     {(keyWord !== "" && searchingList != []) && (
 
@@ -156,12 +154,10 @@ const Header = () => {
             </div>
           </div>
           <div className="col-lg-2">
-
             <div className="header__right">
-
               {checkAuth() ? (
                 <a>
-                  <MessagesPopover/>
+                  <MessagesPopover />
                   <NotificationsPopover />
                   <Link to="./profile">
                     <span className="icon_profile"></span>
@@ -173,15 +169,12 @@ const Header = () => {
                       className="fa fa-sign-out"
                     ></span>
                   </Link>
-                
-
                 </a>
               ) : (
                 <>
                   <Link to="./login">
                     <span className="fa fa-sign-in"></span>
                   </Link>
-                 
                 </>
               )}
             </div>
