@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Routes, Route, } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
@@ -18,7 +17,6 @@ import ComicReadingPage from './components/pages/comic-reading.page';
 import ComicPage from './components/ComicPage';
 import FavoriteComicPage from './components/FavoriteComicPage';
 import HistoryReadingPage from './components/HistoryReading';
-import SearchResutlItem from './components/SearchResultItem';
 import ProfileSidebar from './components/ProfileSidebar';
 import ComicManage from './components/ComicManage';
 import ChapterManage from './components/ChapterManage';
@@ -31,6 +29,7 @@ import PremiumRoute from './security/PremiumRoute';
 import Statistic from './components/Statistic';
 import User from './components/User';
 import UserPublic from './components/UserPublic';
+import SearchComic from "./components/SearchComic";
 import { Toaster } from 'react-hot-toast';
 
 
@@ -54,6 +53,7 @@ function App() {
           <Route path='/history-reading' Component={HistoryReadingPage} />
           <Route path='/testing' Component={OtpDialogInput} />
           <Route path='/user/:userId' Component={UserPublic}/>
+          <Route path='/search-comic' Component={SearchComic} />
 
         </Route>
 

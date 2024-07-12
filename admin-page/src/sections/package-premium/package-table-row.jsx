@@ -109,7 +109,7 @@ export default function PackageTableRow({
 
         <MenuItem onClick={handleClickOpen}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
-          Edit
+          Sửa
         </MenuItem>
         <EditDialog open={openEdit} handleClose={handleClickClose} packagee={{'id':id,'cost':cost,'duration':duration}}/>
         

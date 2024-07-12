@@ -112,17 +112,17 @@ export default function GenreTableRow({
 
         <MenuItem onClick={handleClickOpen}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
-          Edit
+          Sửa
         </MenuItem>
         <EditDialog open={openEdit} handleClose={handleClickClose} genre={{'id':id,'name':name}}/>
         
 
         <MenuItem onClick={handleOpenConfirmDialog} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-          Delete
+          Xóa
         </MenuItem>
       </Popover>
-      <ConfirmDialog content='Are you sure to delete this genre?' open={openConfirmDialog} handleClose={handleCloseConfirmDialog} handleConfirm={handleDeleteGenre}/>
+      <ConfirmDialog content='Bạn có chắc xóa thể loại này?' open={openConfirmDialog} handleClose={handleCloseConfirmDialog} handleConfirm={handleDeleteGenre}/>
     </>
   );
 }

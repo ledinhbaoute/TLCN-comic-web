@@ -113,7 +113,7 @@ const reportCommentNotFound=!dataFilteredComment.length;
 return (
   <Container>
     <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-      <Typography variant="h4">Report Comic</Typography>
+      <Typography variant="h4">Báo cáo truyện</Typography>
 
     </Stack>
 
@@ -130,11 +130,11 @@ return (
             
               onRequestSort={handleSort}
               headLabel={[
-                { id: 'book', label: 'Comic' },
-                { id: 'reasons', label: 'Reasons' },
-                { id: 'date', label: 'Report Date' },
+                { id: 'book', label: 'Truyện' },
+                { id: 'reasons', label: 'Lí do' },
+                { id: 'date', label: 'Thời gian báo cáo' },
                 // { id: 'isVerified', label: 'Verified', align: 'center' },
-                { id: 'status', label: 'Status' },
+                { id: 'status', label: 'Trạng thái' },
                 { id: '' },
               ]}
             />
@@ -182,7 +182,7 @@ return (
 
 
     <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}  sx={{ marginTop:20 }}>
-      <Typography variant="h4">Report Comment</Typography>
+      <Typography variant="h4">Báo cáo bình luận</Typography>
 
     </Stack>
     <Card>
@@ -195,12 +195,12 @@ return (
               rowCount={reportComments.length}
         
               headLabel={[
-                { id: 'comment', label: 'Comment ID' },
-                { id: 'content', label: 'Comment Content' },
-                { id: 'date', label: 'Report Date' },
-                { id: 'reasons', label: 'Reasons' },
+                { id: 'comment', label: 'ID' },
+                { id: 'content', label: 'Nội dung báo cáo' },
+                { id: 'date', label: 'Thời gian' },
+                { id: 'reasons', label: 'Lí do' },
                 // { id: 'isVerified', label: 'Verified', align: 'center' },
-                { id: 'status', label: 'Status' },
+                { id: 'status', label: 'Trạng thái' },
                 { id: '' },
               ]}
             />

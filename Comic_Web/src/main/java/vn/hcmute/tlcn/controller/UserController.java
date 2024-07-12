@@ -43,6 +43,8 @@ public class UserController {
     @Autowired
     ChapterImageServiceImple chapterImageServiceImple;
     @Autowired
+    InvalidTokenService invalidTokenService;
+    @Autowired
     Converter converter;
     @GetMapping("/user")
     ResponseEntity<?> getUser(Authentication authentication) {
@@ -109,8 +111,12 @@ public class UserController {
                 .loadUserByUsername(username);
         final String token = jwtService.generateToken(userDetails);
         userServiceImple.deleteExpiredPremiumPackage(userDetails.getUsername());
-        userServiceImple.updateStatusOnline(username);
+//        userServiceImple.updateStatusOnline(username);
         return ResponseEntity.ok(new Token(token));
+    }
+    @PostMapping("/logout")
+    public void logout(@RequestParam String accessToken){
+        invalidTokenService.logout(accessToken);
     }
     @PostMapping("user/change-password")
     ResponseEntity<?> changePasswordUser(@RequestParam("password") String oldpass,

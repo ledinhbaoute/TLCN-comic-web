@@ -22,6 +22,7 @@ import vn.hcmute.tlcn.service.IComicBookService;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ComicServiceImple implements IComicBookService {
@@ -319,5 +320,14 @@ public class ComicServiceImple implements IComicBookService {
         calendar.add(Calendar.WEEK_OF_YEAR, -1);
         Date oneWeekAgo = calendar.getTime();
         return comicBookRepository.findComicsUpdatedWithinOneWeekOrderByUpdateDateDesc(oneWeekAgo,currentDate,PageRequest.of(indexPage,6)).map(converter::convertEntityToDto);
+    }
+    @Override
+    public List<ComicBookDTO>filterSearchComic(List<String> includeGenres, List<String> excludeGenres, int status,int numberChapter){
+        if(status!=0){
+            return comicBookRepository.findByGenresAndStatusAndChapters(includeGenres,excludeGenres,status,numberChapter)
+                    .stream().map(comicBook -> converter.convertEntityToDto(comicBook)).collect(Collectors.toList());
+        }
+        else return comicBookRepository.findByGenresAndChapters(includeGenres,excludeGenres,numberChapter)
+                .stream().map(comicBook -> converter.convertEntityToDto(comicBook)).collect(Collectors.toList());
     }
 }

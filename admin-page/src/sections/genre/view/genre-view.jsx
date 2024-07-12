@@ -101,10 +101,10 @@ export default function GenrePage() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Genre Manager</Typography>
+        <Typography variant="h4">Quản lý thể loại</Typography>
 
         <Button onClick={handleClickOpen} variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
-          New Genre
+          Thêm thể loại
         </Button>
       </Stack>
       <FormDialog open={open} handleClose={handleClickClose} />
@@ -127,7 +127,7 @@ export default function GenrePage() {
                 onRequestSort={handleSort}
                 headLabel={[
                   { id: 'id', label: 'Id' },
-                  { id: 'name', label: 'Name' },
+                  { id: 'name', label: 'Tên' },
                   { id: "menu", label: "" },
 
                 ]}

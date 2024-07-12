@@ -14,11 +14,11 @@ export default function TableNoData() {
           }}
         >
           <Typography variant="h6" paragraph>
-            Not found
+            Không có báo cáo
           </Typography>
 
           <Typography variant="body2">
-            No results found 
+            Không có báo cáo
           
           </Typography>
         </Paper>

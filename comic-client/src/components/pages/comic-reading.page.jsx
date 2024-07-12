@@ -18,6 +18,9 @@ const ComicReadingPage = () => {
   const [savedPage, setSavedPage] = useState(0);
 
   const imgOnlyPemiumUrl = `${process.env.PUBLIC_URL}/images/only-premium.png`;
+  useEffect(()=>{
+    setCurrentPage(0)
+  },[chapterId])
 
   useEffect(() => {
     const getChapterDetail = async () => {

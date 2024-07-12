@@ -44,7 +44,7 @@ export default function EditDialog({ open, handleClose, packagee }) {
 return (
 
     <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Edit Package</DialogTitle>
+        <DialogTitle>Chỉnh sửa gói premium</DialogTitle>
         <DialogContent>
             {/* <DialogContentText>
             To subscribe to this website, please enter your email address here.
@@ -56,7 +56,7 @@ return (
                 value={cost}
                 onChange={handleCostChange}
                 id="name"
-                label="Cost"
+                label="Giá gói"
                 type="number"
                 fullWidth
                 variant="standard"
@@ -67,15 +67,15 @@ return (
                 value={duration}
                 onChange={handleDurationChange}
                 id="name"
-                label="Duration"
+                label="Thời hạn"
                 type="number"
                 fullWidth
                 variant="standard"
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleSubmitEditPackage}>Confirm</Button>
+            <Button onClick={handleClose}>Hủy</Button>
+            <Button onClick={handleSubmitEditPackage}>Xác nhận</Button>
         </DialogActions>
     </Dialog>
 

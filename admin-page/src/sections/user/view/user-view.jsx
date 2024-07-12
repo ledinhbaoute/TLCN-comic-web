@@ -46,7 +46,6 @@ useEffect(() => {
     try {
       const response = await axios.get(
         `${API_URL}/all-user`);
-      // console.log(response.data)
         setUsers(response.data)
     } catch (error) {
       console.error(error);
@@ -115,10 +114,10 @@ const notFound = !dataFiltered.length && !!filterName;
 return (
   <Container>
     <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-      <Typography variant="h4">Users</Typography>
+      <Typography variant="h4">Quản lý người dùng</Typography>
 
       <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
-        New User
+        Thêm user
       </Button>
     </Stack>
 
@@ -140,10 +139,10 @@ return (
           
               onRequestSort={handleSort}
               headLabel={[
-                { id: 'name', label: 'Name' },
+                { id: 'name', label: 'Tên' },
                 { id: 'email', label: 'Email' },
-                { id: 'phoneNumber', label: 'Phone Number' },
-                { id: 'status', label: 'Status' },
+                { id: 'phoneNumber', label: 'Số điện thoại' },
+                { id: 'status', label: 'Trạng thái' },
                 { id: '' },
               ]}
             />
@@ -156,7 +155,7 @@ return (
                     username={row.userName}
                     name={row.name}
                     phoneNumber={row.phoneNumber}
-                    status={!row.locked ? "Active":"Banned"}
+                    status={!row.locked ? "Khả dụng":"Khóa"}
                     email={row.email}
                     avatarUrl={row.avatar}
                     isVerified={row.isVerified}

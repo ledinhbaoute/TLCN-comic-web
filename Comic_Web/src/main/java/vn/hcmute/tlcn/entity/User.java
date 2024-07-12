@@ -33,6 +33,8 @@ public class User implements Serializable {
     private Date birthDate;
     private String intro;
     private boolean isOnline;
+    @Column(name = "lastActiveTime")
+    private Date lastActiveTime;
 
     public User() {
     }
@@ -57,6 +59,14 @@ public class User implements Serializable {
 
     public void setIntro(String intro) {
         this.intro = intro;
+    }
+
+    public Date getLastActiveTime() {
+        return lastActiveTime;
+    }
+
+    public void setLastActiveTime(Date lastActiveTime) {
+        this.lastActiveTime = lastActiveTime;
     }
 
     public boolean isOnline() {

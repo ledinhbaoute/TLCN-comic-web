@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import vn.hcmute.tlcn.entity.Message;
 import vn.hcmute.tlcn.entity.User;
 import vn.hcmute.tlcn.jwt.JwtService;
-import vn.hcmute.tlcn.model.PrivateMessage;
 import vn.hcmute.tlcn.repository.UserRepository;
 import vn.hcmute.tlcn.securiry.CustomUserDetailsService;
 import vn.hcmute.tlcn.serviceimple.MessageServiceImple;

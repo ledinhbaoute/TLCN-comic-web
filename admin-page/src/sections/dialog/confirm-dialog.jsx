@@ -18,7 +18,7 @@ export default function ConfirmDialog({open,handleClose,handleConfirm,content}) 
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Confirm
+          Xác nhận
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -26,9 +26,9 @@ export default function ConfirmDialog({open,handleClose,handleConfirm,content}) 
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancle</Button>
+          <Button onClick={handleClose}>Hủy</Button>
           <Button onClick={handleConfirm}  autoFocus>
-            Agree
+            Đồng ý
           </Button>
         </DialogActions>
       </Dialog>

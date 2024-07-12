@@ -44,7 +44,7 @@ export default function FormDialog({ open, handleClose}) {
 return (
 
     <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add New Package</DialogTitle>
+        <DialogTitle>Thêm gói mới</DialogTitle>
         <DialogContent>
             {/* <DialogContentText>
             To subscribe to this website, please enter your email address here.
@@ -56,7 +56,7 @@ return (
                 value={cost}
                 onChange={handleCostChange}
                 id="cost"
-                label="Cost"
+                label="Giá (VND)"
                 type="number"
                 fullWidth
                 variant="standard"
@@ -67,15 +67,15 @@ return (
                 value={duration}
                 onChange={handleDurationChange}
                 id="duration"
-                label="Duration"
+                label="Thời hạn (ngày)"
                 type="number"
                 fullWidth
                 variant="standard"
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleSubmitAddPackage}>Confirm</Button>
+            <Button onClick={handleClose}>Hủy</Button>
+            <Button onClick={handleSubmitAddPackage}>Xác nhận</Button>
         </DialogActions>
     </Dialog>
 

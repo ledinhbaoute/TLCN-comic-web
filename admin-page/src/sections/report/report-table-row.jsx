@@ -144,13 +144,13 @@ export default function ReportTableRow({
       >
         
           <MenuItem onClick={handleOpenConfirmDialog}>
-          Delete Comic
+          Xóa truyện
         </MenuItem>
         <MenuItem onClick={handleDeleteReportComic}>
-          Skip
+          Bỏ qua
         </MenuItem>
       </Popover>
-      <ConfirmDialog content="Are you sure to delete this comic?" open={openConfirmDialog} handleClose={handleCloseConfirmDialog} handleConfirm={handleDeleteComic}/>
+      <ConfirmDialog content=" Bạn có chắc muốn xóa truyện này?" open={openConfirmDialog} handleClose={handleCloseConfirmDialog} handleConfirm={handleDeleteComic}/>
     </>
   );
 }

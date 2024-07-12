@@ -100,10 +100,10 @@ export default function PackagePage() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Package Premium</Typography>
+        <Typography variant="h4">Quản lý gói premium</Typography>
 
         <Button onClick={handleClickOpen} variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
-          New Package
+          Thêm gói mới
         </Button>
       </Stack>
       <FormDialog open={open} handleClose={handleClickClose} />
@@ -126,8 +126,8 @@ export default function PackagePage() {
                 onRequestSort={handleSort}
                 headLabel={[
                   { id: 'id', label: 'Id' },
-                  { id: 'cost', label: 'Cost(VND)' },
-                  { id: "Duration", label: "Duration(Day)" },
+                  { id: 'cost', label: 'Giá (VND)' },
+                  { id: "Duration", label: "Thời hạn (Ngày)" },
                   { id: "Menu", label: "" },
 
                 ]}

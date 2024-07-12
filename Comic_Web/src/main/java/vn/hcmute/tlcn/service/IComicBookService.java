@@ -28,5 +28,5 @@ public interface IComicBookService {
     Page<ComicBookDTO> getComicByGenrePagination(String genreId,int indexPage,String sortBy);
     Page<ComicBookDTO>getBookOrderByUpdateDate(int indexPage);
     ResponseObject adminDeleteComic(String comicId);
-  //  List<ComicBookDTO>fitterSearch(String author,String genre,int status);
+    List<ComicBookDTO>filterSearchComic(List<String> includeGenres, List<String> excludeGenres, int status,int numberChapter);
 }

@@ -24,7 +24,7 @@ export default function OptionStatistic({onOptionChange}) {
         renderInput={(params) => (
             <TextField 
               {...params} 
-              label="Thong ke theo" 
+              label="Thống kê theo" 
               InputProps={{ ...params.InputProps, sx: { fontSize: 12 } }} 
               InputLabelProps={{ sx: { fontSize: 12 } }} 
             />

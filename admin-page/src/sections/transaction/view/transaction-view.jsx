@@ -119,9 +119,8 @@ export default function TransactionPage() {
 
   return (
     <Container>
-      {/* <DateRange/> */}
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Transaction</Typography>
+        <Typography variant="h4">Giao dịch đăng ký premium</Typography>
 {/* 
         <Button onClick={handleClickOpen} variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
           New Package
@@ -130,12 +129,12 @@ export default function TransactionPage() {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
 
         <DatePicker
-          label="Start"
+          label="Từ ngày"
           value={startDate}
           onChange={(date) => setStartDate(date)}
         />
         <DatePicker sx={{ marginLeft: 10, marginBottom: 5 }}
-          label="End "
+          label="Đến ngày"
           value={endDate}
           onChange={(date) => setEndDate(date)}
         />
@@ -160,11 +159,11 @@ export default function TransactionPage() {
                 onRequestSort={handleSort}
                 headLabel={[
                   { id: 'id', label: 'Id' },
-                  { id: 'username', label: 'Username' },
-                  { id: "amount", label: "Amount (VND)" },
-                  { id: "title", label: "Content" },
+                  { id: 'username', label: 'User Name' },
+                  { id: "amount", label: "Số tiền (VND)" },
+                  { id: "title", label: "Nội dung" },
 
-                  { id: "createdAt", label: "Created At" },
+                  { id: "createdAt", label: "Thời gian" },
 
 
                 ]}
@@ -204,7 +203,7 @@ export default function TransactionPage() {
           rowsPerPageOptions={[5, 10, 25]}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-        <Typography variant="h6" sx={{ float: 'right', marginRight: 10 }}>Total:{numeral(totalValue).format('0,0')} VND</Typography>
+        <Typography variant="h6" sx={{ float: 'right', marginRight: 10 }}>Tổng:{numeral(totalValue).format('0,0')} VND</Typography>
       </Card>
     </Container>
   );

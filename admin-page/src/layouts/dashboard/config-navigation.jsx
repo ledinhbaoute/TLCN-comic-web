@@ -13,27 +13,27 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
-    title: 'user',
+    title: 'users',
     path: '/user',
     icon: icon('ic_user'),
   },
   {
-    title: 'report',
+    title: 'Báo cáo',
     path: '/report',
     icon: icon('ic_report'),
   },
   {
-    title: 'Genre',
+    title: 'Thể loại',
     path: '/genre',
     icon: icon('ic_genre'),
   },
   {
-    title: 'Package Premium',
+    title: 'Gói premium',
     path: '/package-premium',
     icon: icon('ic_premium'),
   },
   {
-    title: 'Transaction',
+    title: 'Giao dịch',
     path: '/transaction',
     icon: icon('ic_premium'),
   },

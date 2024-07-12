@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 import API_URL from "../config/config";
 import axios from "axios";
 import { fToNow } from '../utils/format-time';
+import {isWithinTwoMinutes} from '../utils/format-time';
 
 
 // STYLED COMPONENTS
@@ -107,7 +108,7 @@ export default function Chatbox({ togglePopup, receiverUserName, setChatList }) 
         if (receivedMessage.sender.userName === receiverUserName) {
           setMessages((prevMessages) => [...prevMessages, receivedMessage]);
         }
-
+        
       });
     });
 
@@ -125,8 +126,6 @@ export default function Chatbox({ togglePopup, receiverUserName, setChatList }) 
       chatBottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
-
-
 
   const getCurrentUser = async () => {
     try {
@@ -200,8 +199,6 @@ export default function Chatbox({ togglePopup, receiverUserName, setChatList }) 
     }
   }, [receiverUserName])
 
-
-
   const sendMessageOnEnter = (event) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
@@ -261,14 +258,16 @@ export default function Chatbox({ togglePopup, receiverUserName, setChatList }) 
       }
     }
   };
+ 
   return (
     <ChatContainer>
       <ProfileBox>
         <Box display="flex" alignItems="center">
-          <ChatAvatar src={receiverUser.avatar} status={receiverUser.online ? "online" : "offline"} />
+          
+          <ChatAvatar src={receiverUser.avatar} status={isWithinTwoMinutes(receiverUser.lastActiveTime) ? "online" : "offline"} />
           <ChatStatus>
             <H5>{receiverUser.name}</H5>
-            <H5>{receiverUser.online ? "Online" : "Offline"}</H5>
+            <H5>{isWithinTwoMinutes(receiverUser.lastActiveTime)?'Active':`Active ${fToNow(receiverUser.lastActiveTime)}` }</H5>
           </ChatStatus>
         </Box>
         <IconButton onClick={togglePopup}>

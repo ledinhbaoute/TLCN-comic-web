@@ -16,12 +16,12 @@ import { useRouter } from 'src/routes/hooks';
 import API_URL from 'src/config/config';
 import { account } from 'src/_mock/account';
 
-const MENU_OPTIONS = [
-  {
-    label: 'Profile',
-    icon: 'eva:person-fill',
-  },
-];
+// const MENU_OPTIONS = [
+//   {
+//     label: 'Profile',
+//     icon: 'eva:person-fill',
+//   },
+// ];
 
 // ----------------------------------------------------------------------
 
@@ -48,7 +48,23 @@ export default function AccountPopover() {
     };
     getInfoAdmin()
   }, [])
-  const logout = () => {
+  const logout=async()=>{
+    try{
+      await axios.post(
+        `${API_URL}/logout`, {accessToken:Cookies.get("access_token")},
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+    }catch (error) {
+      console.log(error);
+    } 
+
+  }
+  const handleLogout = async () => {
+    await logout();
     Cookies.remove("access_token");
     window.sessionStorage.clear();
     router.reload()
@@ -116,21 +132,21 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        {MENU_OPTIONS.map((option) => (
+        {/* {MENU_OPTIONS.map((option) => (
           <MenuItem key={option.label} onClick={handleClose}>
             {option.label}
           </MenuItem>
-        ))}
+        ))} */}
 
         <Divider sx={{ borderStyle: 'dashed', m: 0 }} />
 
         <MenuItem
           disableRipple
           disableTouchRipple
-          onClick={logout}
+          onClick={handleLogout}
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
         >
-          Logout
+          Đăng xuất
         </MenuItem>
       </Popover>
     </>

@@ -40,7 +40,7 @@ export default function EditDialog({ open, handleClose,genre}) {
 return (
 
     <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Edit Genre</DialogTitle>
+        <DialogTitle>Chỉnh sửa thể loại</DialogTitle>
         <DialogContent>
             {/* <DialogContentText>
             To subscribe to this website, please enter your email address here.
@@ -52,15 +52,15 @@ return (
                 value={genreName}
                 onChange={handleTextChange}
                 id="name"
-                label="Genre Name"
+                label="Tên thể loại"
                 type="text"
                 fullWidth
                 variant="standard"
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleSubmitEditGenre}>Confirm</Button>
+            <Button onClick={handleClose}>Hủy</Button>
+            <Button onClick={handleSubmitEditGenre}>Xác nhận</Button>
         </DialogActions>
     </Dialog>
 

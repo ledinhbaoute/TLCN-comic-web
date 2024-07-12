@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import vn.hcmute.tlcn.entity.ComicBook;
 import vn.hcmute.tlcn.model.ResponseObject;
 import vn.hcmute.tlcn.model.ComicBookDTO;
 import vn.hcmute.tlcn.model.UserDTO;
@@ -37,5 +38,10 @@ public class SearchController {
         if(comicBookDTOS.size()>0)
             return ResponseEntity.ok(new ResponseObject(true, "Success!", comicBookDTOS));
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(false,"Not found!",""));
+    }
+    @GetMapping("/filterSearch")
+    List<ComicBookDTO>filterSearchComic(@RequestParam(required = false) List<String>include,@RequestParam(required = false) List<String>exclude
+            ,@RequestParam (required = false,defaultValue = "0") int status,@RequestParam (required = false,defaultValue = "0")int numberChapter){
+        return comicServiceImple.filterSearchComic(include,exclude,status,numberChapter);
     }
 }

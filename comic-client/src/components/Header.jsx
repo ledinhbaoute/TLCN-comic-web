@@ -7,7 +7,6 @@ import { checkAuth } from "../security/Authentication";
 import AppContext from "../context/AppContext";
 import axios from "axios";
 import API_URL from "../config/config";
-import SearchResutlItem from "./SearchResultItem";
 import NotificationsPopover from "./notifications-popover";
 import MessagesPopover from "./MessagesPopover";
 import SearchResultPopover from "./SearchResultPopover";
@@ -62,14 +61,26 @@ const Header = () => {
         console.log(error);
       } 
   };
-  const logout = () => {
-    changeStatusOnline();
-    Cookies.remove("access_token");
-    window.sessionStorage.clear();
-  };
+  const logout=async()=>{
+    try{
+      await axios.post(
+        `${API_URL}/logout`, {accessToken:Cookies.get("access_token")},
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+    }catch (error) {
+      console.log(error);
+    } 
+
+  }
 
   const handleLogout = async () => {
     await logout();
+    Cookies.remove("access_token");
+    window.sessionStorage.clear();
     navigate("/");
     window.location.reload();
     window.scrollTo({
@@ -166,6 +177,9 @@ const Header = () => {
                   <Link to="./profile">
                     <span className="icon_profile"></span>
                   </Link>
+                  <Link to="./search-comic" class="search-switch">
+                   <span class="icon_search"></span>
+                   </Link>
                   <Link to="./">
                     <span
                       title="Đăng xuất"
@@ -178,10 +192,12 @@ const Header = () => {
                 </a>
               ) : (
                 <>
+                <Link to="./search-comic" class="search-switch">
+                   <span class="icon_search"></span>
+                   </Link>
                   <Link to="./login">
                     <span className="fa fa-sign-in"></span>
                   </Link>
-                 
                 </>
               )}
             </div>

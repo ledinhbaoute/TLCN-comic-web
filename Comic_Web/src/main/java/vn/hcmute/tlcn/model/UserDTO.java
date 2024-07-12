@@ -20,6 +20,7 @@ public class UserDTO {
     private Date birthDate;
     private String intro;
     private boolean isOnline;
+    private Date lastActiveTime;
     public UserDTO() {
     }
 
@@ -36,6 +37,14 @@ public class UserDTO {
         this.isLocked=isLocked;
         this.createdAt=createdAt;
         this.birthDate=birthDate;
+    }
+
+    public Date getLastActiveTime() {
+        return lastActiveTime;
+    }
+
+    public void setLastActiveTime(Date lastActiveTime) {
+        this.lastActiveTime = lastActiveTime;
     }
 
     public String getIntro() {

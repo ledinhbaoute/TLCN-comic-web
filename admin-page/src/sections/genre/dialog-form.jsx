@@ -40,7 +40,7 @@ export default function FormDialog({ open, handleClose}) {
 return (
 
     <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add New Genre</DialogTitle>
+        <DialogTitle>Thêm thể loại</DialogTitle>
         <DialogContent>
             {/* <DialogContentText>
             To subscribe to this website, please enter your email address here.
@@ -52,15 +52,15 @@ return (
                 value={genreName}
                 onChange={handleTextChange}
                 id="name"
-                label="Genre Name"
+                label="Tên thể loại"
                 type="text"
                 fullWidth
                 variant="standard"
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleSubmitAddGenre}>Confirm</Button>
+            <Button onClick={handleClose}>Hủy</Button>
+            <Button onClick={handleSubmitAddGenre}>Xác nhận</Button>
         </DialogActions>
     </Dialog>
 

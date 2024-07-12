@@ -116,12 +116,12 @@ export default function UserTableRow({
         {status==="Active"?(
           <MenuItem onClick={handleOpenConfirmDialog}>
           <Iconify icon="eva:lock-fill" sx={{ mr: 2 }} />
-          Lock
+          Khóa
         </MenuItem>
         ):
         (<MenuItem onClick={handleOpenConfirmDialog}>
           <Iconify icon="eva:lock-fill" sx={{ mr: 2 }} />
-          Unlock
+          Mở khóa
         </MenuItem>)}
         
 
@@ -130,7 +130,7 @@ export default function UserTableRow({
           Delete
         </MenuItem> */}
       </Popover>
-      <ConfirmDialog content="Are you sure to change this user status?" open={openConfirmDialog} handleClose={handleCloseConfirmDialog} handleConfirm={lockOrUnlockAccount}/>
+      <ConfirmDialog content="Bạn có chắc muốn thay đổi?" open={openConfirmDialog} handleClose={handleCloseConfirmDialog} handleConfirm={lockOrUnlockAccount}/>
     </>
   );
 }

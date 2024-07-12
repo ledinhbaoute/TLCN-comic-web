@@ -179,7 +179,7 @@ export default function AppView() {
       <Grid container spacing={3}>
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Total User"
+            title="Tổng người dùng"
             total={totalUser}
             color="success"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
@@ -189,7 +189,7 @@ export default function AppView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Total Comic"
+            title="Tổng số truyện"
             total={totalComic}
             color="info"
             icon={<img alt="icon" src="/assets/icons/glass/ic_comic.png" />}
@@ -198,7 +198,7 @@ export default function AppView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Users Premium"
+            title="Người dùng Premium"
             total={totalUserPremium}
             color="warning"
             icon={<img alt="icon" src="/assets/icons/glass/ic_user_premium.png" />}
@@ -207,7 +207,7 @@ export default function AppView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Total Wallet"
+            title="Tổng số ví"
             total={totalWallet}
             color="error"
             icon={<img alt="icon" src="/assets/icons/glass/ic_wallet.png" />}
@@ -217,8 +217,8 @@ export default function AppView() {
         <Grid xs={12} md={6} lg={8}>
           
           <AppWebsiteVisits
-            title="Luot dang ky moi"
-            subheader="bieu do thong ke luot dang ky"
+            title="Lượt đăng ký mới"
+            subheader="Biểu đồ thống kê lượt đăng ký"
             chart={{
               labels: generateLabels(),
               series: [
@@ -239,7 +239,7 @@ export default function AppView() {
 
         <Grid xs={12} md={6} lg={4}>
           <AppCurrentVisits
-            title="Phan bo do tuoi"
+            title="Phân bố độ tuổi"
             chart={{
               series: userAgeDistribution.length>0? [
                 { label: '>16 tuoi', value: userAgeDistribution[0]},
@@ -254,7 +254,7 @@ export default function AppView() {
 
         <Grid xs={12} md={6} lg={8}>
           <AppConversionRates
-            title="Truyen doc nhieu trong tuan"
+            title="Truyện đọc nhiều trong tuần"
             subheader=""
             chart={{
               series: comicTrendings.length > 0 ? 
@@ -279,7 +279,7 @@ export default function AppView() {
         </Grid>
         <Grid xs={12} md={6} lg={8}>
           <AppNewsUpdate
-            title="Truyen moi cap nhat"
+            title="Truyện mới cập nhật"
             list={comicUpdateLastest.length>0?comicUpdateLastest.map(comic => ({
               id: comic.id,
               title: comic.name,
