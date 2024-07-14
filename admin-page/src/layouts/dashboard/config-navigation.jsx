@@ -35,7 +35,12 @@ const navConfig = [
   {
     title: 'Giao dịch',
     path: '/transaction',
-    icon: icon('ic_premium'),
+    icon: icon('ic_transaction'),
+  },
+  {
+    title: 'Giá',
+    path: '/price',
+    icon: icon('ic_price'),
   },
 ];
 export default navConfig;

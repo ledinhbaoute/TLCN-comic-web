@@ -12,7 +12,7 @@ const ComicItem = ({ item,chapter }) => {
 
   const increaseView = async () => {
     try {
-      const response = await axios.post(`${API_URL}/comic/view`,
+      await axios.post(`${API_URL}/comic/view`,
         { comicId: item.id },
         {
           headers: {
@@ -73,13 +73,6 @@ const ComicItem = ({ item,chapter }) => {
   }
   const handleDeleteHistory = async () => {
     deleteHistoryReading()
-    // console.log(deleteStatus)
-    // if (deleteStatus) {
-    //   alert("Xoa thanh cong")
-    // }
-    // else {
-    //   alert("loi")
-    // }
     window.location.reload()
     
   }

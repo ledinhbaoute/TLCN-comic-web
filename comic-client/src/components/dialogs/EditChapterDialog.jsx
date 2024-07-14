@@ -5,11 +5,11 @@ import axios from "axios";
 import API_URL from "../../config/config";
 import { PY_API_URL } from "../../config/config";
 import Cookies from "js-cookie";
-import { Dialog } from "@mui/material";
 // import { isImage, isSizeExceeded } from "../security/CheckingFile";
 import { ReactSortable } from "react-sortablejs";
 import AlertDialog from "./AlertDialog";
-import toast, { Toaster } from "react-hot-toast";
+import { Dialog, Button } from '@mui/material';
+import toast from "react-hot-toast";
 
 const EditChapterDialog = ({ open, onClose, selectedChapter, setChapterList }) => {
     const [chapter, setChapter] = useState(selectedChapter)
@@ -147,6 +147,7 @@ const EditChapterDialog = ({ open, onClose, selectedChapter, setChapterList }) =
             if (chapter.ordinalNumber < 0) {
                 toast.error("Số chương không được nhỏ hơn 0", { position: "top-right" });
             } else {
+                const toastId=toast.loading("Hệ thống đang kiểm tra ảnh!")
                 const results = [];
                 for (const file of selectedFiles) {
                     const result = await handleCheckingImage(file);
@@ -165,7 +166,7 @@ const EditChapterDialog = ({ open, onClose, selectedChapter, setChapterList }) =
                     if (azure_results.length === 0) {
                         editChapter();
                         changeOrderImage(chapter.id, selectedFiles, true)
-                        toast.success("Cập nhật chương thành công")
+                        toast.success("Cập nhật chương thành công",{id:toastId})
                         onClose();
                     }
                     else {
@@ -174,7 +175,7 @@ const EditChapterDialog = ({ open, onClose, selectedChapter, setChapterList }) =
                             listFile = listFile + azure_result.filename + ", ";
                         });
 
-                        toast.error(`Nội dung của bạn không được duyệt do chứa các file hình ảnh nhạy cảm sau: ${listFile}`)
+                        toast.error(`Nội dung của bạn không được duyệt do chứa các file hình ảnh nhạy cảm sau: ${listFile}, vui lòng chỉnh sửa hoặc gửi yêu cầu duyệt lại đến Admin`,{id:toastId})
                         setIsAccept(false)
                     }
                 }
@@ -184,7 +185,7 @@ const EditChapterDialog = ({ open, onClose, selectedChapter, setChapterList }) =
                         listFile = listFile + result.filename + ", ";
                     });
 
-                    toast.error(`Nội dung của bạn không được duyệt do chứa các file hình ảnh nhạy cảm sau: ${listFile}`)
+                    toast.error(`Nội dung của bạn không được duyệt do chứa các file hình ảnh nhạy cảm sau: ${listFile}, vui lòng chỉnh sửa hoặc gửi yêu cầu duyệt lại đến Admin`,{id:toastId})
                     setIsAccept(false)
                 }
             }
@@ -205,6 +206,7 @@ const EditChapterDialog = ({ open, onClose, selectedChapter, setChapterList }) =
             if (chapter.ordinalNumber < 0) {
                 toast.error("Số chương không được nhỏ hơn 0", { position: "top-right" });
             } else {
+                const toastId=toast.loading("Hệ thống đang tiến hành kiểm tra ảnh!")
                 const results = [];
                 for (const file of selectedFiles) {
                     const result = await handleCheckingImage(file);
@@ -223,14 +225,14 @@ const EditChapterDialog = ({ open, onClose, selectedChapter, setChapterList }) =
                     if (azure_results.length === 0) {
                         editChapter();
                         changeOrderImage(chapter.id, selectedFiles, true)
-                        toast.success("Cập nhật chương thành công")
+                        toast.success("Cập nhật chương thành công",{id:toastId})
                         onClose();
                     }
                     else {
                         editChapter()
                         changeOrderImage(chapter.id, selectedFiles, false)
                         setIsAccept(true)
-                        toast.success("Đã gửi yêu cầu duyệt lại")
+                        toast.success("Đã gửi yêu cầu duyệt lại",{id:toastId})
                         onClose();
                     }
                 }
@@ -238,7 +240,7 @@ const EditChapterDialog = ({ open, onClose, selectedChapter, setChapterList }) =
                     editChapter()
                     changeOrderImage(chapter.id, selectedFiles, false)
                     setIsAccept(true)
-                    toast.success("Đã gửi yêu cầu duyệt lại")
+                    toast.success("Đã gửi yêu cầu duyệt lại",{id:toastId})
                     onClose();
                 }
             }
@@ -304,7 +306,7 @@ const EditChapterDialog = ({ open, onClose, selectedChapter, setChapterList }) =
             <Dialog open={open}>
                 <div className="add-dialog">
                     <h3>Chỉnh sửa chương truyện</h3>
-                    <h4> Số chương</h4>
+                    <h4> Số thứ tự của chương trong truyện</h4>
                     <input
                         type="number"
                         name="ordinalNumber"
@@ -352,17 +354,17 @@ const EditChapterDialog = ({ open, onClose, selectedChapter, setChapterList }) =
                             {previewImages.map((item, index) => (
                                 <div>
 
-                                    <button onClick={() => handleRemoveImage(index)}>Bỏ hình</button>
+                                    <Button variant="contained" color="warning" onClick={() => handleRemoveImage(index)}>Bỏ hình</Button>
                                     <img key={index} src={item} alt="aaa" />
                                 </div>
                             ))}
                         </ReactSortable>
                     }
                     <div>
-                        {isAccept && <button onClick={handleEditChapter}>Xác nhận</button>}
-                        {!isAccept && <button onClick={handleEditChapterIfHaveSensetive}>Yêu cầu duyệt lại</button>}
+                        {isAccept && <Button  variant="contained" color="success"onClick={handleEditChapter}>Xác nhận</Button>}
+                        {!isAccept && <Button variant="contained" color="success" onClick={handleEditChapterIfHaveSensetive}>Yêu cầu duyệt lại</Button>}
 
-                        <button onClick={onClose}>Hủy</button>
+                        <Button variant="contained" color="error" onClick={onClose}>Hủy</Button>
                     </div>
                 </div>
             </Dialog>

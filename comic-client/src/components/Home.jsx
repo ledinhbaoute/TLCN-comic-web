@@ -11,7 +11,6 @@ const Home = () => {
   const [listTopView, setListTopView] = useState([])
   const [listTrending, setListTrending] = useState([])
   const [listLatestUpdate, setListLatestUpdate] = useState([])
-  const [listRamdomComic, setListRamdomComic] = useState([]);
   useEffect(() => {
     const getTopViewComic = async () => {
       try {
@@ -64,35 +63,18 @@ const Home = () => {
 
   }, []);
 
-  useEffect(() => {
-    const getRandomComic = async () => {
-      try {
-       
-          const response = await axios.get(
-            `${API_URL}/comicbooks`
-          );
-          setListRamdomComic(response.data.data);
-        
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getRandomComic();
-
-  }, []);
-
   return (
     <div>
       {/*  Hero Section Begin  */}
       <section className="hero">
         <div className="container">
-          <Fade>
-            {listRamdomComic.map((comic) => (
-              <div key={comic.id}>
-                <Link to={`/comic-detail/${comic.id}`}><img style={{ width: '1172px', height:'564px'}} src={`http://localhost:8081/api/v1/files/${comic.image}`} ></img></Link>
-              
-              </div>
-            ))}
+          <Fade duration={2000}>
+            <img style={{ width: '1350px', height: '560px' }} src="/images/slide/image-1.jpg" alt="hahah" />
+            <img style={{ width: '1350px', height: '600px' }} src="/images/slide/hero-1.jpg"  alt="hahha"/>
+            <img style={{ width: '1350px', height: '600px' }} src="/images/slide/image-6.webp"  alt="hahha"/>
+            <img style={{ width: '1350px', height: '600px' }} src="/images/slide/image-5.webp"  alt="hahah"/>
+            <img style={{ width: '1350px', height: '600px' }} src="/images/slide/image-5.jpg"  alt="imahhage"/>
+
           </Fade>
         </div>
       </section>
@@ -125,7 +107,7 @@ const Home = () => {
                   ))}
                 </div>
               </div>
-             
+
               <div className="recent__product">
                 <div className="row" >
                   <div className="col-lg-8 col-md-8 col-sm-8">

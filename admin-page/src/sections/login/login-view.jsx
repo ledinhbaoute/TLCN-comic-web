@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie'
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -21,8 +22,6 @@ import { bgGradient } from 'src/theme/css';
 
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
-
-
 
 
 
@@ -68,7 +67,7 @@ export default function LoginView() {
         Cookies.set("access_token",response.data.accessToken)
         router.push('/');}
     } catch (error) {
-      window.alert("Đăng nhập thất bại. Sai tên đăng nhập hoặc mật khẩu");
+      toast.error("Đăng nhập thất bại. Sai tên đăng nhập hoặc mật khẩu");
       console.error(error);
     }
   };

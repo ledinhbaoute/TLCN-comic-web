@@ -1,6 +1,7 @@
 .comic-list-container {
   background-color: #fff;
   padding-bottom: 10px;
+  min-height: 750px;
 }
 
 .table-row:nth-child(even) {
@@ -38,7 +39,7 @@ td:nth-child(3) {
 
 th:nth-child(4),
 td:nth-child(4) {
-  width: 50px;
+  width: 150px;
 }
 
 th:nth-child(5),
@@ -50,7 +51,7 @@ th:nth-child(6),
 td:nth-child(6),
 th:nth-child(7),
 td:nth-child(7) {
-  width: 80px;
+  width: 100px;
 }
 
 .add-button {
@@ -67,12 +68,6 @@ td:nth-child(7) {
   border-radius: 4px;
 }
 
-.edit {
-  background-color: #f1c40f;
-  color: #000;
-  border: 2px solid #c5a600;
-  border-radius: 20px;
-}
 
 .delete {
   background-color: #e74c3c;
@@ -145,7 +140,7 @@ td:nth-child(7) {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
   border-radius: 3px;
 }
 
@@ -167,7 +162,7 @@ td:nth-child(7) {
   padding: 8px 16px;
   margin-right: 10px;
   font-size: 14px;
-  background-color: #4caf50;
+  /* background-color: #4caf50; */
   color: #fff;
   border: none;
   border-radius: 3px;

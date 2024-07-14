@@ -284,7 +284,7 @@ public class ComicServiceImple implements IComicBookService {
         calendar.add(Calendar.WEEK_OF_YEAR, -1);
         Date oneWeekAgo = calendar.getTime();
 
-        Page<ComicBook> trendingList = historyIncreaseViewRepo.getTrending(oneWeekAgo, currentDate, PageRequest.of(indexPage, 6));
+        Page<ComicBook> trendingList = historyIncreaseViewRepo.getTrending(oneWeekAgo, currentDate, PageRequest.of(indexPage, 12));
         return trendingList.map(converter::convertEntityToDto);
 //        int endIndex = Math.min(trendingList.size(), 10);
 //        return trendingList.subList(0, endIndex).stream().map(c -> converter.convertEntityToDto(c)).toList();
@@ -319,7 +319,7 @@ public class ComicServiceImple implements IComicBookService {
         calendar.setTime(currentDate);
         calendar.add(Calendar.WEEK_OF_YEAR, -1);
         Date oneWeekAgo = calendar.getTime();
-        return comicBookRepository.findComicsUpdatedWithinOneWeekOrderByUpdateDateDesc(oneWeekAgo,currentDate,PageRequest.of(indexPage,6)).map(converter::convertEntityToDto);
+        return comicBookRepository.findComicsUpdatedWithinOneWeekOrderByUpdateDateDesc(oneWeekAgo,currentDate,PageRequest.of(indexPage,12)).map(converter::convertEntityToDto);
     }
     @Override
     public List<ComicBookDTO>filterSearchComic(List<String> includeGenres, List<String> excludeGenres, int status,int numberChapter){

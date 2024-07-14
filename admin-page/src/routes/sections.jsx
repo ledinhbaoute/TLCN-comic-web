@@ -12,6 +12,7 @@ export const ReportPage = lazy(() => import('src/pages/report'));
 export const GenrePage = lazy(() => import('src/pages/genre'));
 export const PackagePage = lazy(() => import('src/pages/package'));
 export const TransactionPage = lazy(() => import('src/pages/transaction'));
+export const PricePage = lazy(() => import('src/pages/price'));
 // ----------------------------------------------------------------------
 
 const checkLogin = (loggedIn, element) => {
@@ -41,6 +42,7 @@ export default function Router() {
         {path:'genre',element:<GenrePage/>},
         {path:'package-premium',element:<PackagePage/>},
         {path:'transaction',element:<TransactionPage/>},
+        {path:'price',element:<PricePage/>}
       ],
     },
     {

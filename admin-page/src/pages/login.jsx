@@ -8,7 +8,7 @@ export default function LoginPage() {
   return (
     <>
       <Helmet>
-        <title> Login|Comic Reading </title>
+        <title> Đăng nhập|Comic Reading </title>
       </Helmet>
 
       <LoginView />

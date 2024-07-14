@@ -34,7 +34,6 @@ const HistoryReadingPage = () => {
         }
         getHistoryReading();
     }, [listHistory.length]);
-    const imageError = process.env.PUBLIC_URL + '/images/hihihi.png';
 
     return (
         <section className="product-page spad">
@@ -64,12 +63,12 @@ const HistoryReadingPage = () => {
                                         {checkAuth() ? (
                                             <div>
                                                 <h3>Chưa có lịch sử đọc truyện</h3>
-                                                <img src={imageError} alt="Error"></img>
+                                               
                                             </div>
                                         ) : (
                                             <div>
                                                 <h3>Bạn cần đăng nhập</h3>
-                                                <img src={imageError} alt="Error"></img>
+                                               
                                             </div>)
                                         }
                                     </div>

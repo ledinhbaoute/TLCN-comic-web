@@ -4,7 +4,7 @@ import { TransactionView } from 'src/sections/transaction/view';
 
 // ----------------------------------------------------------------------
 
-export default function ReportPage() {
+export default function TransactionPage() {
   return (
     <>
       <Helmet>

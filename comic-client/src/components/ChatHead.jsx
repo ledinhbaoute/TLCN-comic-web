@@ -1,7 +1,8 @@
 import { cloneElement, useState } from "react";
 import { styled } from "@mui/material";
 import clsx from "clsx";
-
+import { checkAuth } from "../security/Authentication";
+import toast from "react-hot-toast";
 
 // STYLED COMPONENTS
 const PopupRoot = styled("div")(({ theme }) => ({
@@ -32,7 +33,23 @@ const Popup = styled("div")(({ theme }) => ({
 export default function ChatHead({ icon, children }) {
   const [open, setOpen] = useState(false);
 
-  const togglePopup = () => setOpen((open) => !open);
+  const togglePopup = () => {
+    if(checkAuth()){
+      console.log(checkAuth)
+      setOpen((open) => !open);
+    }
+    else{
+      toast("Bạn cần đăng nhập để nhắn tin!",{
+        icon:'🛈',
+        position:"top-right",
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+       })
+    } 
+  }
   
   return (
     <PopupRoot>

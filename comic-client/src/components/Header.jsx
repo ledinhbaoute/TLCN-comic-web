@@ -178,7 +178,7 @@ const Header = () => {
                     <span className="icon_profile"></span>
                   </Link>
                   <Link to="./search-comic" class="search-switch">
-                   <span class="icon_search"></span>
+                   <span className="icon_search"></span>
                    </Link>
                   <Link to="./">
                     <span

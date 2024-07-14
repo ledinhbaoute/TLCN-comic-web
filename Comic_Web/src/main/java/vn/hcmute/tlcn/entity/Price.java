@@ -22,6 +22,9 @@ public class Price {
         this.type=type;
     }
 
+    public int getId() {
+        return id;
+    }
 
     public int getView() {
         return view;

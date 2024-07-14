@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import API_URL from "../config/config";
-import Pagination from "./Pagination";
 import ComicItem from "./ComicItem";
 import Cookies from "js-cookie";
 import { checkAuth } from "../security/Authentication";
 import RecommentComicList from "./RecommentComicList";
 const FavoriteComicPage = () => {
     const [listComic, setListComic] = useState([])
-    const imageError = process.env.PUBLIC_URL + '/images/hihihi.png';
     useEffect(() => {
         const getFavoriteComic = async () => {
             if (checkAuth()) {
@@ -59,13 +57,13 @@ const FavoriteComicPage = () => {
                                         {checkAuth() ? (
                                             <div>
                                                 <h3>Danh sách trống</h3>
-                                                <img src={imageError} alt="Error"></img>
+                                                
                                             </div>
                                         ) : (
                                             <div>
 
                                                 <h3>Bạn cần đăng nhập</h3>
-                                                <img src={imageError} alt="Error"></img>
+                                                
                                             </div>
                                         )
                                         }

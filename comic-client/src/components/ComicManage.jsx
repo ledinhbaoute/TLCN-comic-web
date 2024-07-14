@@ -5,10 +5,11 @@ import API_URL from "../config/config";
 import { PY_API_URL } from "../config/config";
 import Cookies from "js-cookie";
 import AppContext from "../context/AppContext";
-import { Dialog } from "@mui/material";
+// import { Dialog } from "@mui/material";
 import AlertDialog from "./dialogs/AlertDialog";
 import ConfirmDialog from "./dialogs/ConfirmDialog";
 import toast from "react-hot-toast";
+import { Dialog, TextField, Button, Checkbox, FormControlLabel, Radio, RadioGroup,  Pagination } from '@mui/material';
 
 const ComicManage = () => {
   const genresList = useContext(AppContext);
@@ -24,6 +25,7 @@ const ComicManage = () => {
     description: "",
     genres: [],
   });
+  const [updateState,setUpdateState]=useState(false)
   const [newComicImage, setNewComicImage] = useState(null);
 
   const comicStatus = (value) => {
@@ -51,7 +53,7 @@ const ComicManage = () => {
       }
     };
     getComics();
-  }, []);
+  }, [updateState]);
 
   const handleSearchClick = () => {
     setSearchResult(
@@ -64,18 +66,15 @@ const ComicManage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const comicsPerPage = 10;
 
-  const handleClick = (event) => {
-    setCurrentPage(Number(event.target.id));
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
   };
 
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(searchResult.length / comicsPerPage); i++) {
-    pageNumbers.push(i);
-  }
+  const pageNumbers = Math.ceil(searchResult.length / comicsPerPage);
 
   const indexOfLastComic = currentPage * comicsPerPage;
   const indexOfFirstComic = indexOfLastComic - comicsPerPage;
-  const currentcomics = searchResult.slice(indexOfFirstComic, indexOfLastComic);
+  const currentComics = searchResult.slice(indexOfFirstComic, indexOfLastComic);
   ///nhận diện ảnh nhạy cảm
   const handleCheckingImage = async (image) => {
     try {
@@ -139,7 +138,6 @@ const ComicManage = () => {
           data: { comicId: comicId },
         }
       );
-      //   console.log(response.data);
       setAlertMessage("Xóa truyện thành công");
       setAlertDialogOpen(true);
     } catch (error) {
@@ -177,8 +175,14 @@ const ComicManage = () => {
           },
         }
       );
-      setAlertMessage("Thêm truyện mới thành công");
-      setAlertDialogOpen(true);
+      setUpdateState(!updateState)
+      setNewComic({
+        name: "",
+        description: "",
+        genres: [],
+      })
+      setNewComicImage(null)
+      setShowAddDialog(false)
       //   console.log(response.data);
     } catch (error) {
       setAlertMessage(
@@ -209,10 +213,11 @@ const ComicManage = () => {
         },
       })
     } else {
+      const toastId = toast.loading("Hệ thống đang thực hiện kiểm tra ảnh...");
       const result = await handleCheckingImage(newComicImage)
       const azure_result = await handleAzureCheckingImage(newComicImage)
       if (!result.SFW || !azure_result.SFW) {
-        toast.error("Ảnh được phát hiện là nhạy cảm")
+        toast.error("Ảnh được phát hiện là nhạy cảm",{id:toastId})
       }
       else {
         const formData = new FormData();
@@ -221,7 +226,7 @@ const ComicManage = () => {
         formData.append("discription", newComic.description);
         formData.append("image", newComicImage);
         addComic(formData);
-        setShowAddDialog(false);
+        toast.success("Thêm truyện mới thành công!",{id:toastId})
       }
     }
   };
@@ -239,9 +244,7 @@ const ComicManage = () => {
 
   const handleImageChange = (file) => {
     if (file) {
-      // Thực hiện xử lý hình ảnh ở đây, ví dụ: tải lên máy chủ, lưu trữ URL hình ảnh, v.v.
       setNewComicImage(file);
-      //   console.log("Hình ảnh đã được chọn:", file);
     }
   };
 
@@ -270,9 +273,7 @@ const ComicManage = () => {
 
   const handleUpdateComicImgChange = (file) => {
     if (file) {
-      // Thực hiện xử lý hình ảnh ở đây, ví dụ: tải lên máy chủ, lưu trữ URL hình ảnh, v.v.
       setSelectedComicImg(file);
-      //   console.log("Hình ảnh đã được chọn:", file);
     }
   };
 
@@ -285,9 +286,6 @@ const ComicManage = () => {
       ...prevComic,
       genres: updatedGenres,
     }));
-    // console.log(selectedComic);
-    // const updateGenreIds = selectedComic.genres.map(genre => genre.id);
-    // console.log(updateGenreIds);
   };
 
   const updateComic = async () => {
@@ -309,23 +307,19 @@ const ComicManage = () => {
           },
         }
       );
-      //   console.log(response.data);
-      setSelectedComic(response.data.data)
-      setAlertMessage(
-        (preMessage) => `${preMessage} Cập nhật thông tin truyện thành công.`
-      );
+      setUpdateState(!updateState)
     } catch (error) {
       console.log(error);
       setAlertMessage(
         (preMessage) => `${preMessage} Cập nhật thông tin truyện thất bại.`
       );
-      // setAlertDialogOpen(true);
+      setAlertDialogOpen(true);
     }
   };
 
   const updateCoverImg = async (formData) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${API_URL}/user/comic/update_coverImg`,
         formData,
         {
@@ -335,8 +329,7 @@ const ComicManage = () => {
           },
         }
       );
-      //   console.log(response.data);
-      setAlertMessage(" Cập nhật hình ảnh thành công.");
+     
     } catch (error) {
       console.log(error);
       setAlertMessage(
@@ -354,10 +347,12 @@ const ComicManage = () => {
 
   const handleCancelEdit = () => {
     setShowEditDialog(false);
+    setNewComicImage(null)
+
   };
 
-  const handleEditClick = (comicId) => {
-    getComicDetail(comicId);
+  const handleEditClick = async(comicId) => {
+    await getComicDetail(comicId);
     setShowEditDialog(true);
   };
 
@@ -378,21 +373,27 @@ const ComicManage = () => {
       })
     } else {
       if (!(selectedComicImg === null)) {
+        const toastId=toast.loading("Hệ thống đang thực hiện kiểm tra ảnh!")
         const result = await handleCheckingImage(selectedComicImg)
         const azure_result = await handleAzureCheckingImage(selectedComicImg)
         if (!result.SFW || !azure_result.SFW) {
-          toast.error("Không thể cập nhật ảnh vì phát hiện ảnh nhạy cảm!")
+          toast.error("Không thể cập nhật ảnh vì phát hiện ảnh nhạy cảm!",{id:toastId})
         }
         else {
           const formData = new FormData();
           formData.append("comicId", selectedComic.id);
           formData.append("file", selectedComicImg);
           await updateCoverImg(formData);
+          toast.success("Cập nhật ảnh bìa truyện thành công!",{id:toastId})
         }
       }
       await updateComic();
-      setAlertDialogOpen(true);
-      setShowEditDialog(false);
+      setSelectedComic({
+        genres: [],
+      })
+      setSelectedComicImg(null)
+      setShowEditDialog(false)
+      toast.success("Cập nhật thông tin truyện thành công!")
     }
   };
 
@@ -437,13 +438,13 @@ const ComicManage = () => {
           value={searchTerm}
           onChange={(event) => setSearchTerm(event.target.value)}
         />
-        <button onClick={handleSearchClick}>Tìm kiếm</button>
+       <Button variant="outlined" onClick={handleSearchClick}>Tìm kiếm</Button>
       </div>
 
       <div className="add-button">
-        <button className="add" onClick={handleAddClick}>
+      <Button variant="contained" color="primary" onClick={handleAddClick}>
           Thêm truyện mới
-        </button>
+        </Button>
       </div>
 
       <ConfirmDialog
@@ -468,24 +469,20 @@ const ComicManage = () => {
         message={alertMessage}
       />
 
-      <Dialog open={showAddDialog}>
+<Dialog open={showAddDialog} onClose={handleCancelAdd}>
         <div className="add-dialog">
           <h3>Thêm truyện mới</h3>
-          <input
-            type="text"
-            name="name"
-            placeholder="Tên truyện"
+          <TextField
+            label="Tên truyện"
             value={newComic.name}
             onChange={(e) => setNewComic({ ...newComic, name: e.target.value })}
+            fullWidth
           />
-          <input
-            type="text"
-            name="description"
-            placeholder="Mô tả"
+          <TextField
+            label="Mô tả"
             value={newComic.description}
-            onChange={(e) =>
-              setNewComic({ ...newComic, description: e.target.value })
-            }
+            onChange={(e) => setNewComic({ ...newComic, description: e.target.value })}
+            fullWidth
           />
           <div>
             <a>Chọn ảnh đại điện cho truyện</a>
@@ -499,49 +496,39 @@ const ComicManage = () => {
           <div>
             <h4>Thể loại</h4>
             {genresList.map((genre) => (
-              <label key={genre}>
-                <input
-                  type="checkbox"
-                  checked={newComic.genres.includes(genre.id)}
-                  onChange={() => handleGenreChange(genre.id)}
-                />
-                {genre.name}
-              </label>
+              <FormControlLabel
+                key={genre.id}
+                control={
+                  <Checkbox
+                    checked={newComic.genres.includes(genre.id)}
+                    onChange={() => handleGenreChange(genre.id)}
+                  />
+                }
+                label={genre.name}
+              />
             ))}
           </div>
-
           <div>
-            <button onClick={handleAddComic}>Thêm</button>
-            <button onClick={handleCancelAdd}>Hủy</button>
+            <Button variant="contained" color="success" onClick={handleAddComic}>Thêm</Button>
+            <Button onClick={handleCancelAdd}>Hủy</Button>
           </div>
         </div>
       </Dialog>
 
-      <Dialog open={showEditDialog}>
+      <Dialog open={showEditDialog} onClose={handleCancelEdit}>
         <div className="add-dialog">
           <h3>Chỉnh sửa truyện</h3>
-          <input
-            type="text"
-            name="name"
-            placeholder="Tên truyện"
-            defaultValue={selectedComic.name}
+          <TextField
+            label="Tên truyện"
             value={selectedComic.name}
-            onChange={(e) =>
-              setSelectedComic({ ...selectedComic, name: e.target.value })
-            }
+            onChange={(e) => setSelectedComic({ ...selectedComic, name: e.target.value })}
+            fullWidth
           />
-          <input
-            type="text"
-            name="description"
-            placeholder="Mô tả"
-            defaultValue={selectedComic.discription}
+          <TextField
+            label="Mô tả"
             value={selectedComic.discription}
-            onChange={(e) =>
-              setSelectedComic({
-                ...selectedComic,
-                discription: e.target.value,
-              })
-            }
+            onChange={(e) => setSelectedComic({ ...selectedComic, discription: e.target.value })}
+            fullWidth
           />
           <div>
             <a>Chọn ảnh đại điện cho truyện</a>
@@ -554,55 +541,30 @@ const ComicManage = () => {
           </div>
           <div>
             <h4>Trạng thái</h4>
-            <label>
-              <input
-                type="radio"
-                value={1}
-                checked={selectedComic.status === 1}
-                onChange={handleStatusChange}
-              />
-              Đang tiến hành
-            </label>
-            <label>
-              <input
-                type="radio"
-                value={2}
-                checked={selectedComic.status === 2}
-                onChange={handleStatusChange}
-              />
-              Đã xong
-            </label>
-            <label>
-              <input
-                type="radio"
-                value={3}
-                checked={selectedComic.status === 3}
-                onChange={handleStatusChange}
-              />
-              Tạm ngưng
-            </label>
+            <RadioGroup value={selectedComic.status} onChange={handleStatusChange}>
+              <FormControlLabel value={1} control={<Radio />} label="Đang tiến hành" />
+              <FormControlLabel value={2} control={<Radio />} label="Đã xong" />
+              <FormControlLabel value={3} control={<Radio />} label="Tạm ngưng" />
+            </RadioGroup>
           </div>
           <div>
             <h4>Thể loại</h4>
             {genresList.map((genre) => (
-              <label key={genre}>
-                <input
-                  type="checkbox"
-                  checked={selectedComic.genres.some(
-                    (item) => item.id === genre.id
-                  )}
-                  onChange={() =>
-                    handleSelectedComicGenreChange(genre.id, genre.name)
-                  }
-                />
-                {genre.name}
-              </label>
+              <FormControlLabel
+                key={genre.id}
+                control={
+                  <Checkbox
+                    checked={selectedComic.genres.some((item) => item.id === genre.id)}
+                    onChange={() => handleSelectedComicGenreChange(genre.id, genre.name)}
+                  />
+                }
+                label={genre.name}
+              />
             ))}
           </div>
-
           <div>
-            <button onClick={handleEditComic}>Xác nhận</button>
-            <button onClick={handleCancelEdit}>Hủy</button>
+            <Button variant="contained" color="success"  onClick={handleEditComic}>Xác nhận</Button>
+            <Button onClick={handleCancelEdit}>Hủy</Button>
           </div>
         </div>
       </Dialog>
@@ -618,7 +580,7 @@ const ComicManage = () => {
             <th></th>
           </tr>
         </thead>
-        {currentcomics.map((comic, index) => (
+        {currentComics.map((comic, index) => (
           <tbody>
             <tr className="table-row" key={index}>
               <td>
@@ -637,52 +599,39 @@ const ComicManage = () => {
                 {comic.premium ? (
                   "Đã nâng cấp"
                 ) : (
-                  <button
-                    className="edit"
-                    onClick={() => handleUpgradeClick(comic.id)}
-                  >
-                    Nâng cấp
-                  </button>
+                  <Button variant="contained" color="success" sx={{textTransform:"initial"}} onClick={() => handleUpgradeClick(comic.id)}>
+                      Nâng cấp
+                    </Button>
                 )}
               </td>
               <td>
-                <button className="edit">
-                  <Link to={`/chapter-manage/${comic.id}`}>Quản lý chương</Link>
-                </button>
+              <Button variant="contained" color="primary"  sx={{textTransform:"initial"}}>
+                    <Link to={`/chapter-manage/${comic.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                      Quản lý chương
+                    </Link>
+                  </Button>
               </td>
               <td>
-                <button
-                  className="edit"
-                  onClick={() => handleEditClick(comic.id)}
-                >
-                  Sửa
-                </button>
+              <Button variant="contained" color="warning" onClick={() => handleEditClick(comic.id)}>
+                    Sửa
+                  </Button>
               </td>
               <td>
-                <button
-                  className="delete"
-                  onClick={() => handleDeleteClick(comic.id, comic.name)}
-                >
-                  Xóa
-                </button>
+              <Button variant="contained" color="error" onClick={() => handleDeleteClick(comic.id, comic.name)}>
+                    Xóa
+                  </Button>
               </td>
             </tr>
           </tbody>
         ))}
       </table>
-
-      <div className="pagination">
-        {pageNumbers.map((number) => (
-          <button
-            key={number}
-            id={number}
-            onClick={handleClick}
-            className={currentPage === number ? "active" : ""}
-          >
-            {number}
-          </button>
-        ))}
-      </div>
+      <Pagination
+        count={pageNumbers}
+        page={currentPage}
+        onChange={handlePageChange}
+        color="primary"
+        className="pagination"
+      />
     </div>
   );
 };

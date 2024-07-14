@@ -646,6 +646,7 @@ ol {
 
 .product-page {
   padding-top: 60px;
+  min-height: 600px;
 }
 
 .btn__all {
@@ -2160,7 +2161,7 @@ ol {
 
 /*--------------------------------- Responsive Media Quaries -----------------------------*/
 
-@media only screen and (min-width: 1200px) and (max-width: 1300px) {
+@media only screen and (min-width: 500px) and (max-width: 500px) {
   .hero {
     overflow: hidden;
   }
@@ -2168,7 +2169,7 @@ ol {
 
 @media only screen and (min-width: 1200px) {
   .container {
-    max-width: 1170px;
+    max-width: 1350px;
   }
 }
 

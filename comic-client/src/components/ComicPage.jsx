@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import API_URL from "../config/config";
 import Pagination from "./Pagination";
-import ComicItem from "./ComicItem";
+import SearchComicItem from "./SearchComicItem"
 const ComicPage = (props) => {
     const {listBy, indexPage} = useParams();
     const [listComic, setListComic] = useState([])
@@ -44,11 +44,11 @@ const ComicPage = (props) => {
         <section className="product-page spad">
             <div className="container">
                 <div className="row">
-                    <div className="col-lg-8">
+                    <div className="col-lg-12">
                         <div className="product__page__content">
                             <div className="product__page__title">
                                 <div className="row">
-                                    <div className="col-lg-8 col-md-8 col-sm-6">
+                                    <div className="col-lg-12 col-md-8 col-sm-6">
                                         <div className="section-title">
                                             <h4>{listBy==="trending"? "Trending":"Truyện mới cập nhật"}</h4>
                                         </div>
@@ -58,7 +58,7 @@ const ComicPage = (props) => {
                             </div>
                             <div className="row">
                                 {listComic.map((item) => (
-                                    <ComicItem item={item} key={item.id} />
+                                    <SearchComicItem item={item} key={item.id} />
                                 ))}
                             </div>
                         </div>

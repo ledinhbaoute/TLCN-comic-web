@@ -4,12 +4,13 @@ import axios from "axios";
 import API_URL from "../../config/config";
 import { PY_API_URL } from "../../config/config";
 import Cookies from "js-cookie";
-import { Dialog } from "@mui/material";
 import { isImage, isSizeExceeded } from "../../security/CheckingFile";
 import { ReactSortable } from "react-sortablejs";
 import AlertDialog from "./AlertDialog";
 import ConfirmDialog from "./ConfirmDialog";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import { Dialog, TextField, Button } from '@mui/material';
+
 
 const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
     const [newChapterName, setNewChapterName] = useState("");
@@ -61,9 +62,6 @@ const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
                     },
                 }
             );
-            // console.log(response.data);
-            toast.success("Tạo chương mới thành công, đang tiến hành upload ảnh!");
-            console.log(response.data.data)
             setChapterList(response.data.data, false)
             return response.data.data.id;
         } catch (error) {
@@ -89,7 +87,7 @@ const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
                 }
             );
             // console.log(response.data);
-            toast.success("Đã gửi yêu cầu duyệt cho admin");
+           
             setChapterList(response.data.data, false)
             return response.data.data.id;
         } catch (error) {
@@ -168,6 +166,7 @@ const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
                 }
             }
             if (checkfile === 1) {
+                const toastId=toast.loading("Hệ thống đang tiến hành kiểm tra ảnh!")
                 const results = [];
                 for (const file of selectedFiles) {
                     const result = await handleCheckingImage(file);
@@ -210,7 +209,7 @@ const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
                             uploadFilesSequentially()
                                 .then(() => {
                                     // Khi tất cả các file đã được upload thành công
-                                    toast.success("Upload ảnh thành công!");
+                                    toast.success("Upload ảnh thành công!",{id:toastId});
                                     // Thực hiện vòng lặp kế tiếp hoặc các công việc tiếp theo ở đây
                                 })
                                 .catch((error) => {
@@ -224,14 +223,14 @@ const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
                         }
                         onClose();
                     }
-                    else{
+                    else {
                         setIsAccept(false)
                         var listFile = "";
                         azure_results.forEach((azure_result) => {
                             listFile = listFile + azure_result.filename + ", ";
                         });
-    
-                        toast.error(`Nội dung của bạn không được duyệt do chứa các file hình ảnh nhạy cảm sau: ${listFile}`)
+
+                        toast.error(`Nội dung của bạn không được duyệt do chứa các file hình ảnh nhạy cảm sau: ${listFile}, vui lòng thực hiện chỉnh sửa hoặc yêu cầu admin duyệt lại!`,{id:toastId})
                     }
                 } else {
                     setIsAccept(false)
@@ -240,7 +239,7 @@ const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
                         listFile = listFile + result.filename + ", ";
                     });
 
-                    toast.error(`Nội dung của bạn không được duyệt do chứa các file hình ảnh nhạy cảm sau: ${listFile}`)
+                    toast.error(`Nội dung của bạn không được duyệt do chứa các file hình ảnh nhạy cảm sau: ${listFile}, vui lòng thực hiện chỉnh sửa hoặc yêu cầu admin duyệt lại!`,{id:toastId})
                 }
 
             } else {
@@ -273,6 +272,7 @@ const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
                 }
             }
             if (checkfile === 1) {
+                const toastId=toast.loading("Hệ thống đang thực hiện kiểm tra ảnh!")
                 const results = [];
                 for (const file of selectedFiles) {
                     const result = await handleCheckingImage(file);
@@ -289,11 +289,13 @@ const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
                     }
                 }
                 let newChapterId = "";
-                if (results.length === 0&&azure_results.length==0) {
+                if (results.length === 0 && azure_results.length == 0) {
                     newChapterId = await addChapter();
+                    toast.success("Thêm chương mới thành công",{id:toastId})
                 }
                 else {
                     newChapterId = await addChapterNotAccept();
+                    toast.success("Đã gửi yêu cầu duyệt cho admin",{id:toastId});
                 }
                 // Khai báo một hàm bọc để chờ đợi việc uploadChapterImg hoàn thành
                 const uploadFilesSequentially = async () => {
@@ -370,12 +372,11 @@ const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
             <Dialog open={open}>
                 <div className="add-dialog">
                     <h3>Thêm chương mới</h3>
-                    <input
-                        type="text"
-                        name="name"
-                        placeholder="Tên chương"
+                    <TextField
+                        label="Tên chương"
                         value={newChapterName}
                         onChange={(e) => setNewChapterName(e.target.value)}
+                        fullWidth
                     />
                     <div>
                         <a>Chọn ảnh cho chương truyện</a>
@@ -395,9 +396,9 @@ const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
                         >
                             {previewImages.map((item, index) => (
                                 <div>
-                                    <button onClick={() => handleRemoveImage(index)}>
+                                    <Button variant="contained" color="warning" sx={{textTransform:"initial"}} onClick={() => handleRemoveImage(index)}>
                                         Bỏ hình
-                                    </button>
+                                    </Button>
                                     <img key={index} src={item} alt="aaa" />
                                 </div>
                             ))}
@@ -405,10 +406,10 @@ const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
                     )}
 
                     <div>
-                        {isAccept && <button onClick={handleAddChapter}>Thêm</button>}
-                        {!isAccept && <button onClick={handleAddChapterNotAccept}>Yêu cầu duyệt lại</button>}
+                        {isAccept && <Button variant="contained" color="success" onClick={handleAddChapter}>Thêm</Button>}
+                        {!isAccept && <Button variant="contained" color="success" onClick={handleAddChapterNotAccept}>Yêu cầu duyệt lại</Button>}
 
-                        <button onClick={onClose}>Hủy</button>
+                        <Button variant="contained" color="error" onClick={onClose}>Hủy</Button>
                     </div>
                 </div>
             </Dialog>

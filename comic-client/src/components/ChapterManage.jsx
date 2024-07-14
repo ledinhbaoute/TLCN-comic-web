@@ -9,6 +9,7 @@ import AlertDialog from "./dialogs/AlertDialog";
 
 import EditChapterDialog from "./dialogs/EditChapterDialog";
 import AddChapterDialog from "./dialogs/AddChapterDialog";
+import { Button,  Pagination } from '@mui/material';
 import toast from "react-hot-toast";
 
 const ChapterManage = () => {
@@ -50,21 +51,15 @@ const ChapterManage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const chaptersPerPage = 10;
 
-  const handleClick = (event) => {
-    setCurrentPage(Number(event.target.id));
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
   };
 
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(chaptersList.length / chaptersPerPage); i++) {
-    pageNumbers.push(i);
-  }
+  const pageNumbers = Math.ceil(chaptersList.length / chaptersPerPage);
 
   const indexOfLastChapter = currentPage * chaptersPerPage;
   const indexOfFirstChapter = indexOfLastChapter - chaptersPerPage;
-  const currentchapters = chaptersList.slice(
-    indexOfFirstChapter,
-    indexOfLastChapter
-  );
+  const currentchapters = chaptersList.slice(indexOfFirstChapter, indexOfLastChapter);
 
   //
   //Thêm chương
@@ -166,15 +161,19 @@ const ChapterManage = () => {
 
   return (
     <div className="comic-list-container">
-      <div className="search-bar">
-        <input type="text" placeholder="Tìm kiếm..." />
-        <button>Tìm kiếm</button>
+       <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Tìm kiếm theo tên..."
+         
+        />
+       <Button variant="outlined" >Tìm kiếm</Button>
       </div>
 
       <div className="add-button">
-        <button className="add" onClick={handleAddClick}>
+      <Button variant="contained" color="primary" onClick={handleAddClick}>
           Thêm chương mới
-        </button>
+        </Button>
       </div>
 
       <ConfirmDialog
@@ -232,39 +231,33 @@ const ChapterManage = () => {
               }
               <td></td>
               <td>
-                <button
-                  className="edit"
-                  onClick={() =>
+                <Button variant="contained" color="warning"  onClick={() =>
                     handleEditClick(
                       chapter.id,
                       chapter.chapterName,
                       chapter.ordinalNumber
                     )
-                  }
-                >
-                  Sửa
-                </button>
+                  }>
+                    Sửa
+                  </Button>
               </td>
               <td>
-                <button
-                  className="delete"
-                  onClick={() =>
+                <Button variant="contained" color="error" onClick={() =>
                     handleDeleteClick(
                       chapter.id,
                       chapter.chapterName,
                       chapter.ordinalNumber
                     )
-                  }
-                >
-                  Xóa
-                </button>
+                  }>
+                    Xóa
+                  </Button>
               </td>
             </tr>
           </tbody>
         ))}
       </table>
 
-      <div className="pagination">
+      {/* <div className="pagination">
         {pageNumbers.map((number) => (
           <button
             key={number}
@@ -275,7 +268,14 @@ const ChapterManage = () => {
             {number}
           </button>
         ))}
-      </div>
+      </div> */}
+       <Pagination
+        count={pageNumbers}
+        page={currentPage}
+        onChange={handlePageChange}
+        color="primary"
+        className="pagination"
+      />
     </div>
   );
 };
