@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useCallback } from "react";
 import axios from "axios";
 import "../sass/_public-profile.scss";
 import { Link, useParams } from "react-router-dom";
@@ -36,7 +36,7 @@ import ChatHead from "./ChatHead";
 import Comment from "@mui/icons-material/Comment";
 
 const UserPublic = () => {
-    const userId = useParams("userId");
+    const { userId } = useParams();
     const [user, setUser] = useState({});
     const navigate = useNavigateTo();
     const [comics, setComics] = useState([]);
@@ -44,41 +44,37 @@ const UserPublic = () => {
     const [alertMessage, setAlertMessage] = useState("");
     const [follow, setFollow] = useState(false)
     const defaultAvatarUrl = `${process.env.PUBLIC_URL}/images/default-avatar.png`;
-
-    const getUser = async () => {
+    const getUser = useCallback(async () => {
         try {
-            const response = await axios.get(`${API_URL}/findUser/${userId.userId}`);
+            const response = await axios.get(`${API_URL}/findUser/${userId}`);
             if (response.data) {
                 setUser(response.data);
-                checkFollow(response.data.userName)
+                checkFollow(response.data.userName);
             } else {
                 navigate("/NotFound");
             }
         } catch (error) {
             console.log(error);
         }
-    };
+    }, [userId, navigate]);
 
-    const getComics = async () => {
+    const getComics = useCallback(async () => {
         try {
-            const response = await axios.get(
-                `${API_URL}/comicbooks/filter/actor/${userId.userId}`
-            );
+            const response = await axios.get(`${API_URL}/comicbooks/filter/actor/${userId}`);
             setComics(response.data.data);
         } catch (error) {
             console.log(error);
         }
-    };
+    }, [userId]);
 
     useEffect(() => {
-        if (userId.userId === window.sessionStorage.getItem("userid")) {
+        if (userId === window.sessionStorage.getItem("userid")) {
             navigate("/profile");
         } else {
             getUser();
             getComics();
-
         }
-    }, [userId]);
+    }, [userId,getUser, getComics,navigate]);
 
     const [currentPage, setCurrentPage] = useState(1);
     const comicsPerPage = 10;
@@ -223,7 +219,7 @@ const UserPublic = () => {
             const respone = await axios.post(
                 `${API_URL}/user/donate`,
                 {
-                    receiver: userId.userId,
+                    receiver: userId,
                     amount: amount,
                     message: donateMessage,
                     password: password,
@@ -357,16 +353,12 @@ const UserPublic = () => {
                                 </div>
                                 <CardBody>
                                     <div className="author">
-
                                         <img
                                             alt="..."
                                             className="avatar border-gray"
                                             src={user.avatar ? user.avatar : defaultAvatarUrl}
-
                                         />
-
                                         <h5 className="title">{user.name}</h5>
-
                                         <p className="description">@{user.userName}</p>
                                     </div>
                                     <p className="description text-center">

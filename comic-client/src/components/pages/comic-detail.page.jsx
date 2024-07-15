@@ -1,7 +1,6 @@
 import ComicDetail from "../ComicDetail";
 import Breadcrumb from "../Breadcrumb";
 import Review from "../Review";
-import ComicList from "../ComicList";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../../config/config";
@@ -35,8 +34,6 @@ const ComicDetailPage = () => {
         window.scrollTo({
             top: 0,
         });
-
-
     }, [comicId]);
 
     useEffect(() => {
@@ -81,7 +78,7 @@ const ComicDetailPage = () => {
     const insertHistoryReading = async (chapterId) => {
         try {
             if (checkAuth) {
-                const response = await axios.post(
+                await axios.post(
                     `${API_URL}/user/history_reading`,
                     { chapterId: chapterId },
                     {

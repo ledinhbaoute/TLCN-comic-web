@@ -8,7 +8,6 @@ import { checkAuth } from "../security/Authentication";
 const HistoryReadingPage = () => {
     const [listComic, setListComic] = useState([])
     const [listHistory, setListHistory] = useState([])
-
     useEffect(() => {
         const getHistoryReading = async () => {
             if (checkAuth()) {
@@ -22,10 +21,6 @@ const HistoryReadingPage = () => {
                         }
                     );
                     setListHistory(response.data);
-                    setListComic(listHistory.map((item, index) =>
-                        item.chapter
-                    ))
-                    console.log(listHistory)
 
                 } catch (error) {
                     console.log(error);
@@ -33,8 +28,13 @@ const HistoryReadingPage = () => {
             }
         }
         getHistoryReading();
-    }, [listHistory.length]);
-
+    }, []);
+    useEffect(()=>{
+        setListComic(listHistory.map((item, index) =>
+            item.chapter
+        ))
+    },[listHistory])
+    
     return (
         <section className="product-page spad">
             <div className="container">

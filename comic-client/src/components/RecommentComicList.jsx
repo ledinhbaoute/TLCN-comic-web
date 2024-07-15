@@ -68,7 +68,7 @@ const RecommentComicList = ({ tittle }) => {
                         <h5>{tittle}</h5>
                     </div>
                     <Scrollbars
-               autoHeight autoHeightMax={600}>
+               autoHeight autoHeightMax={1120}>
                     {recommentComicList && recommentComicList.map((item) => (
                         <div class="product__sidebar__comment__item">
                             <img class="product__sidebar__comment__item__pic" src={item.image} alt="" />

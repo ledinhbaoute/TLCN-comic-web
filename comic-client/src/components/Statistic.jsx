@@ -5,7 +5,6 @@ import API_URL from "../config/config";
 import axios from "axios";
 import AppWidgetSummary from "./app-widget-summary";
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";

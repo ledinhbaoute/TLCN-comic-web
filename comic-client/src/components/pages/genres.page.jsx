@@ -21,7 +21,7 @@ const GenresPage = () => {
     const selectedValue = event.target.value;
     setSortBy(selectedValue);
   };
-
+  
   useEffect(() => {
     const getComicByGenre = async () => {
       try {

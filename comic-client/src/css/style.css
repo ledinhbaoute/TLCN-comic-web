@@ -671,7 +671,7 @@ ol {
 }
 
 .product__item__pic {
-  height: 325px;
+  height: 250px;
   position: relative;
   border-radius: 5px;
 }
@@ -836,11 +836,12 @@ ol {
   margin-right: 0;
 }
 
+
 .product__sidebar__view__item {
   height: 190px;
   position: relative;
   border-radius: 5px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .product__sidebar__view__item .ep {
@@ -876,7 +877,7 @@ ol {
 }
 
 .product__sidebar__view__item h5 a {
-  color: #bdbdbd;
+  color: #f7f3f3;
   font-weight: 700;
   line-height: 26px;
 }
@@ -2109,7 +2110,7 @@ ol {
   margin-left: -25px;
 }
 
-.page-up a {
+.page-up button {
   display: inline-block;
   font-size: 36px;
   color: #ffffff;
@@ -2121,7 +2122,7 @@ ol {
   border-radius: 50%;
 }
 
-.page-up a span {
+.page-up button span {
   position: relative;
   top: 2px;
   left: -1px;

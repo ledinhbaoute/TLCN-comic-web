@@ -50,5 +50,9 @@ public class FavoriteComicController {
         }
         return ResponseEntity.status(401).body("Unauthorized!");
     }
+    @GetMapping("/isFavorite")
+    boolean isFavorite(@RequestParam String userId,@RequestParam String comicId){
+        return favoriteComicService.isFavorite(userId,comicId);
+    }
 
 }

@@ -23,6 +23,8 @@ public class Chapter {
     private List<Comment>comments;
     @OneToMany(mappedBy = "chapter",cascade = CascadeType.ALL)
     private List<ReadingHistory>readingHistories;
+    @OneToMany(mappedBy = "chapter",cascade = CascadeType.ALL)
+    private List<BookMark>bookMarks;
     @Column(name = "publish_date")
     private Date publishDate;
     @Column(name = "ordinal_number")

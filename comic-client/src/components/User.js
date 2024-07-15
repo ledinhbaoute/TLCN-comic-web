@@ -3,7 +3,6 @@ import axios from "axios";
 import API_URL from "../config/config";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import { useNavigateTo } from "../service/navigation";
 import {
   Button,
   Card,
@@ -17,6 +16,7 @@ import {
   Row,
   Col,
 } from "reactstrap";
+
 import {
   Dialog,
   DialogTitle,
@@ -35,8 +35,6 @@ import ConfirmDialog from "./dialogs/ConfirmDialog";
 import '../css/paper-dashboard.min.css'
 import { Link } from "react-router-dom";
 function User() {
-  const navigate = useNavigateTo();
-
   const [user, setUser] = useState({});
   const [followList, setFollowList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
@@ -73,16 +71,15 @@ function User() {
           },
         });
         if (response.data.message === "Not register premium") {
-          setPremium({ ...premium, status: false });
+          setPremium(prevPremium => ({ ...prevPremium, status: false }));
         } else {
-          setPremium({
+          setPremium(prevPremium => ({
+            ...prevPremium,
             status: true,
             packagePremium: response.data.packagePremium,
             startDate: response.data.startDate,
-          });
+          }));
         }
-        console.log(premium);
-        // console.log(response);
       } catch (error) {
         console.log(error);
       }
@@ -141,7 +138,7 @@ function User() {
 
   const uploadAvatar = async (formData) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${API_URL}/user/avt-upload`,
         formData,
         {
@@ -249,7 +246,7 @@ function User() {
 
   const changePassword = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${API_URL}/user/change-password`,
         {
           password: oldPass,

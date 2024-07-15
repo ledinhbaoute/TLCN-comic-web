@@ -2,7 +2,6 @@ import React, { useState, useEffect} from "react";
 import "../css/search-comic.css";
 import axios from "axios";
 import API_URL from "../config/config";
-import Pagination from "./Pagination";
 import SearchComicItem from "./SearchComicItem";
 
 function SearchComic() {

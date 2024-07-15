@@ -3,7 +3,6 @@ import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import API_URL from "../config/config";
 import Cookies from "js-cookie";
-
 import ConfirmDialog from "./dialogs/ConfirmDialog";
 import AlertDialog from "./dialogs/AlertDialog";
 
@@ -18,21 +17,6 @@ const ChapterManage = () => {
   const [alertDialogOpen, setAlertDialogOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
-
-
-  const getChapters = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/user/chapters/${comicId}`, {
-        headers: {
-          Authorization: "Bearer " + Cookies.get("access_token"),
-        },
-      });
-      setChapterList(response.data.data)
-
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const updateChapterList = (updatedChapter,isEdit) => {
     if(isEdit){
     setChapterList((prevChapters) => 
@@ -45,8 +29,21 @@ const ChapterManage = () => {
   }
 
   useEffect(() => {
+    const getChapters = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/user/chapters/${comicId}`, {
+          headers: {
+            Authorization: "Bearer " + Cookies.get("access_token"),
+          },
+        });
+        setChapterList(response.data.data)
+  
+      } catch (error) {
+        console.log(error);
+      }
+    };
     getChapters();
-  }, []);
+  }, [comicId]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const chaptersPerPage = 10;
@@ -85,7 +82,7 @@ const ChapterManage = () => {
 
   const deleteChapter = async (chapterId) => {
     try {
-      const response = await axios.delete(`${API_URL}/user/chapters`, {
+      await axios.delete(`${API_URL}/user/chapters`, {
         headers: {
           Authorization: "Bearer " + Cookies.get("access_token"),
           "Content-Type": "application/x-www-form-urlencoded",

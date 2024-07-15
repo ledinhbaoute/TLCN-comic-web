@@ -9,7 +9,6 @@ const ComicPage = (props) => {
     const [listComic, setListComic] = useState([])
     const [totalPage, setTotalPage] = useState({});
     
- 
     useEffect(() => {
         const getListComic = async () => {
             if (listBy === "trending") {
@@ -22,7 +21,6 @@ const ComicPage = (props) => {
                 } catch (error) {
                     console.log(error);
                 }
-
             }
             else if(listBy==="new_update"){
                 try {

@@ -235,7 +235,7 @@ public class ComicServiceImple implements IComicBookService {
         UserPremium userPremium = userPremiumRepo.findOneByUser_UserName(username).orElse(null);
         if (userPremium != null) {
             comicBook.setPremium(true);
-            return new ResponseObject(true, "Upgrade Comic Success!", converter.convertEntityToDto(comicBook));
+            return new ResponseObject(true, "Nâng cấp truyện thành công!", converter.convertEntityToDto(comicBook));
         }
         return new ResponseObject(false, "You need upgrade to Premium Account!", "");
     }
@@ -308,8 +308,8 @@ public class ComicServiceImple implements IComicBookService {
     @Override
     public Page<ComicBookDTO> getComicByGenrePagination(String genreId, int indexPage, String sortBy) {
         if (sortBy == null)
-            return comicBookRepository.findByGenres_Id(genreId, PageRequest.of(indexPage, 6)).map(converter::convertEntityToDto);
-        return comicBookRepository.findByGenres_Id(genreId, PageRequest.of(indexPage, 6, Sort.by(sortBy).descending())).map(converter::convertEntityToDto);
+            return comicBookRepository.findByGenres_Id(genreId, PageRequest.of(indexPage, 8)).map(converter::convertEntityToDto);
+        return comicBookRepository.findByGenres_Id(genreId, PageRequest.of(indexPage, 8, Sort.by(sortBy).descending())).map(converter::convertEntityToDto);
     }
 
     @Override

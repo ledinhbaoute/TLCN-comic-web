@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import API_URL from "../config/config";
-import { useNavigateTo } from "../service/navigation";
 import OtpDialogInput from "./dialogs/OTPDialogInput";
 import Loading from "./Loading";
 import toast from "react-hot-toast";
@@ -22,9 +21,6 @@ const Register = () => {
   const [otpDialogOpen, setOtpDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isOlderThanToday, setIsOlderThanToday] = useState(false);
-
-
-  const navigate = useNavigateTo();
 
   const handleFullnameChange = (event) => {
     setFullname(event.target.value);
@@ -217,8 +213,6 @@ const Register = () => {
                     />
                     <span className="fa fa-calendar"></span>
                   </div>
-                  
-                  
                   <div className="input__item">
                     <input
                       className="inputText"

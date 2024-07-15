@@ -93,8 +93,6 @@ export default function SearchResultPopover() {
           p: 1,
           zIndex: 10,
         }}>
-            
-            
           <List
             disablePadding
             subheader={

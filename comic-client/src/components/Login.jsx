@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../sass/style.scss";
 import "../css/AllStyles";
-import { Link, redirect } from "react-router-dom";
+import { Link} from "react-router-dom";
 import axios from "axios";
 import API_URL from "../config/config";
 import Cookies from "js-cookie";
@@ -13,7 +13,6 @@ const Login = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
   const navigate = useNavigateTo();
 
   const handleUsernameChange = (event) => {

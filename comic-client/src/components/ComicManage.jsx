@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useContext, Component } from "react";
+import React, { useState, useEffect, useContext} from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import API_URL from "../config/config";
 import { PY_API_URL } from "../config/config";
 import Cookies from "js-cookie";
 import AppContext from "../context/AppContext";
-// import { Dialog } from "@mui/material";
 import AlertDialog from "./dialogs/AlertDialog";
 import ConfirmDialog from "./dialogs/ConfirmDialog";
 import toast from "react-hot-toast";
@@ -53,7 +52,7 @@ const ComicManage = () => {
       }
     };
     getComics();
-  }, [updateState]);
+  }, [updateState,userId]);
 
   const handleSearchClick = () => {
     setSearchResult(
@@ -127,7 +126,7 @@ const ComicManage = () => {
 
   const deleteComic = async (comicId) => {
     try {
-      const response = await axios.delete(
+      await axios.delete(
         `${API_URL}/user/comicbooks`,
 
         {
@@ -165,7 +164,7 @@ const ComicManage = () => {
 
   const addComic = async (formData) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${API_URL}/user/comicbooks`,
         formData,
         {
@@ -183,7 +182,6 @@ const ComicManage = () => {
       })
       setNewComicImage(null)
       setShowAddDialog(false)
-      //   console.log(response.data);
     } catch (error) {
       setAlertMessage(
         "Thêm truyện mới thất bại. Đảm bảo bạn đã điền đủ các mục và file ảnh không vượt quá 1Mb"
@@ -291,7 +289,7 @@ const ComicManage = () => {
   const updateComic = async () => {
     try {
       const updateGenreIds = selectedComic.genres.map((genre) => genre.id);
-      const response = await axios.put(
+      await axios.put(
         `${API_URL}/user/comicbooks`,
         {
           comicId: selectedComic.id,
@@ -485,7 +483,7 @@ const ComicManage = () => {
             fullWidth
           />
           <div>
-            <a>Chọn ảnh đại điện cho truyện</a>
+            <h6>Chọn ảnh đại điện cho truyện</h6>
             <input
               type="file"
               name="image"
@@ -531,7 +529,7 @@ const ComicManage = () => {
             fullWidth
           />
           <div>
-            <a>Chọn ảnh đại điện cho truyện</a>
+            <h6>Chọn ảnh đại điện cho truyện</h6>
             <input
               type="file"
               name="image"

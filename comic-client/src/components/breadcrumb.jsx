@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 const Breadcrumb=(props)=>{
     const currentGenre=props.currentGenre
     return(
-        
         <div className="breadcrumb-option">
         <div className="container">
             <div className="row">

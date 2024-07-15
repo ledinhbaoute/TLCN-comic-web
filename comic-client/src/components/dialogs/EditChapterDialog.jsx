@@ -170,7 +170,7 @@ const EditChapterDialog = ({ open, onClose, selectedChapter, setChapterList }) =
                         onClose();
                     }
                     else {
-                        var listFile = "";
+                        let listFile = "";
                         azure_results.forEach((azure_result) => {
                             listFile = listFile + azure_result.filename + ", ";
                         });
@@ -180,7 +180,7 @@ const EditChapterDialog = ({ open, onClose, selectedChapter, setChapterList }) =
                     }
                 }
                 else {
-                    var listFile = "";
+                    let listFile = "";
                     results.forEach((result) => {
                         listFile = listFile + result.filename + ", ";
                     });
@@ -335,7 +335,7 @@ const EditChapterDialog = ({ open, onClose, selectedChapter, setChapterList }) =
                         }
                     />
                     <div>
-                        <a>Thêm ảnh</a>
+                        <h6>Thêm ảnh</h6>
                         <input
                             type="file"
                             name="image"

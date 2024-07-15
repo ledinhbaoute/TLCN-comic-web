@@ -75,5 +75,12 @@ public class FavoriteComicServiceImple implements IFavoriteComicService {
         }
         return favoriteComicDTOS;
     }
+    @Override
+    public boolean isFavorite(String userId,String comicId){
+        FavoriteComic favoriteComic=favoriteComicRepository.findById(new FavoriteComicKey(userId,comicId)).orElse(null);
+        if (favoriteComic!=null)
+            return true;
+        return false;
+    }
 
 }

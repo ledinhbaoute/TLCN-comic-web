@@ -1,19 +1,8 @@
 import React from "react";
-import { css } from "@emotion/react";
-import { RingLoader } from "react-spinners";
 import {
-  Dialog,
   CircularProgress,
-  DialogContentText,
-  Box,
-  Backdrop,
+  Backdrop
 } from "@mui/material";
-
-const override = css`
-  display: block;
-  margin: 0 auto;
-  border-color: red;
-`;
 
 const Loading = () => {
   return (

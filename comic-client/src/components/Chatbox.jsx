@@ -119,7 +119,7 @@ export default function Chatbox({ togglePopup, receiverUserName, setChatList }) 
         stompClient.disconnect();
       }
     };
-  }, [token]);
+  }, [token,receiverUserName]);
 
   useEffect(() => {
     if (chatBottomRef.current) {
@@ -197,7 +197,7 @@ export default function Chatbox({ togglePopup, receiverUserName, setChatList }) 
         return Object.fromEntries(updatedChatList);
       })
     }
-  }, [receiverUserName])
+  }, [receiverUserName,setChatList])
 
   const sendMessageOnEnter = (event) => {
     if (event.key === "Enter" && !event.shiftKey) {

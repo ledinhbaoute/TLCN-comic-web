@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "../css/payment-info.css";
-import axios from "axios";
-import API_URL from "../config/config";
-import Cookies from "js-cookie";
 
 const PaymentInfoPage = () => {
   const [paymentInfo, setPaymentInfo] = useState({});

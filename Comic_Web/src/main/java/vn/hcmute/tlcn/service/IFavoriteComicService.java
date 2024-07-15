@@ -10,4 +10,5 @@ public interface IFavoriteComicService {
     ResponseEntity<ResponseObject> addFavoriteComic(String username,  String comicId);
     ResponseEntity<ResponseObject> removeFavoriteComic(String username,String comicId);
     List<FavoriteComicDTO>getFavoriteComicByUser(String username);
+    boolean isFavorite(String userId,String comicId);
 }

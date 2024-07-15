@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom/client";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -19,15 +18,14 @@ import toast from "react-hot-toast";
 
 const ComicDetail = (props) => {
   const comic = props.comic;
-  const [listComic, setListComic] = useState([]);
+  const userId = window.sessionStorage.getItem("userid")
   const [isFavorite, setIsfavorite] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertDialogOpen, setAlertDialogOpen] = useState(false);
 
-  const [favorite, setFavorite] = useState({});
   const addFavoriteComic = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${API_URL}/user/favorite-comic`,
         { comicId: comic.id },
         {
@@ -37,7 +35,6 @@ const ComicDetail = (props) => {
           },
         }
       );
-      setFavorite(response.data.data);
       setIsfavorite(true)
       toast.success("Đã thêm truyện vào mục ưa thích!",{
         position:"top-right"
@@ -65,36 +62,22 @@ const ComicDetail = (props) => {
   };
 
   useEffect(() => {
-    const getFavoriteComic = async () => {
+    const isFavoriteComic = async () => {
       if (checkAuth()) {
         try {
-          const response = await axios.get(`${API_URL}/user/favorite-comic`, {
-            headers: {
-              Authorization: "Bearer " + Cookies.get("access_token"),
-            },
-          });
-          setListComic(response.data.data);
-          // console.log(listComic);
+          const response = await axios.get(`${API_URL}/isFavorite?userId=${userId}&&comicId=${comic.id}`);
+          setIsfavorite(response.data);
         } catch (error) {
           console.log(error);
         }
       }
     };
-    getFavoriteComic();
-
-    for (let index = 0; index < listComic.length; index++) {
-      // console.log(listComic[index].comicBookDTO.id===comic.id);
-      if (listComic[index].comicBookDTO.id === comic.id) {
-        setIsfavorite(true);
-        break;
-      }
-    }
-    // console.log("Is favorite", isFavorite);
-  }, [comic]);
+    isFavoriteComic();
+  }, [comic,userId]);
 
   const deleteFavoriteComic = async () => {
     try {
-      const response = await axios.delete(`${API_URL}/user/favorite-comic`, {
+      await axios.delete(`${API_URL}/user/favorite-comic`, {
         headers: {
           Authorization: "Bearer " + Cookies.get("access_token"),
           "Content-Type": "application/x-www-form-urlencoded",
@@ -160,7 +143,7 @@ const ComicDetail = (props) => {
 
   const reportCommic = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${API_URL}/user/report_comic`,
         { comicId: comic.id, reasonIds: checked.join(",") },
         {
@@ -304,8 +287,8 @@ const ComicDetail = (props) => {
                       <span>Thể loại:</span>
 
                       {comic.genres &&
-                        comic.genres.map((item, index) => (
-                          <a key={index}> {item.name} </a>
+                        comic.genres.map((item) => (
+                          item.name+" "
                         ))}
                     </li>
                   </ul>

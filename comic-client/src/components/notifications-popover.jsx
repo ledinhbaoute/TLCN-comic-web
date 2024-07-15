@@ -138,7 +138,6 @@ export default function NotificationsPopover() {
         handleClose()
       });
   };
-
   return (
     <>
       <IconButton color={open ? 'primary' : 'default'} onClick={handleOpen}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 // import "../sass/style.scss";
 // import "../css/AllStyles";
 import { Link, NavLink, useNavigate } from "react-router-dom";
@@ -16,51 +16,8 @@ const Header = () => {
 
   const logoUrl = `${process.env.PUBLIC_URL}/images/logo.png`;
 
-  const [keyWord, setKeyWord] = useState("");
-  const [searchingList, setSearchingList] = useState([]);
-  
-  useEffect(() => {
-    if (keyWord !== "") {
-      searchComic(keyWord)
-    }
-  }
-  , [keyWord]);
-
-  const handleKeyWordChange = (event) => {
-    setKeyWord(event.target.value);
-  }
-
-  const searchComic = async (keyS) => {
-
-    try {
-      const response = await axios.get(
-        `${API_URL}/search/comics?keySearch=${keyS}`
-      );
-      setSearchingList(response.data.data);
-
-
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const navigate = useNavigate();
 
-  const changeStatusOnline = async () => {
-      try {
-         await axios.post(
-          `${API_URL}/user/update_status`, {},
-          {
-            headers: {
-              Authorization: "Bearer " + Cookies.get("access_token"),
-            },
-          }
-        );
-       
-      } catch (error) {
-        console.log(error);
-      } 
-  };
   const logout=async()=>{
     try{
       await axios.post(
@@ -167,11 +124,10 @@ const Header = () => {
             </div>
           </div>
           <div className="col-lg-2">
-
             <div className="header__right">
 
               {checkAuth() ? (
-                <a>
+                <>
                   <MessagesPopover/>
                   <NotificationsPopover />
                   <Link to="./profile">
@@ -186,10 +142,8 @@ const Header = () => {
                       onClick={handleLogout}
                       className="fa fa-sign-out"
                     ></span>
-                  </Link>
-                
-
-                </a>
+                  </Link>  
+                </>
               ) : (
                 <>
                 <Link to="./search-comic" class="search-switch">

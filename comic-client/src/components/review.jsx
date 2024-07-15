@@ -1,6 +1,6 @@
 import axios from "axios";
 import API_URL from "../config/config";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Rating } from 'react-simple-star-rating'
 import { checkAuth } from "../security/Authentication";
 import Cookies from 'js-cookie';
@@ -11,9 +11,8 @@ const Review = (props) => {
     const comicId=props.comicId
     const [ratingComment, setRatingComment] = useState("");
     const [ratingScore, setRatingScore] = useState(0)
-    const [rating, setRating] = useState({})
     const defaultAvatarUrl = `${process.env.PUBLIC_URL}/images/default-avatar.png`;
-    
+
     const handleTextareaChange = (event) => {
         setRatingComment(event.target.value);
     };
@@ -22,7 +21,7 @@ const Review = (props) => {
     }
     const insertRating = async () => {
         try {
-                const response = await axios.post(
+                await axios.post(
                     `${API_URL}/user/ratings`,
                     {comicId:comicId,score:ratingScore,comment:ratingComment},
                     {
@@ -32,11 +31,6 @@ const Review = (props) => {
                         }
                       }
                 );
-                if(response.data.status===true){
-                    setRating(response.data.data)
-                    
-                }
-               
 
         } catch (error) {
             console.log(error);
@@ -46,7 +40,6 @@ const Review = (props) => {
     const handleSubmit = (event) => {
         //event.preventDefault()
         if (!checkAuth()) {
-
             toast("Bạn cần đăng nhập để đánh giá truyện!",{
                 icon:'🛈',
                 position:"top-right",

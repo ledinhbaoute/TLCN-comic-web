@@ -23,7 +23,7 @@ const Comment = (props) => {
   const chapterId = props.chapterId;
   const [commentList, setCommentList] = useState([]);
   const [commentContent, setCommentContent] = useState("");
-  const [comment, setComment] = useState({});
+  
   const [alertMessage, setAlertMessage] = useState("");
   const [alertDialogOpen, setAlertDialogOpen] = useState(false);
   const defaultAvatarUrl = `${process.env.PUBLIC_URL}/images/default-avatar.png`;
@@ -57,7 +57,6 @@ const Comment = (props) => {
         }
       );
       if (response.data.status === true) {
-        setComment(response.data.data);
         setCommentList((prev)=>[response.data.data,...prev])
       }
     } catch (error) {

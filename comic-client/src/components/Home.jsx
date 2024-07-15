@@ -28,7 +28,6 @@ const Home = () => {
 
   }, []);
 
-
   useEffect(() => {
     const getTrendingComic = async () => {
       try {
@@ -74,7 +73,6 @@ const Home = () => {
             <img style={{ width: '1350px', height: '600px' }} src="/images/slide/image-6.webp"  alt="hahha"/>
             <img style={{ width: '1350px', height: '600px' }} src="/images/slide/image-5.webp"  alt="hahah"/>
             <img style={{ width: '1350px', height: '600px' }} src="/images/slide/image-5.jpg"  alt="imahhage"/>
-
           </Fade>
         </div>
       </section>

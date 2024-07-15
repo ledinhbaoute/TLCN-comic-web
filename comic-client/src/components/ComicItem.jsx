@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link, useLocation } from "react-router-dom";
 import axios from 'axios';
 import API_URL from "../config/config";
@@ -6,7 +6,6 @@ import Cookies from 'js-cookie';
 import { checkAuth } from '../security/Authentication';
 const ComicItem = ({ item,chapter }) => {
   const firstThreeGenres = item.genres.slice(0, 3);
-  const [deleteStatus, setDeleteStatus] = useState(false);
   const location = useLocation();
   const currentPath = location.pathname
 
@@ -27,7 +26,7 @@ const ComicItem = ({ item,chapter }) => {
 
   const deleteFavoriteComic = async () => {
     try {
-      const response = await axios.delete(`${API_URL}/user/favorite-comic`,
+      await axios.delete(`${API_URL}/user/favorite-comic`,
         {
           headers: {
             "Authorization": "Bearer " + Cookies.get("access_token"),
@@ -35,7 +34,6 @@ const ComicItem = ({ item,chapter }) => {
 
           }, data: { comicId: item.id },
         });
-      setDeleteStatus(response.data.status)
 
     } catch (error) {
       console.error('Error increasing view:', error);
@@ -44,7 +42,7 @@ const ComicItem = ({ item,chapter }) => {
 
   const deleteHistoryReading = async () => {
     try {
-      const response = await axios.delete(`${API_URL}/user/history_reading`,
+      await axios.delete(`${API_URL}/user/history_reading`,
         {
           headers: {
             "Authorization": "Bearer " + Cookies.get("access_token"),
@@ -57,7 +55,6 @@ const ComicItem = ({ item,chapter }) => {
       console.error('Error increasing view:', error);
     }
   };
-
 
   const handleDeleteFavorite = async () => {
     deleteFavoriteComic()
@@ -80,7 +77,7 @@ const ComicItem = ({ item,chapter }) => {
   const insertHistoryReading = async (chapterId) => {
     try {
         if (checkAuth) {
-            const response = await axios.post(
+            await axios.post(
                 `${API_URL}/user/history_reading`,
                 { chapterId: chapterId },
                 {
@@ -99,7 +96,7 @@ const ComicItem = ({ item,chapter }) => {
 };
 
   return (
-    <div className="col-lg-4 col-md-6 col-sm-6">
+    <div className="col-lg-3 col-md-6 col-sm-6">
       <div className="product__item">
         <div className="product__item__pic set-bg" style={{ backgroundImage: `url('${API_URL}/files/${item.image}')` }}>
           {item.premium && (

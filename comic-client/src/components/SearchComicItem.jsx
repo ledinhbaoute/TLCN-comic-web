@@ -1,17 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../config/config";
-import Cookies from "js-cookie";
-import { checkAuth } from "../security/Authentication";
 const SearchComicItem = ({ item }) => {
     const firstThreeGenres = item.genres.slice(0, 3);
-    const location = useLocation();
-    const currentPath = location.pathname;
 
     const increaseView = async () => {
         try {
-            const response = await axios.post(
+            await axios.post(
                 `${API_URL}/comic/view`,
                 { comicId: item.id },
                 {
@@ -22,25 +18,6 @@ const SearchComicItem = ({ item }) => {
             );
         } catch (error) {
             console.error(error);
-        }
-    };
-    const insertHistoryReading = async (chapterId) => {
-        try {
-            if (checkAuth) {
-                const response = await axios.post(
-                    `${API_URL}/user/history_reading`,
-                    { chapterId: chapterId },
-                    {
-                        headers: {
-                            Authorization: "Bearer " + Cookies.get("access_token"),
-                            "Content-Type": "application/x-www-form-urlencoded",
-                        },
-                    }
-                );
-            }
-            // setRatingList(response.data.data);
-        } catch (error) {
-            console.log(error);
         }
     };
 

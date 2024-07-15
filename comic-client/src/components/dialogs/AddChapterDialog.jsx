@@ -7,10 +7,8 @@ import Cookies from "js-cookie";
 import { isImage, isSizeExceeded } from "../../security/CheckingFile";
 import { ReactSortable } from "react-sortablejs";
 import AlertDialog from "./AlertDialog";
-import ConfirmDialog from "./ConfirmDialog";
 import toast from "react-hot-toast";
 import { Dialog, TextField, Button } from '@mui/material';
-
 
 const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
     const [newChapterName, setNewChapterName] = useState("");
@@ -19,10 +17,7 @@ const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
     const [isAccept, setIsAccept] = useState(true)
     const [alertDialogOpen, setAlertDialogOpen] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
-    const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-    const [confirmMessage, setConfirmMessage] = useState("");
-    const [confirmTitle, setConfirmTitle] = useState("Xác nhận");
-    const [confirmButton, setConfirmButton] = useState("Xác nhận");
+    // const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
     useEffect(() => {
         setNewChapterName("");
@@ -225,7 +220,7 @@ const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
                     }
                     else {
                         setIsAccept(false)
-                        var listFile = "";
+                        let listFile = "";
                         azure_results.forEach((azure_result) => {
                             listFile = listFile + azure_result.filename + ", ";
                         });
@@ -234,7 +229,7 @@ const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
                     }
                 } else {
                     setIsAccept(false)
-                    var listFile = "";
+                    let listFile = "";
                     results.forEach((result) => {
                         listFile = listFile + result.filename + ", ";
                     });
@@ -289,7 +284,7 @@ const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
                     }
                 }
                 let newChapterId = "";
-                if (results.length === 0 && azure_results.length == 0) {
+                if (results.length === 0 && azure_results.length === 0) {
                     newChapterId = await addChapter();
                     toast.success("Thêm chương mới thành công",{id:toastId})
                 }
@@ -361,14 +356,14 @@ const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
                 onClose={() => setAlertDialogOpen(false)}
                 message={alertMessage}
             />
-            <ConfirmDialog
+            {/* <ConfirmDialog
                 open={confirmDialogOpen}
                 onClose={() => setConfirmDialogOpen(false)}
                 onAccept={() => handleAddChapterNotAccept()}
                 message={confirmMessage}
                 title={confirmTitle}
                 buttonText={confirmButton}
-            />
+            /> */}
             <Dialog open={open}>
                 <div className="add-dialog">
                     <h3>Thêm chương mới</h3>
@@ -379,7 +374,7 @@ const AddChapterDialog = ({ open, onClose, comicId, setChapterList }) => {
                         fullWidth
                     />
                     <div>
-                        <a>Chọn ảnh cho chương truyện</a>
+                        <h6>Chọn ảnh cho chương truyện</h6>
                         <input
                             type="file"
                             name="image"

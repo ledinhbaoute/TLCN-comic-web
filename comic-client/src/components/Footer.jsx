@@ -1,11 +1,8 @@
 import React from "react";
-// import "../sass/style.scss";
-// import "../css/AllStyles";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
   const logoUrl=`${process.env.PUBLIC_URL}/images/logo.png`
-  const currentYear = new Date().getFullYear();
 
   const handleScrollToTop = () => {
       window.scrollTo({
@@ -16,9 +13,9 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div className="page-up">
-        <a onClick={handleScrollToTop} id="scrollToTopButton">
+        <button onClick={handleScrollToTop} id="scrollToTopButton">
           <span className="arrow_carrot-up"></span>
-        </a>
+        </button>
       </div>
       <div className="container">
         <div className="row">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import API_URL from '../config/config';
@@ -120,10 +120,10 @@ export default function MessagesPopover() {
     getChatList();
   },[token])
   
-  const updateChatList=(newChatList)=>{
+  const updateChatList=useCallback((newChatList)=>{
     setMessageList(newChatList)
-  }
-
+  },[]) 
+  
   return (
     <>
       <IconButton color={open ? 'primary' : 'default'} onClick={handleOpen}>

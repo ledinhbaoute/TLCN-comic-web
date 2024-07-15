@@ -55,9 +55,9 @@ public class DonateServiceImple {
         Wallet donateWallet = optionalWallet.get();
         Wallet receiverWallet = optional.get();
         if (donateWallet.getBalance() < amount)
-            return new ResponseObject(false, "Balance not enough", "");
+            return new ResponseObject(false, "Số dư ví không đủ", "");
         if (!passwordEncoder.matches(password, donateWallet.getUser().getPassword()))
-            return new ResponseObject(false, "Password incorrect!", "");
+            return new ResponseObject(false, "Mật khẩu không đúng", "");
         Donate donate = new Donate(generateId.generateId(), donateWallet, receiverWallet, donateWallet.getUser().getName() +
                 " donated to " + receiverWallet.getUser().getName(), message, amount, new Date());
         donateRepository.save(donate);
@@ -85,7 +85,7 @@ public class DonateServiceImple {
             throw new RuntimeException(e.getMessage());
         }
 
-        return new ResponseObject(true, "Donate Success!", converter.convertEntityToDto(donate));
+        return new ResponseObject(true, "Donate thành công!", converter.convertEntityToDto(donate));
     }
 
     public List<DonateDTO> getDonateHistory(String username) {

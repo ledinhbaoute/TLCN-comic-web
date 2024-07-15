@@ -5,14 +5,9 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../config/config";
 import { useNavigateTo } from "../service/navigation";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import OtpDialogInput from "./dialogs/OTPDialogInput";
 import Loading from "./Loading";
-import toast from "react-hot-toast";
+import toast from "react-hot-toast"
 
 const ForgetPassword = () => {
   const [username, setUsername] = useState("");

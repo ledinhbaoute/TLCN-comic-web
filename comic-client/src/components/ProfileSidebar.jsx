@@ -1,8 +1,7 @@
-import React, { Component, useState } from "react";
-import { useLocation, NavLink, Link, Outlet, Navigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, Outlet } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
-import { checkAuth } from "../security/Authentication";
 
 import "../css/sidebar.css";
 
@@ -17,7 +16,7 @@ function ProfileSidebar() {
       <Header />
       <div className="layout">
         <div className="sidebar">
-          <a className="toggle-button">🏡 Quản lý cá nhân</a>
+          <h6 className="toggle-button">🏡 Quản lý cá nhân</h6>
           <ul className="sidebar-menu">
             <li className={`sidebar-link ${
                   selectedItem === "menu-item-1" ? "selected" : ""

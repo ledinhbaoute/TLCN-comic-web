@@ -3,7 +3,6 @@ import "../sass/_wallet-page.scss";
 import axios from "axios";
 import API_URL from "../config/config";
 import AlertDialog from "./dialogs/AlertDialog";
-import ConfirmDialog from "./dialogs/ConfirmDialog";
 import { format } from "date-fns";
 import Cookies from "js-cookie";
 import {
@@ -35,44 +34,62 @@ const Wallet = () => {
 
   const [openConfirmDialog, setConfirmDialogOpen] = useState(false);
 
-  const getTransactions = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/user/transactions`, {
-        headers: {
-          Authorization: "Bearer " + Cookies.get("access_token"),
-        },
-      });
-      setTransactionHistory(response.data.data);
-    } catch (error) {
-      console.log(error);
+  useEffect(()=>{
+    const getTransactions = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/user/transactions`, {
+          headers: {
+            Authorization: "Bearer " + Cookies.get("access_token"),
+          },
+        });
+        setTransactionHistory(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (wallet !== null && wallet !== 'Not registered yet') {
+      getTransactions()
     }
-  };
+  },[wallet])
 
-  const getRcvDonates = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/user/received_donate_history`, {
-        headers: {
-          Authorization: "Bearer " + Cookies.get("access_token"),
-        },
-      });
-      setrcvDonateHistory(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
-  const getSendDonates = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/user/donate_history`, {
-        headers: {
-          Authorization: "Bearer " + Cookies.get("access_token"),
-        },
-      });
-      setSendDonateHistory(response.data);
-    } catch (error) {
-      console.log(error);
+  useEffect(()=>{
+    const getRcvDonates = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/user/received_donate_history`, {
+          headers: {
+            Authorization: "Bearer " + Cookies.get("access_token"),
+          },
+        });
+        setrcvDonateHistory(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (wallet !== null && wallet !== 'Not registered yet') {
+      getRcvDonates()
     }
-  };
+  },[wallet])
+  
+
+  useEffect(() => {
+    const getSendDonates = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/user/donate_history`, {
+          headers: {
+            Authorization: "Bearer " + Cookies.get("access_token"),
+          },
+        });
+        setSendDonateHistory(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (wallet !== null && wallet !== 'Not registered yet') {
+      getSendDonates()
+    }
+  }, [wallet])
+
 
   useEffect(() => {
     const getWallet = async () => {
@@ -83,19 +100,13 @@ const Wallet = () => {
           },
         });
         setWallet(response.data);
-        console.log(wallet);
       } catch (error) {
         setWallet(null);
         console.log(error);
       }
     };
     getWallet();
-    if (wallet !== "Not registered yet") {
-      getTransactions();
-      getRcvDonates();
-      getSendDonates();
-    }
-  }, [wallet.balance]);
+  }, []);
 
   //
   //Phân trang bảng transactions
@@ -144,11 +155,11 @@ const Wallet = () => {
   const handleSendDonatePageChange = (event) => {
     setCurrentSendDonatePage(Number(event.target.id));
   };
-  
+
 
   const openWallet = async () => {
     try {
-      const response = await axios.post(`${API_URL}/user/register_wallet`, {}, {
+      await axios.post(`${API_URL}/user/register_wallet`, {}, {
         headers: {
           Authorization: "Bearer " + Cookies.get("access_token"),
         },
@@ -176,7 +187,6 @@ const Wallet = () => {
   const [openRechargeDialog, setRechargeDialogOpen] = useState(false);
   const [amount, setAmount] = useState("");
   const [paymentUrl, setPaymentUrl] = useState("");
-  const [paymentInfo, setPaymentInfo] = useState(null);
   const [openPaymentInfoDialog, setPaymentInfoDialogOpen] = useState(false);
 
   const handleAmountChange = (e) => {
@@ -320,35 +330,34 @@ const Wallet = () => {
       >
         <DialogTitle>Kết quả giao dịch</DialogTitle>
         <DialogContent>
-          {!paymentInfo && (
-            <div>Loading...</div>
-          )}
+          <div>Loading...</div>
         </DialogContent>
       </Dialog>
       <div className="transaction-table">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nội dung</th>
-            <th>Số tiền</th>
-            <th>Thời gian</th>
-            <th>Số dư</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentTransactions.map((transaction) => (
-            <tr key={transaction.id}>
-              <td>{transaction.id}</td>
-              <td>{transaction.title}</td>
-              <td>{transaction.type===2||transaction.type===3? '-'+Number(transaction.amount).toLocaleString():'+'+Number(transaction.amount).toLocaleString()}đ</td>
-              <td>{format(transaction.createdAt,'yyyy/MM/dd HH:mm:ss')}</td>
-              <td>{Number(transaction.balance).toLocaleString()} đ</td>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nội dung</th>
+              <th>Số tiền</th>
+              <th>Thời gian</th>
+              <th>Số dư</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {currentTransactions.map((transaction) => (
+              <tr key={transaction.id}>
+                <td>{transaction.id}</td>
+                <td>{transaction.title}</td>
+                <td>{transaction.type === 2 || transaction.type === 3 ? '-' + Number(transaction.amount).toLocaleString() : '+' + Number(transaction.amount).toLocaleString()}đ</td>
+                <td>{format(transaction.createdAt, 'yyyy/MM/dd HH:mm:ss')}</td>
+                <td>{Number(transaction.balance).toLocaleString()} đ</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
+
       <div className="pagination">
         {transactionPageNumbers.map((number) => (
           <button
@@ -361,36 +370,36 @@ const Wallet = () => {
           </button>
         ))}
       </div>
-      <h3 style={{marginTop: "10px"}}>Lịch sử nhận donate</h3>
-      <div  className="donate-table">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Người gửi</th>
-            <th>Tin nhắn</th>
-            <th>Số tiền</th>
-            <th>Thời gian</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentrcvDonates.map((donate) => (
-            <tr key={donate.id}>
-              <td>{donate.id}</td>
-              
-              <td>
-                <Link to={`/user/${donate.donateWallet.user.id}`}>
-                <img src={donate.donateWallet.user.avatar} alt="aaa"style={{height:40,width:40,borderRadius:20}}/>
-                </Link>
-                {donate.donateWallet.user.name}
-                </td>
-              <td>{donate.message}</td>
-              <td>{Number(donate.amount).toLocaleString()} đ</td>
-              <td>{format(donate.donateDate,'yyyy/MM/dd HH:mm:ss')}</td>
+      <h3 style={{ marginTop: "10px" }}>Lịch sử nhận donate</h3>
+      <div className="donate-table">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Người gửi</th>
+              <th>Tin nhắn</th>
+              <th>Số tiền</th>
+              <th>Thời gian</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {currentrcvDonates.map((donate) => (
+              <tr key={donate.id}>
+                <td>{donate.id}</td>
+
+                <td>
+                  <Link to={`/user/${donate.donateWallet.user.id}`}>
+                    <img src={donate.donateWallet.user.avatar} alt="aaa" style={{ height: 40, width: 40, borderRadius: 20 }} />
+                  </Link>
+                  {donate.donateWallet.user.name}
+                </td>
+                <td>{donate.message}</td>
+                <td>{Number(donate.amount).toLocaleString()} đ</td>
+                <td>{format(donate.donateDate, 'yyyy/MM/dd HH:mm:ss')}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       <div className="pagination">
         {rcvDonatePageNumbers.map((number) => (
@@ -404,37 +413,37 @@ const Wallet = () => {
           </button>
         ))}
       </div>
-      <h3 style={{marginTop: "10px"}}>Lịch sử gửi donate</h3>
-      <div  className="donate-table">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>
-              Người nhận</th>
-            <th>Tin nhắn</th>
-            <th>Số tiền</th>
-            <th>Thời gian</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentSendDonates.map((donate) => (
-            <tr key={donate.id}>
-              <td>{donate.id}</td>
-              <td>
-              <Link to={`/user/${donate.receiverWallet.user.id}`} >
-              <img src={donate.receiverWallet.user.avatar} alt="aaa" style={{height:40,width:40,borderRadius:20}}/>
-              </Link>
-                {donate.receiverWallet.user.name}
+      <h3 style={{ marginTop: "10px" }}>Lịch sử gửi donate</h3>
+      <div className="donate-table">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>
+                Người nhận</th>
+              <th>Tin nhắn</th>
+              <th>Số tiền</th>
+              <th>Thời gian</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentSendDonates.map((donate) => (
+              <tr key={donate.id}>
+                <td>{donate.id}</td>
+                <td>
+                  <Link to={`/user/${donate.receiverWallet.user.id}`} >
+                    <img src={donate.receiverWallet.user.avatar} alt="aaa" style={{ height: 40, width: 40, borderRadius: 20 }} />
+                  </Link>
+                  {donate.receiverWallet.user.name}
                 </td>
 
-              <td>{donate.message}</td>
-              <td>{Number(donate.amount).toLocaleString()} đ</td>
-              <td>{format(donate.donateDate,'yyyy/MM/dd HH:mm:ss')}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                <td>{donate.message}</td>
+                <td>{Number(donate.amount).toLocaleString()} đ</td>
+                <td>{format(donate.donateDate, 'yyyy/MM/dd HH:mm:ss')}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       <div className="pagination">
         {sendDonatePageNumbers.map((number) => (

@@ -10,7 +10,6 @@ function NotFound() {
     alignItems: 'center',
     height: '100vh',
   };
-
   const centerImageStyle = {
     maxWidth: '100%',
     maxHeight: '100%',
@@ -21,6 +20,7 @@ function NotFound() {
       <img
         src={img404Url}
         style={centerImageStyle}
+        alt='Not Found'
       />
     </Link>
   )
